@@ -10,7 +10,7 @@ import time
 import json
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from context.store import ContextStore
 from agents.sub_agents.image import ImageAgent
