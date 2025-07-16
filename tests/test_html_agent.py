@@ -10,10 +10,10 @@ import time
 import json
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from Agents.ContentAgent.html_ag import HtmlAgent
-from ContextStore.context_store import ContextStore
+from agents.sub_agents.html import HtmlAgent
+from context.store import ContextStore
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()

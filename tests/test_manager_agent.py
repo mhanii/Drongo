@@ -4,16 +4,16 @@ import base64
 from dotenv import load_dotenv
 
 # Add parent directory to path for our module imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import real classes
 from langchain_google_genai import ChatGoogleGenerativeAI
-from ContextStore.context_store import ContextStore
+from context.store import ContextStore
 
 # Import dummy classes for testing
-from Agents.ContentAgent.content_ag import ContentAgent
-from Agents.ManagerAgent.apply_tool import ApplyTool
-from Agents.ManagerAgent.manager_ag import ManagerAgent
+from agents.content import ContentAgent
+from agents.tools.apply import ApplyTool
+from agents.manager import ManagerAgent
 # Helper to create a dummy PDF for testing
 from fpdf import FPDF
 

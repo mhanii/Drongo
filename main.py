@@ -1,7 +1,7 @@
 import flask
 from flask import request, session
 
-from Agents.ManagerAgent.manager_ag import ManagerAgent
+from agents.manager import ManagerAgent
 
 from dotenv import load_dotenv
 import os
