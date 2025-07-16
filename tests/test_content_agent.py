@@ -1,407 +1,193 @@
-"""
-Comprehensive test suite for the Content Agent coordination functionality.
-Tests the coordination between HTML and Image agents, content strategy, and integration.
-"""
-
-from dotenv import load_dotenv
+import unittest
+from unittest.mock import MagicMock, patch, ANY
 import os
 import sys
-import time
-import json
 
 # Add parent directory to path for imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from context.store import ContextStore
 from agents.content import ContentAgent
-from langchain_google_genai import ChatGoogleGenerativeAI
+from database.content_chunk_db import ContentChunkDB, ContentChunk
 
-load_dotenv()
+class TestContentAgent(unittest.TestCase):
 
-
-class ContentAgentTester:
-    def __init__(self):
-        """Initialize the content agent tester."""
-        self.content_agent = None
-        self.test_results = []
-        
-    def print_test_header(self, test_name):
-        """Print a formatted test header."""
-        print(f"\n{'='*60}")
-        print(f"🧪 TESTING: {test_name}")
-        print(f"{'='*60}")
-
-    def print_test_result(self, result, test_description):
-        """Print formatted test result."""
-        print(f"\n📋 {test_description}")
-        print("-" * 40)
-        
-        if isinstance(result, dict) and 'messages' in result:
-            # Extract the final response from agent
-            final_message = result['messages'][-1].content if result['messages'] else "No response"
-            print(f"🤖 Agent Response: {final_message}")
-        else:
-            print(f"📄 Result: {result}")
-
-    def wait_for_user(self):
-        """Wait for user input before continuing."""
-        input("\n⏸️  Press Enter to continue to next test...")
-
-    def initialize_content_agent(self):
-        """Initialize the content agent for testing."""
-        print("🚀 Initializing Content Agent Test Suite...")
-        
-        # Create context store
-        # self.store = ContextStore()
-        
-        # Initialize content agent
+    def setUp(self):
+        """Set up the test environment for each test."""
+        # This creates a new in-memory SQLite database for each test
         self.content_agent = ContentAgent(
-            model="models/gemini-2.0-flash",
-            # store=self.store,
-            checkpoint_path="data/checkpoint.sqlite"
+            model="models/gemini-pro",  # This will be mocked in most tests
+            checkpoint_path=":memory:"
         )
-        
-        print("✅ Content Agent initialized successfully!")
-        print(f"📊 Available tools: {len(self.content_agent.defined_tools)}")
-        
-        return True
+        # Mock the underlying generative model for the agent
+        self.mock_model = MagicMock()
+        self.content_agent.model_instance = self.mock_model
 
-    def test_html_agent_coordination(self):
-        """Test coordination with HTML agent."""
-        self.print_test_header("HTML AGENT COORDINATION")
-        
-        html_test_cases = [
-            "Generate a simple paragraph about machine learning with clean formatting",
-            "Create a professional product description for a new smartphone with proper styling",
-            "Generate a blog post introduction about sustainable technology with modern typography",
-            "Create a comparison table of different programming languages with professional styling"
+        # We also need to mock the agents that the ContentAgent uses
+        self.mock_html_agent = MagicMock()
+        self.content_agent.html_agent = self.mock_html_agent
+
+        self.mock_image_agent = MagicMock()
+        self.content_agent.image_agent = self.mock_image_agent
+
+    def test_initialization(self):
+        """Test that the ContentAgent initializes correctly."""
+        self.assertIsInstance(self.content_agent, ContentAgent)
+        self.assertIsInstance(self.content_agent.chunk_db, ContentChunkDB)
+        self.assertIsNotNone(self.content_agent.agent)
+
+    def test_run_html_agent_tool_success(self):
+        """Test the successful execution of the `run_html_agent` tool."""
+        # Configure the mock HTML agent to return a successful result
+        test_html = "<p><span>This is successful HTML.</span></p>"
+        self.mock_html_agent.run.return_value = {
+            "status": "success",
+            "html": test_html
+        }
+
+        # Call the tool method directly
+        result_str = self.content_agent.run_html_agent("A test", "default style")
+
+        # Assertions on the string returned by the tool
+        self.assertIn("HTML Generation Result", result_str)
+        self.assertIn("chunk_id", result_str)
+        self.assertIn("Status: PENDING", result_str)
+
+        # Assertions on the internal state
+        self.assertEqual(len(self.content_agent.generated_chunks), 1)
+        chunk = self.content_agent.generated_chunks[0]
+        self.assertEqual(chunk['html'], test_html)
+        self.assertEqual(chunk['status'], 'PENDING')
+
+        # Verify that the chunk was saved to the DB
+        saved_chunk = self.content_agent.chunk_db.get_chunk_by_id(chunk['id'])
+        self.assertIsNotNone(saved_chunk)
+        self.assertEqual(saved_chunk.html, test_html)
+
+    def test_run_html_agent_tool_failure(self):
+        """Test the `run_html_agent` tool when the html_agent reports an error."""
+        # Configure the mock HTML agent to return an error status
+        error_html = "<p><span>Generation failed.</span></p>"
+        self.mock_html_agent.run.return_value = {
+            "status": "error",
+            "html": error_html
+        }
+
+        # Call the tool method
+        result_str = self.content_agent.run_html_agent("A failing test", "error style")
+
+        # Assertions on the string returned by the tool
+        self.assertIn("HTML Generation failed", result_str)
+        self.assertIn("Created a placeholder chunk", result_str)
+
+        # Assertions on the internal state
+        self.assertEqual(len(self.content_agent.generated_chunks), 1)
+        chunk = self.content_agent.generated_chunks[0]
+        self.assertEqual(chunk['html'], "<p><span>Error generating content.</span></p>")
+        self.assertEqual(chunk['status'], 'ERROR')
+
+        # Verify the error chunk was saved to the DB
+        saved_chunk = self.content_agent.chunk_db.get_chunk_by_id(chunk['id'])
+        self.assertIsNotNone(saved_chunk)
+        self.assertEqual(saved_chunk.status, 'ERROR')
+
+    def test_run_html_agent_tool_exception(self):
+        """Test the `run_html_agent` tool when the html_agent raises an exception."""
+        # Configure the mock HTML agent to raise an exception
+        self.mock_html_agent.run.side_effect = Exception("A critical failure occurred")
+
+        # Call the tool method
+        result_str = self.content_agent.run_html_agent("An exception test", "exception style")
+
+        # Assertions on the string returned by the tool
+        self.assertIn("Error in HTML generation", result_str)
+        self.assertIn("A critical failure occurred", result_str)
+
+        # Assertions on the internal state (it should still create an error chunk)
+        self.assertEqual(len(self.content_agent.generated_chunks), 1)
+        chunk = self.content_agent.generated_chunks[0]
+        self.assertIn("An exception occurred", chunk['html'])
+        self.assertEqual(chunk['status'], 'ERROR')
+
+    @patch('langgraph.prebuilt.create_react_agent')
+    def test_agent_run_returns_no_chunks(self, mock_create_agent):
+        """Test the main `run` method when the agent generates no chunks."""
+        # Mock the entire react agent to simulate it not calling any tools
+        mock_react_agent = MagicMock()
+        mock_react_agent.invoke.return_value = {"messages": [{"role": "assistant", "content": "I did nothing."}]}
+        mock_create_agent.return_value = mock_react_agent
+
+        # Re-initialize the agent to use the mocked react agent
+        self.content_agent.agent = mock_react_agent
+
+        # Run the agent
+        result = self.content_agent.run("A prompt that does nothing")
+
+        # Assertions
+        self.assertEqual(result, "No content chunks were generated. Please check the logs for errors.")
+        self.assertEqual(len(self.content_agent.generated_chunks), 0)
+
+    @patch('langgraph.prebuilt.create_react_agent')
+    def test_agent_run_returns_only_error_chunks(self, mock_create_agent):
+        """Test the `run` method when all generated chunks are errors."""
+        # This test will actually call our tool, but the tool will report an error
+        self.mock_html_agent.run.return_value = {"status": "error", "html": ""}
+
+        # We need to mock the agent's response to simulate it calling our tool
+        mock_react_agent = MagicMock()
+        # The tool's output will be added to the state, so we check the final state
+        # Here we just need to ensure the logic inside `run` that checks the chunks works
+        mock_react_agent.invoke.return_value = "some response" # The response itself doesn't matter
+        self.content_agent.agent = mock_react_agent
+
+        # Manually create an error chunk as if the tool was called
+        error_chunk = ContentChunk(html="error", status="ERROR")
+        self.content_agent.generated_chunks.append(error_chunk.to_dict())
+
+        # Run the agent
+        result = self.content_agent.run("A prompt that fails")
+
+        # Assertion
+        self.assertEqual(result, "All content generation attempts resulted in errors. Please review your request and the agent's capabilities.")
+
+    def test_multiple_html_agent_calls_mixed_results(self):
+        """Test a scenario with multiple calls to the html_agent tool with mixed results."""
+        # Configure the mock to return different results on subsequent calls
+        self.mock_html_agent.run.side_effect = [
+            {"status": "success", "html": "<p><span>First call success.</span></p>"},
+            {"status": "error", "html": ""},
+            {"status": "success", "html": "<div><span>Third call success.</span></div>"}
         ]
-        
-        for i, test_case in enumerate(html_test_cases, 1):
-            print(f"\n🧪 HTML Coordination Test {i}:")
-            print(f"Request: {test_case}")
-            
-            result = self.content_agent.run(test_case)
-            self.print_test_result(result, f"HTML Coordination - Test {i}")
-            self.wait_for_user()
 
-    def test_image_agent_coordination(self):
-        """Test coordination with Image agent."""
-        self.print_test_header("IMAGE AGENT COORDINATION")
-        
-        image_test_cases = [
-            "Add an image from https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg with caption 'Nature boardwalk for testing'",
-            "Get statistics about all images in the store",
-            "Search for images with 'nature' in their captions",
-            "Generate AI-powered captions for all images that don't have detailed captions"
-        ]
-        
-        for i, test_case in enumerate(image_test_cases, 1):
-            print(f"\n🧪 Image Coordination Test {i}:")
-            print(f"Request: {test_case}")
-            
-            result = self.content_agent.run(test_case)
-            self.print_test_result(result, f"Image Coordination - Test {i}")
-            self.wait_for_user()
+        # Simulate three calls to the tool
+        res1 = self.content_agent.run_html_agent("First", "style")
+        res2 = self.content_agent.run_html_agent("Second", "style")
+        res3 = self.content_agent.run_html_agent("Third", "style")
 
-    def test_context_analysis(self):
-        """Test context analysis and summary capabilities."""
-        self.print_test_header("CONTEXT ANALYSIS")
-        
-        context_test_cases = [
-            "Get a summary of all available context including images and documents",
-            "Analyze what content generation approach would work best for a tech blog",
-            "Determine the requirements for creating a product landing page",
-            "Assess what resources are available for creating visual content"
-        ]
-        
-        for i, test_case in enumerate(context_test_cases, 1):
-            print(f"\n🧪 Context Analysis Test {i}:")
-            print(f"Request: {test_case}")
-            
-            result = self.content_agent.run(test_case)
-            self.print_test_result(result, f"Context Analysis - Test {i}")
-            self.wait_for_user()
+        # Assertions on the internal state
+        self.assertEqual(len(self.content_agent.generated_chunks), 3)
 
-    def test_coordinated_content_generation(self):
-        """Test coordinated content generation involving both HTML and images."""
-        self.print_test_header("COORDINATED CONTENT GENERATION")
-        
-        coordinated_test_cases = [
-            {
-                "request": "Create a blog post about natural landscapes using any available images from the store",
-                "description": "Multi-agent coordination for blog content"
-            },
-            {
-                "request": "Generate a product showcase page that includes both text content and image processing",
-                "description": "E-commerce content with image integration"
-            },
-            {
-                "request": "Create a comprehensive article about photography with image examples and proper formatting",
-                "description": "Technical content with visual elements"
-            }
-        ]
-        
-        for i, test_case in enumerate(coordinated_test_cases, 1):
-            print(f"\n🧪 Coordinated Generation Test {i}:")
-            print(f"Request: {test_case['request']}")
-            print(f"Description: {test_case['description']}")
-            
-            result = self.content_agent.run(test_case['request'])
-            self.print_test_result(result, f"Coordinated Generation - Test {i}")
-            self.wait_for_user()
+        # Check chunk 1 (success)
+        self.assertEqual(self.content_agent.generated_chunks[0]['status'], 'PENDING')
+        self.assertIn("First call success", self.content_agent.generated_chunks[0]['html'])
 
-    def test_content_strategy_planning(self):
-        """Test content strategy and planning capabilities."""
-        self.print_test_header("CONTENT STRATEGY & PLANNING")
-        
-        strategy_test_cases = [
-            {
-                "request": "Plan a content strategy for a tech startup's website including both text and visual elements",
-                "type": "Strategic planning"
-            },
-            {
-                "request": "Analyze the requirements for creating an educational course landing page",
-                "type": "Requirement analysis"
-            },
-            {
-                "request": "Coordinate the creation of a multi-section article about AI with proper structure and images",
-                "type": "Complex coordination"
-            },
-            {
-                "request": "Design a content workflow for a product comparison page with tables and product images",
-                "type": "Workflow design"
-            }
-        ]
-        
-        for i, test_case in enumerate(strategy_test_cases, 1):
-            print(f"\n🧪 Strategy Test {i} - {test_case['type']}:")
-            print(f"Request: {test_case['request']}")
-            
-            result = self.content_agent.run(test_case['request'])
-            self.print_test_result(result, f"Strategy Planning - Test {i}")
-            self.wait_for_user()
+        # Check chunk 2 (error)
+        self.assertEqual(self.content_agent.generated_chunks[1]['status'], 'ERROR')
+        self.assertIn("Error generating content", self.content_agent.generated_chunks[1]['html'])
 
-    def test_quality_assurance_and_integration(self):
-        """Test quality assurance and content integration."""
-        self.print_test_header("QUALITY ASSURANCE & INTEGRATION")
-        
-        qa_test_cases = [
-            "Review and improve the quality of content generation for a professional website",
-            "Ensure proper integration between text content and visual elements",
-            "Validate that generated content meets professional standards and guidelines",
-            "Coordinate quality control across both HTML and image processing operations"
-        ]
-        
-        for i, test_case in enumerate(qa_test_cases, 1):
-            print(f"\n🧪 Quality Assurance Test {i}:")
-            print(f"Request: {test_case}")
-            
-            result = self.content_agent.run(test_case)
-            self.print_test_result(result, f"Quality Assurance - Test {i}")
-            self.wait_for_user()
+        # Check chunk 3 (success)
+        self.assertEqual(self.content_agent.generated_chunks[2]['status'], 'PENDING')
+        self.assertIn("Third call success", self.content_agent.generated_chunks[2]['html'])
 
-    def test_complex_workflows(self):
-        """Test complex multi-step workflows."""
-        self.print_test_header("COMPLEX WORKFLOWS")
+        # Verify the DB state
+        all_chunks = self.content_agent.chunk_db.get_all_chunks()
+        self.assertEqual(len(all_chunks), 3)
         
-        workflow_test_cases = [
-            {
-                "request": """Create a complete product launch page that includes:
-                1. Add product images from URLs
-                2. Generate compelling product descriptions
-                3. Create feature comparison tables
-                4. Process images for optimal display
-                5. Integrate everything into a cohesive page""",
-                "description": "Complete product launch workflow"
-            },
-            {
-                "request": """Develop a comprehensive blog post workflow:
-                1. Analyze available images for relevance
-                2. Generate engaging blog content with proper structure
-                3. Create image thumbnails for better performance
-                4. Integrate images with text content
-                5. Ensure professional formatting throughout""",
-                "description": "Blog content creation workflow"
-            }
-        ]
+        # Sort by creation time to ensure order
+        all_chunks.sort(key=lambda c: c.created_at)
         
-        for i, test_case in enumerate(workflow_test_cases, 1):
-            print(f"\n🧪 Complex Workflow Test {i}:")
-            print(f"Description: {test_case['description']}")
-            print(f"Request: {test_case['request']}")
-            
-            start_time = time.time()
-            result = self.content_agent.run(test_case['request'])
-            end_time = time.time()
-            
-            execution_time = end_time - start_time
-            print(f"⏱️ Execution time: {execution_time:.2f} seconds")
-            
-            self.print_test_result(result, f"Complex Workflow - Test {i}")
-            self.wait_for_user()
+        self.assertEqual(all_chunks[0].status, 'PENDING')
+        self.assertEqual(all_chunks[1].status, 'ERROR')
+        self.assertEqual(all_chunks[2].status, 'PENDING')
 
-    def test_error_handling_and_edge_cases(self):
-        """Test error handling and edge cases."""
-        self.print_test_header("ERROR HANDLING & EDGE CASES")
-        
-        edge_cases = [
-            {
-                "request": "",  # Empty request
-                "description": "Empty request handling"
-            },
-            {
-                "request": "Process a non-existent image with ID 'fake-image-123'",
-                "description": "Invalid image ID handling"
-            },
-            {
-                "request": "Create content with impossible requirements that cannot be fulfilled",
-                "description": "Impossible requirements handling"
-            },
-            {
-                "request": "Generate content using tools that don't exist",
-                "description": "Invalid tool usage handling"
-            }
-        ]
-        
-        for i, test_case in enumerate(edge_cases, 1):
-            print(f"\n🧪 Edge Case Test {i} - {test_case['description']}:")
-            print(f"Request: '{test_case['request']}'")
-            
-            try:
-                result = self.content_agent.run(test_case['request'])
-                self.print_test_result(result, f"Edge Case - Test {i}")
-                
-            except Exception as e:
-                print(f"❌ Exception caught: {str(e)}")
-                print("✅ Error handling working correctly")
-            
-            self.wait_for_user()
-
-    def test_performance_metrics(self):
-        """Test performance and efficiency metrics."""
-        self.print_test_header("PERFORMANCE METRICS")
-        
-        performance_tests = [
-            ("Simple coordination", "Create a paragraph about AI and add an image"),
-            ("Medium complexity", "Generate a product page with images and descriptions"),
-            ("High complexity", "Create a comprehensive article with multiple images and complex formatting"),
-            ("Multi-tool usage", "Coordinate HTML generation, image processing, and content analysis")
-        ]
-        
-        results_summary = []
-        
-        for test_name, request in performance_tests:
-            print(f"\n⏱️ Performance Test: {test_name}")
-            print(f"Request: {request}")
-            
-            start_time = time.time()
-            result = self.content_agent.run(request)
-            end_time = time.time()
-            
-            execution_time = end_time - start_time
-            
-            # Analyze result quality
-            success = isinstance(result, dict) and 'messages' in result and len(result['messages']) > 0
-            
-            test_result = {
-                "test_name": test_name,
-                "execution_time": round(execution_time, 2),
-                "success": success,
-                "request_length": len(request)
-            }
-            
-            results_summary.append(test_result)
-            
-            print(f"⏱️ Time: {execution_time:.2f}s")
-            print(f"✅ Success: {success}")
-        
-        # Print performance summary
-        print(f"\n📊 PERFORMANCE SUMMARY:")
-        print("-" * 50)
-        for result in results_summary:
-            status = "✅ PASS" if result['success'] else "❌ FAIL"
-            print(f"{result['test_name']}: {result['execution_time']}s, {status}")
-        
-        avg_time = sum(r['execution_time'] for r in results_summary) / len(results_summary)
-        success_rate = sum(1 for r in results_summary if r['success']) / len(results_summary) * 100
-        
-        print(f"\n📈 OVERALL METRICS:")
-        print(f"Average execution time: {avg_time:.2f}s")
-        print(f"Success rate: {success_rate:.1f}%")
-        
-        self.wait_for_user()
-
-    def run_interactive_mode(self):
-        """Run interactive mode for manual testing."""
-        self.print_test_header("INTERACTIVE MODE")
-        print("🎮 Interactive testing mode - try any content coordination request!")
-        print("Examples:")
-        print("  - 'Create a landing page with images and professional content'")
-        print("  - 'Generate a blog post about technology with visual elements'")
-        print("  - 'Coordinate image processing and HTML generation for a product page'")
-        print("  - 'Analyze content requirements and suggest an approach'")
-        print("  - Type 'quit' to exit")
-        
-        while True:
-            try:
-                prompt = input("\n🎯 Enter content request: ").strip()
-                
-                if prompt.lower() in ['quit', 'exit', 'q']:
-                    break
-                
-                if not prompt:
-                    continue
-                
-                print(f"\n🔄 Processing content coordination...")
-                result = self.content_agent.run(prompt)
-                self.print_test_result(result, "Interactive Content Coordination")
-                
-            except KeyboardInterrupt:
-                print("\n👋 Exiting interactive mode...")
-                break
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-
-    def run_all_tests(self):
-        """Run all test suites."""
-        print("🧪 CONTENT AGENT COMPREHENSIVE TEST SUITE")
-        print("=" * 60)
-        
-        try:
-            # Initialize
-            if not self.initialize_content_agent():
-                return False
-            
-            # Run test suites
-            self.test_html_agent_coordination()
-            self.test_image_agent_coordination()
-            self.test_context_analysis()
-            self.test_coordinated_content_generation()
-            self.test_content_strategy_planning()
-            self.test_quality_assurance_and_integration()
-            self.test_complex_workflows()
-            self.test_error_handling_and_edge_cases()
-            self.test_performance_metrics()
-            
-            # Interactive mode
-            self.run_interactive_mode()
-            
-            print("\n🎉 Content Agent test suite completed!")
-            print("✅ All coordination and integration functionality has been tested.")
-            return True
-            
-        except Exception as e:
-            print(f"❌ Test suite error: {str(e)}")
-            print("Please check your environment variables and dependencies.")
-            return False
-
-
-def main():
-    """Main function to run content agent tests."""
-    tester = ContentAgentTester()
-    tester.run_all_tests()
-
-
-if __name__ == "__main__":
-    main() 
+if __name__ == '__main__':
+    unittest.main()
