@@ -1,7 +1,7 @@
 from collections import deque
 from typing import TypeVar, Generic, Callable, Dict, Optional, List, Union, Protocol
 
-from Agents.ManagerAgent.DB import sql_client
+from database import sql_client
 from langgraph.graph.message import add_messages  # if still needed
 from langchain_google_genai import ChatGoogleGenerativeAI  # if still needed
 from .pointers import ImagePointer,DocumentPointer
