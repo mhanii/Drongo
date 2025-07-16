@@ -12,7 +12,7 @@ import json
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ContextStore.cs import ContextStore
+from ContextStore.context_store import ContextStore
 from Agents.ContentAgent.img_ag import ImageAgent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -62,7 +62,7 @@ class ImageAgentTester:
         self.image_agent = ImageAgent(
             model=model,
             store=self.store,
-            checkpoint_path="checkpoint.sqlite"
+            checkpoint_path="data/checkpoint.sqlite"
         )
         
         print("✅ Image Agent initialized successfully!")
@@ -71,12 +71,12 @@ class ImageAgentTester:
         return True
 
     def test_basic_image_operations(self):
-        """Test basic image management operations."""
+        """Test basic image management operations, including type field."""
         self.print_test_header("BASIC IMAGE OPERATIONS")
         
         tests = [
             ("Get comprehensive statistics about all images in the store", "Initial store statistics"),
-            ("Add the image from https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg to the store with caption 'Beautiful nature boardwalk in Wisconsin for testing'", "Adding image from URL"),
+            ("Add the image from https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg to the store with caption 'Beautiful nature boardwalk in Wisconsin for testing' and type 'jpg'", "Adding image from URL with type"),
             ("Get all images from the store and show their details", "Retrieving all images from store"),
             ("Search for images with 'nature' in their captions", "Searching images by caption")
         ]

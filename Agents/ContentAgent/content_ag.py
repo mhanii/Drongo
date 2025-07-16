@@ -1,7 +1,8 @@
 from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import tool
-from ContextStore.cs import ContextStore
+from ContextStore.context_store import ContextStore
 from typing_extensions import TypedDict
+from typing import Dict
 import sqlite3
 from typing import Annotated, List
 from Agents.ContentAgent.img_ag import ImageAgent
@@ -9,34 +10,43 @@ from Agents.ContentAgent.html_ag import HtmlAgent
 from langgraph.graph.message import add_messages
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.memory import MemorySaver
+from Agents.ContentAgent.content_chunk_db import ContentChunk, ContentChunkDB
+from Agents.ContentAgent.logger import log_content_agent_event
 
 class State(TypedDict):
     messages: Annotated[List, add_messages]
 
+# Removed ContentChunk class from here
 
 class ContentAgent:
-    def __init__(self, model: str, store: ContextStore, checkpoint_path: str) -> None:
+    def __init__(self, model: str, checkpoint_path: str) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
-        self.CS = store
+        self.chunk_db = ContentChunkDB(self.connection)
+        # self.CS = store
         self.model_instance = ChatGoogleGenerativeAI(model=model)
-        self.html_agent = HtmlAgent(model=self.model_instance, checkpoint_path=checkpoint_path, store=store)
-        self.image_agent = ImageAgent(model=self.model_instance, store=store, checkpoint_path=checkpoint_path)
-
+        self.html_agent = HtmlAgent(model=self.model_instance, checkpoint_path=checkpoint_path)
+        self.image_agent = ImageAgent(model=self.model_instance, checkpoint_path=checkpoint_path)
+        self.document_structure = ""
+        self.generated_chunks: List[Dict] = []
         self.config = {"configurable": {"thread_id": "1"}}
 
+        
         self.defined_tools = [
             self.run_html_agent,
             self.run_image_agent,
-            self.get_context_summary,
-            self.coordinate_content_generation,
-            self.analyze_content_requirements
+            # self.get_context_summary,
+            # self.coordinate_content_generation,
+            # self.analyze_content_requirements
         ]
 
         self.agent = create_react_agent(
             model=self.model_instance,
             tools=self.defined_tools,
-            debug=True,
-            checkpointer=SqliteSaver(self.connection),
+            debug=False,
+            # checkpointer=SqliteSaver(self.connection),
+            checkpointer=MemorySaver(),
+
             prompt="""You are an advanced Content Generation Agent and coordinator. You are the central hub for all content-related operations in this system. Your primary responsibilities include:
 
 ## CORE RESPONSIBILITIES:
@@ -86,7 +96,8 @@ When users request content generation:
 Remember: You are the intelligent coordinator that ensures high-quality, integrated content output by leveraging your specialized sub-agents effectively."""
         )
 
-    @tool
+    # Remove DB and cache logic from here, use self.chunk_db instead
+
     def run_html_agent(self, description: str, style_guidelines: str, context: str = "No additional context") -> str:
         """
         Run the HTML agent to generate high-quality HTML content based on specifications.
@@ -101,12 +112,33 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
             str: Generated HTML content with validation and quality assurance
         """
         try:
-            result = self.html_agent.run(description, style_guidelines, context)
-            return f"HTML Generation Result: {result}"
+            result = self.html_agent.run(description, style_guidelines, context,self.document_structure)
+            response_html = result["html"]
+            # Create and save ContentChunk
+            if result["status"] == "success":
+
+                chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
+                self.chunk_db.save_content_chunk(chunk)
+                self.generated_chunks.append(chunk.to_dict())
+                log_content_agent_event(description, style_guidelines, context, response_html, "SUCCESS", self.document_structure)
+                return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
+            else:
+                print("### Error generating content chunk. ###")
+                # OPTION 1: Add a placeholder chunk with an error status
+                error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
+                self.chunk_db.save_content_chunk(error_chunk)
+                self.generated_chunks.append(error_chunk.to_dict())
+                log_content_agent_event(description, style_guidelines, context, result["html"], "ERROR", self.document_structure)
+                return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
+
         except Exception as e:
+            # OPTION 2: Handle exceptions gracefully and create an error chunk
+            error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
+            self.chunk_db.save_content_chunk(error_chunk)
+            self.generated_chunks.append(error_chunk.to_dict())
+            log_content_agent_event(description, style_guidelines, context, str(e), "EXCEPTION")
             return f"Error in HTML generation: {str(e)}"
 
-    @tool  
     def run_image_agent(self, detailed_instruction: str) -> str:
         """
         Run the advanced Image Agent for comprehensive image operations and management.
@@ -142,45 +174,43 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         except Exception as e:
             return f"Error in image processing: {str(e)}"
 
-    @tool
-    def get_context_summary(self) -> str:
-        """
-        Get a summary of available context including images and documents in the store.
-        Useful for understanding what resources are available before content generation.
+#     def get_context_summary(self) -> str:
+#         """
+#         Get a summary of available context including images and documents in the store.
+#         Useful for understanding what resources are available before content generation.
         
-        Returns:
-            str: Summary of context store contents
-        """
-        try:
-            # Get image summary
-            image_summary = self.CS.img_manager.get_images_summary()
+#         Returns:
+#             str: Summary of context store contents
+#         """
+#         try:
+#             # Get image summary
+#             image_summary = self.CS.img_manager.get_images_summary()
             
-            # Get document summary  
-            doc_summary = self.CS.doc_manager.get_docs_summary()
+#             # Get document summary  
+#             doc_summary = self.CS.doc_manager.get_docs_summary()
             
-            # Get statistics
-            image_stats_result = self.image_agent.run("Get comprehensive statistics about all images in the store")
+#             # Get statistics
+#             image_stats_result = self.image_agent.run("Get comprehensive statistics about all images in the store")
             
-            context_summary = f"""
-CONTEXT STORE SUMMARY:
-======================
+#             context_summary = f"""
+# CONTEXT STORE SUMMARY:
+# ======================
 
-IMAGES:
-{image_summary}
+# IMAGES:
+# {image_summary}
 
-DOCUMENTS: 
-{doc_summary}
+# DOCUMENTS: 
+# {doc_summary}
 
-IMAGE STATISTICS:
-{image_stats_result}
+# IMAGE STATISTICS:
+# {image_stats_result}
 
-CONVERSATION ID: {self.CS.conversation_id}
-"""
-            return context_summary
-        except Exception as e:
-            return f"Error getting context summary: {str(e)}"
+# CONVERSATION ID: {self.CS.conversation_id}
+# """
+#             return context_summary
+#         except Exception as e:
+#             return f"Error getting context summary: {str(e)}"
 
-    @tool
     def coordinate_content_generation(self, content_type: str, requirements: str, include_images: bool = False) -> str:
         """
         Coordinate complex content generation that may involve both HTML and image operations.
@@ -273,7 +303,7 @@ CONVERSATION ID: {self.CS.conversation_id}
         else:
             return "Clean, professional styling with proper typography and spacing"
 
-    def run(self, prompt: str):
+    def run(self, prompt: str,document_structure: str = ""):
         """
         Main entry point for the Content Agent. Processes user requests and coordinates
         appropriate responses using HTML and Image agents as needed.
@@ -284,8 +314,20 @@ CONVERSATION ID: {self.CS.conversation_id}
         Returns:
             Agent response with generated content
         """
+        self.document_structure = document_structure
+        self.generated_chunks = []  # Reset the list for each new run
+
+        prompt += f"Document Structure: {self.document_structure}"
         response = self.agent.invoke(
             {"messages": [{"role": "user", "content": prompt}]},
             config=self.config
             )
-        return response
+        print(self.generated_chunks)
+
+        if len(self.generated_chunks) == 0:
+            return "No content chunks were generated. Please check the logs for errors."
+        else:
+            # Optional: you could check if all chunks have an "ERROR" status
+            if all(chunk['status'] == 'ERROR' for chunk in self.generated_chunks):
+                return "All content generation attempts resulted in errors. Please review your request and the agent's capabilities."
+        return self.generated_chunks
