@@ -3,17 +3,17 @@ from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.graph.message import  add_messages # Ensure this is correctly used or messages are plain lists
 from typing import Annotated, List, Optional,Dict
 from langgraph.checkpoint.sqlite import SqliteSaver
-from ContextStore.context_store import ImagePointer,DocumentPointer
+from context.pointers import ImagePointer,DocumentPointer
 from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import tool
-from ContextStore.context_store import ContextStore
+from context.store import ContextStore
 from typing_extensions import TypedDict
 import sqlite3
 import base64
 from io import BytesIO
 from unstructured.partition.pdf import partition_pdf
-from Agents.ManagerAgent.apply_tool import ApplyTool
-from Agents.ContentAgent.content_ag import ContentAgent
+from agents.tools.apply import ApplyTool
+from agents.content import ContentAgent
 
 
 

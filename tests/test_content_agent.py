@@ -12,8 +12,8 @@ import json
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ContextStore.context_store import ContextStore
-from Agents.ContentAgent.content_ag import ContentAgent
+from context.store import ContextStore
+from agents.content import ContentAgent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
