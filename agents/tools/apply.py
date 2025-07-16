@@ -48,6 +48,33 @@ Task: Decide which position_id should be deleted from the document.
 Return a JSON object with:
 - position_id: the position_id of the element to delete
 """
+        elif type.upper() == "EDIT":
+            return f"""
+You are an expert document editing assistant. Your task is to determine the precise location in the document to REPLACE with a new HTML chunk.
+
+### Current Document Structure
+Here is the document, which is a sequence of HTML elements. Each element has a unique `position_id`.
+
+{document_structure}
+
+New Content to Use for Replacement:
+{chunk_html}
+
+**User's Goal**
+The user's original request was: "{last_prompt}"
+{last_prompt}
+
+
+CRITICAL INSTRUCTIONS:
+- You must identify the SINGLE element whose content should be replaced with the new chunk.
+- If the user specifies a position, use the position_id they are referring to.
+- If the user describes the content to edit, find the best matching element.
+- You must return ONLY a single, valid JSON object and nothing else.
+
+Task: Decide the best position to REPLACE with this chunk.
+Return a JSON object with:
+- position_id: the position_id of the element to replace
+"""
         # Extend for other types as needed
         else:
             return f"Unknown apply type: {type}"
@@ -58,7 +85,7 @@ Return a JSON object with:
         For type 'INSERT', returns position_id and relative_position ('AFTER' or 'BEFORE').
         """
         chunk_html = ""
-        if type.upper() == "INSERT":
+        if type.upper() == "INSERT" or type.upper() == "EDIT":
             chunk = self.content_db.load_content_chunk(chunk_id)
             if not chunk:
                 return {"error": f"Chunk with id {chunk_id} not found."}
