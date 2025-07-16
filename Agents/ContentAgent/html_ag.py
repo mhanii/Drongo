@@ -10,7 +10,9 @@ from typing import Annotated, List, Optional
 from IPython.display import Image, display
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
-from ContextStore.cs import ContextStore
+from ContextStore.context_store import ContextStore
+from time import sleep
+from Agents.ContentAgent.logger import log_html_agent_event
 
 # Define State with cleaner structure
 class State(TypedDict, total=False):
@@ -20,6 +22,8 @@ class State(TypedDict, total=False):
     style_guidelines: str
     context: str  # Single consolidated context string
     
+    document_structure: str
+
     content_generation_outcome: str
     validation_outcome: str
     evaluator_score: int
@@ -38,8 +42,7 @@ class EvaluatorResponse(BaseModel):
 class HtmlAgent:
     def __init__(self, 
                  model: ChatGoogleGenerativeAI,
-                 checkpoint_path: str = "checkpoint.sqlite",
-                 store: Optional[ContextStore] = None,
+                 checkpoint_path: str = "data/checkpoint.sqlite",
                  disallowed_tags=["script", "iframe", "style", "link", "meta", "head", "body", "html", "div", "em", "br", "i", "b"], 
                  allowed_tags=["p", "span", "u", "ol", "ul", "li", "table", "tr", "td", "th", "tbody", "h1", "h2", "h3", "h4", "h5", "h6"], 
                  acceptance_threshold=90, 
@@ -47,13 +50,13 @@ class HtmlAgent:
         
         self.model = model
         self.html_validator = HTMLValidator()
-        self.store = store
         self.connection = MemorySaver()
         
         self.disallowed_tags = disallowed_tags
         self.allowed_tags = allowed_tags
         self.acceptance_threshold = acceptance_threshold
         self.max_retries = max_retries
+        
         
         # Build the graph
         graph_builder = StateGraph(State)
@@ -113,7 +116,7 @@ class HtmlAgent:
         self.graph = graph_builder.compile(checkpointer=self.connection)
         self.config = {"configurable": {"thread_id": "1"}}
 
-    def get_context(self, description: str, style_guidelines: str, previous_context: str = "") -> str:
+    def get_context(self, description: str, style_guidelines: str = "", previous_context: str = "") -> str:
         """
         Create a comprehensive context string that includes:
         - Task description and style guidelines
@@ -130,37 +133,37 @@ class HtmlAgent:
         context_parts.append("")
         
         # Add document context if store is available
-        if self.store and self.store.doc_manager:
-            docs = self.store.doc_manager.get_all_docs()
-            if docs:
-                context_parts.append("=== AVAILABLE DOCUMENTS ===")
-                for doc in docs:
-                    doc_data = doc.get_doc_data()
-                    if doc_data:
-                        try:
-                            # Assume documents are text-based
-                            doc_text = doc_data.decode('utf-8', errors='ignore')
-                            # Limit document content to avoid overwhelming the context
-                            if len(doc_text) > 1000:
-                                doc_text = doc_text[:1000] + "... [truncated]"
-                            context_parts.append(f"Document: {doc.get_caption()}")
-                            context_parts.append(f"Content: {doc_text}")
-                            context_parts.append("")
-                        except Exception as e:
-                            context_parts.append(f"Document: {doc.get_caption()} (Error reading: {e})")
-                            context_parts.append("")
+        # if self.store and self.store.doc_manager:
+        #     docs = self.store.doc_manager.get_all_docs()
+        #     if docs:
+        #         context_parts.append("=== AVAILABLE DOCUMENTS ===")
+        #         for doc in docs:
+        #             doc_data = doc.get_doc_data()
+        #             if doc_data:
+        #                 try:
+        #                     # Assume documents are text-based
+        #                     doc_text = doc_data.decode('utf-8', errors='ignore')
+        #                     # Limit document content to avoid overwhelming the context
+        #                     if len(doc_text) > 1000:
+        #                         doc_text = doc_text[:1000] + "... [truncated]"
+        #                     context_parts.append(f"Document: {doc.get_caption()}")
+        #                     context_parts.append(f"Content: {doc_text}")
+        #                     context_parts.append("")
+        #                 except Exception as e:
+        #                     context_parts.append(f"Document: {doc.get_caption()} (Error reading: {e})")
+        #                     context_parts.append("")
         
-        # Add image context if store is available
-        if self.store and self.store.img_manager:
-            images = self.store.img_manager.get_all_images()
-            if images:
-                context_parts.append("=== AVAILABLE IMAGES ===")
-                for img in images:
-                    context_parts.append(f"Image ID: {img.get_image_id()}")
-                    context_parts.append(f"Caption: {img.get_caption()}")
-                    if hasattr(img, 'url') and img.url:
-                        context_parts.append(f"URL: {img.url}")
-                    context_parts.append("")
+        # # Add image context if store is available
+        # if self.store and self.store.img_manager:
+        #     images = self.store.img_manager.get_all_images()
+        #     if images:
+        #         context_parts.append("=== AVAILABLE IMAGES ===")
+        #         for img in images:
+        #             context_parts.append(f"Image ID: {img.get_image_id()}")
+        #             context_parts.append(f"Caption: {img.get_caption()}")
+        #             if hasattr(img, 'url') and img.url:
+        #                 context_parts.append(f"URL: {img.url}")
+        #             context_parts.append("")
         
         # Add previous context/history
         if previous_context:
@@ -177,6 +180,7 @@ class HtmlAgent:
         context = state.get("context", "")
         description = state.get("description", "")
         style_guidelines = state.get("style_guidelines", "")
+        document_structure = state.get("document_structure", "")
         
         prompt = f"""You are an expert HTML content generator. Your task is to create high-quality HTML content based on the provided information.
 
@@ -186,6 +190,8 @@ class HtmlAgent:
 === CONTEXT INFORMATION ===
 {context}
 
+=== DOCUMENT STRUCTURE ===
+{document_structure}
 === GENERATION TASK ===
 Create HTML content that fulfills the following requirements:
 - Description: {description}
@@ -206,31 +212,32 @@ Generate the HTML content now:"""
     def _get_content_generation_rules(self) -> str:
         """Define the HTML generation rules."""
         return f"""
-1. **Valid Structure:** Ensure perfect HTML syntax with properly nested tags
-2. **Allowed Tags ONLY:** Use ONLY these tags: {', '.join(self.allowed_tags)}
-3. **Forbidden Tags:** NEVER use these tags: {', '.join(self.disallowed_tags)}
-4. **Text Encapsulation:** ALL visible text MUST be wrapped in <span> tags
-5. **Span Placement:** Place <span> tags immediately inside block elements (p, h1-h6, li, td, th)
-6. **Root Element:** Start with appropriate block element (p, h1-h6, table, ul, ol)
-7. **Tables:** Must contain <tbody>, use <th> for headers, <td> for data cells
-8. **Colors:** Use HEX format only (#FF0000, #333333, etc.)
-9. **Styling:** Use inline style attributes only - no external CSS
-10. **Headings:** Use h1-h6 appropriately for content hierarchy
-11. **Spacing:** Use <p> tags for paragraphs, margins/padding for spacing
-12. **Font Styling:** Apply general styles to block elements, use <span> for inline changes
-13. **Attributes:** Ensure valid CSS properties in double quotes
+1. Valid Structure: Ensure perfect HTML syntax with properly nested tags
+2. Allowed Tags ONLY: Use ONLY these tags: {', '.join(self.allowed_tags)}
+3. Forbidden Tags: NEVER use these tags: {', '.join(self.disallowed_tags)}
+4. Text Encapsulation: ALL visible text MUST be wrapped in <span> tags
+5. Span Placement: Place <span> tags immediately inside block elements (p, h1-h6, li, td, th)
+6. Root Element: Start with appropriate block element (p, h1-h6, table, ul, ol)
+7. Tables: Must contain <tbody>, use <th> for headers, <td> for data cells
+8. Colors: Use HEX format only (#FF0000, #333333, etc.)
+9. Styling: Use inline style attributes only - no external CSS
+10. Headings: Use h1-h6 appropriately for content hierarchy
+11. Spacing: Use <p> tags for paragraphs, margins/padding for spacing
+12. Font Styling: Apply general styles to block elements, use <span> for inline changes
+13. Attributes: Ensure valid CSS properties in double quotes
+14. Inline styles: Ensure the styles are inline. Inline styles in our case,in fact, are encouraged.
 """
 
-    def run(self, description: str, style_guidelines: str, context: str = ""):
+    def run(self, description: str, style_guidelines: str, context: str = "", document_structure : str = ""):
         """
         Main entry point for HTML generation.
         """
         # Generate comprehensive context
         full_context = self.get_context(description, style_guidelines, context)
-        
         initial_state = {
             "description": description,
             "style_guidelines": style_guidelines,
+            "document_structure" : document_structure,
             "context": full_context,
             "html": "",
             "current_retry_count": 0,
@@ -239,8 +246,18 @@ Generate the HTML content now:"""
             "max_retries_reached": False,
             "messages": []
         }
-        
-        return self.graph.invoke(initial_state, self.config)
+        response = self.graph.invoke(initial_state, self.config)
+        # Logging: get the final HTML, validator, and evaluator responses
+        html = response.get("html", "")
+        validator_response = response.get("validation_outcome", "")
+        evaluator_feedback = response.get("evaluator_feedback", "")
+        log_html_agent_event(html, validator_response, evaluator_feedback, document_structure)
+
+        custom_response = {
+            "status" : "success" if response.get("validation_outcome","") != "" else "error",
+            "html" : response.get("html","")
+        }
+        return custom_response
 
     def moderator_action(self, state: State) -> dict:
         """Moderator manages the flow and retry logic."""
@@ -287,7 +304,7 @@ Generate the HTML content now:"""
     def content_generator_action(self, state: State) -> dict:
         """Generate HTML content using the LLM."""
         print("--- Content Generator Action ---")
-        
+        sleep(3)
         try:
             # Create the generation prompt
             prompt = self.get_content_generation_prompt(state)
@@ -327,7 +344,7 @@ Generate the HTML content now:"""
     def html_validator_action(self, state: State) -> dict:
         """Validate the generated HTML."""
         print("--- HTML Validator Action ---")
-        
+        sleep(3)
         html_to_validate = state.get("html", "")
         if not html_to_validate:
             return {
@@ -377,7 +394,7 @@ Generate the HTML content now:"""
     def evaluator_action(self, state: State) -> dict:
         """Evaluate the quality of generated HTML."""
         print("--- Evaluator Action ---")
-        
+        sleep(2)
         try:
             prompt = self._get_evaluator_prompt(state)
             response = self.model.with_structured_output(EvaluatorResponse).invoke(prompt)
@@ -426,8 +443,9 @@ Generate the HTML content now:"""
         description = state.get("description", "")
         style_guidelines = state.get("style_guidelines", "")
         html_content = state.get("html", "")
-        
+        generation_rules = self._get_content_generation_rules()
         return f"""You are an expert HTML content evaluator. Evaluate the provided HTML content based on the task requirements and quality standards.
+        The HTML content is generated as a part of a document editor such as google docs or microsoft word. Therefore, it shouldn't be treated as if it were a part of a website.
 
 TASK REQUIREMENTS:
 - Description: {description}
@@ -435,6 +453,9 @@ TASK REQUIREMENTS:
 
 HTML CONTENT TO EVALUATE:
 {html_content}
+
+RULES GIVEN TO THE GENERATOR:
+{generation_rules}
 
 EVALUATION CRITERIA:
 1. Task Fulfillment (40 points): Does the content match the description and requirements?

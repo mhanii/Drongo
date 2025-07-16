@@ -13,7 +13,7 @@ import json
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Agents.ContentAgent.html_ag import HtmlAgent
-from ContextStore.cs import ContextStore
+from ContextStore.context_store import ContextStore
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
@@ -58,7 +58,7 @@ class HtmlAgentTester:
         print("🚀 Initializing HTML Agent Test Suite...")
         
         # Initialize context store
-        self.store = ContextStore("html_test_conversation", None, None)
+        self.store = ContextStore()
         
         # Initialize model
         model = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-exp")
@@ -66,8 +66,7 @@ class HtmlAgentTester:
         # Initialize HTML agent with custom settings for testing
         self.html_agent = HtmlAgent(
             model=model,
-            checkpoint_path="checkpoint.sqlite",
-            store=self.store,  # Pass the store for document integration
+            checkpoint_path="data/checkpoint.sqlite",
             acceptance_threshold=85,  # Lower threshold for testing
             max_retries=2  # Fewer retries for faster testing
         )

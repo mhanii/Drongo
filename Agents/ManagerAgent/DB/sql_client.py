@@ -1,8 +1,8 @@
 import sqlite3
 import os
 
-IMAGE_DB_PATH = "image.sqlite"
-DOC_DB_PATH = "doc.sqlite"
+IMAGE_DB_PATH = "data/image.sqlite"
+DOC_DB_PATH = "data/doc.sqlite"
 
 def get_db_connection(db_path):
     return sqlite3.connect(db_path, check_same_thread=False)
@@ -12,8 +12,11 @@ def init_image_db():
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS images (
-            image_id TEXT PRIMARY KEY,
-            image_data BLOB
+            id TEXT PRIMARY KEY,
+            data BLOB,
+            filename TEXT,
+            caption TEXT,
+            type TEXT
         )
     """)
     conn.commit()
@@ -24,8 +27,10 @@ def init_doc_db():
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS documents (
-            doc_id TEXT PRIMARY KEY,
-            doc_data BLOB
+            id TEXT PRIMARY KEY,
+            data BLOB,
+            filename TEXT,
+            summary TEXT
         )
     """)
     conn.commit()
@@ -35,47 +40,53 @@ def init_doc_db():
 init_image_db()
 init_doc_db()
 
-def add_image(image_id: str, image_data: bytes):
+def add_image(image_id: str, filename: str, image_data: bytes = None, caption: str = None, type: str = None):
     conn = get_db_connection(IMAGE_DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT OR REPLACE INTO images (image_id, image_data) VALUES (?, ?)", (image_id, image_data))
+    cursor.execute("INSERT OR REPLACE INTO images (id, data, filename, caption, type) VALUES (?, ?, ?, ?, ?)", (image_id, image_data, filename, caption, type))
     conn.commit()
     conn.close()
 
-def get_image(image_id: str) -> bytes | None:
+def get_image(image_id: str):
     conn = get_db_connection(IMAGE_DB_PATH)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT image_data FROM images WHERE image_id = ?", (image_id,))
+    cursor.execute("SELECT * FROM images WHERE id = ?", (image_id,))
     row = cursor.fetchone()
     conn.close()
-    return row[0] if row else None
+    if row:
+        return dict(row)
+    return None
 
 def delete_image(image_id: str):
     conn = get_db_connection(IMAGE_DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM images WHERE image_id = ?", (image_id,))
+    cursor.execute("DELETE FROM images WHERE id = ?", (image_id,))
     conn.commit()
     conn.close()
 
-def add_document(doc_id: str, doc_data: bytes):
+def add_document(doc_id: str, doc_data: bytes, filename: str = None, summary: str = None):
     conn = get_db_connection(DOC_DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT OR REPLACE INTO documents (doc_id, doc_data) VALUES (?, ?)", (doc_id, doc_data))
+    cursor.execute("INSERT OR REPLACE INTO documents (id, data, filename, summary) VALUES (?, ?, ?, ?)", (doc_id, doc_data, filename, summary))
     conn.commit()
     conn.close()
 
-def get_document(doc_id: str) -> bytes | None:
+def get_document(doc_id: str):
     conn = get_db_connection(DOC_DB_PATH)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT doc_data FROM documents WHERE doc_id = ?", (doc_id,))
+    cursor.execute("SELECT * FROM documents WHERE id = ?", (doc_id,))
     row = cursor.fetchone()
     conn.close()
-    return row[0] if row else None
+    if row:
+        return dict(row)
+    return None
 
 def delete_document(doc_id: str):
     conn = get_db_connection(DOC_DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM documents WHERE doc_id = ?", (doc_id,))
+    cursor.execute("DELETE FROM documents WHERE id = ?", (doc_id,))
     conn.commit()
     conn.close()
 

@@ -1,7 +1,7 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import tool
-from ContextStore.cs import ContextStore, ImagePointer
+from ContextStore.context_store import ContextStore, ImagePointer
 from typing import Annotated, List, Optional, Dict
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph.message import add_messages
@@ -21,9 +21,8 @@ class State(TypedDict):
 
 
 class ImageAgent:
-    def __init__(self, model: ChatGoogleGenerativeAI, store: ContextStore, checkpoint_path: str) -> None:
+    def __init__(self, model: ChatGoogleGenerativeAI, checkpoint_path: str) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
-        self.CS = store
         self.model = model
         
         # Define all image processing tools
@@ -85,29 +84,23 @@ class ImageAgent:
             return json.dumps({"status": "error", "message": f"Failed to retrieve images: {str(e)}"})
 
     
-    def add_image_to_store(self, url: str, caption: Optional[str] = None) -> str:
+    def add_image_to_store(self, url: str, caption: Optional[str] = None, type: Optional[str] = None) -> str:
         """
         Adds a new image to the image manager from a given URL.
         A caption for the image can optionally be provided.
-        
-        Args:
-            url (str): The URL of the image to add. Should be a direct link to an image file.
-            caption (Optional[str]): An optional caption for the image.
-            
-        Returns:
-            str: JSON string indicating the status of the operation.
+        Type (format) can also be provided.
         """
         try:
             if not self.CS.img_manager.is_valid_image_url(url):
                 return json.dumps({"status": "error", "message": "Invalid image URL format"})
-            
-            img_pointer = self.CS.img_manager.add_image_from_url(url, caption or f"Image from {url}")
+            img_pointer = self.CS.img_manager.add_image_from_url(url, caption or f"Image from {url}", type=type)
             if img_pointer:
                 return json.dumps({
                     "status": "success", 
                     "message": "Image added successfully", 
                     "image_id": img_pointer.get_image_id(),
-                    "caption": img_pointer.get_caption()
+                    "caption": img_pointer.get_caption(),
+                    "type": getattr(img_pointer, 'type', None)
                 })
             else:
                 return json.dumps({"status": "error", "message": "Failed to fetch or store image"})

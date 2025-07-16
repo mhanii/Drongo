@@ -12,7 +12,7 @@ import json
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ContextStore.cs import ContextStore
+from ContextStore.context_store import ContextStore
 from Agents.ContentAgent.content_ag import ContentAgent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -23,7 +23,6 @@ class ContentAgentTester:
     def __init__(self):
         """Initialize the content agent tester."""
         self.content_agent = None
-        self.store = None
         self.test_results = []
         
     def print_test_header(self, test_name):
@@ -53,13 +52,13 @@ class ContentAgentTester:
         print("🚀 Initializing Content Agent Test Suite...")
         
         # Create context store
-        self.store = ContextStore("content_test_conversation", None, None)
+        # self.store = ContextStore()
         
         # Initialize content agent
         self.content_agent = ContentAgent(
-            model="models/gemini-2.0-flash-exp",
-            store=self.store,
-            checkpoint_path="checkpoint.sqlite"
+            model="models/gemini-2.0-flash",
+            # store=self.store,
+            checkpoint_path="data/checkpoint.sqlite"
         )
         
         print("✅ Content Agent initialized successfully!")
