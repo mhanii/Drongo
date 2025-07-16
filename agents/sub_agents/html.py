@@ -10,9 +10,9 @@ from typing import Annotated, List, Optional
 from IPython.display import Image, display
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
-from ContextStore.context_store import ContextStore
+from context.store import ContextStore
 from time import sleep
-from Agents.ContentAgent.logger import log_html_agent_event
+from logger import log_html_agent_event
 
 # Define State with cleaner structure
 class State(TypedDict, total=False):
