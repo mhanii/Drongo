@@ -1,7 +1,7 @@
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from agents.content_chunk_db import ContentChunkDB
+from database.content_chunk_db import ContentChunkDB
 class ApplyTool:
     def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro"):
         self.model = ChatGoogleGenerativeAI(model=model)
