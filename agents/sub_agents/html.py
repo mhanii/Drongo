@@ -12,8 +12,9 @@ import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
 from context.store import ContextStore
 from time import sleep
-from logger import log_html_agent_event
+from new_logger import get_logger
 
+logger = get_logger()
 # Define State with cleaner structure
 class State(TypedDict, total=False):
     messages: Annotated[list, add_messages]
@@ -40,17 +41,19 @@ class EvaluatorResponse(BaseModel):
     feedback: str
 
 class HtmlAgent:
-    def __init__(self, 
+    def __init__(self,
                  model: ChatGoogleGenerativeAI,
                  checkpoint_path: str = "data/checkpoint.sqlite",
-                 disallowed_tags=["script", "iframe", "style", "link", "meta", "head", "body", "html", "div", "em", "br", "i", "b"], 
-                 allowed_tags=["p", "span", "u", "ol", "ul", "li", "table", "tr", "td", "th", "tbody", "h1", "h2", "h3", "h4", "h5", "h6"], 
-                 acceptance_threshold=90, 
-                 max_retries=3):
+                 disallowed_tags=["script", "iframe", "style", "link", "meta", "head", "body", "html", "div", "em", "br", "i", "b"],
+                 allowed_tags=["p", "span", "u", "ol", "ul", "li", "table", "tr", "td", "th", "tbody", "h1", "h2", "h3", "h4", "h5", "h6"],
+                 acceptance_threshold=90,
+                 max_retries=3,
+                 debug=False):
         
         self.model = model
         self.html_validator = HTMLValidator()
         self.connection = MemorySaver()
+        self.debug = debug
         
         self.disallowed_tags = disallowed_tags
         self.allowed_tags = allowed_tags
@@ -247,11 +250,11 @@ Generate the HTML content now:"""
             "messages": []
         }
         response = self.graph.invoke(initial_state, self.config)
-        # Logging: get the final HTML, validator, and evaluator responses
-        html = response.get("html", "")
-        validator_response = response.get("validation_outcome", "")
-        evaluator_feedback = response.get("evaluator_feedback", "")
-        log_html_agent_event(html, validator_response, evaluator_feedback, document_structure)
+        if self.debug:
+            logger.debug(f"HTML Agent Response: {response}")
+            logger.debug(f"Generated HTML: {response.get('html', '')}")
+            logger.debug(f"Validation Outcome: {response.get('validation_outcome', '')}")
+            logger.debug(f"Evaluator Feedback: {response.get('evaluator_feedback', '')}")
 
         custom_response = {
             "status" : "success" if response.get("validation_outcome","") != "" else "error",
@@ -261,7 +264,7 @@ Generate the HTML content now:"""
 
     def moderator_action(self, state: State) -> dict:
         """Moderator manages the flow and retry logic."""
-        print("--- Moderator Action ---")
+        logger.info("--- Moderator Action ---")
         
         current_retries = state.get("current_retry_count", 0)
         evaluator_feedback = state.get("evaluator_feedback")
@@ -275,7 +278,7 @@ Generate the HTML content now:"""
             current_retries += 1
         
         if current_retries > self.max_retries:
-            print(f"Moderator: Max retries ({self.max_retries}) exceeded.")
+            logger.warning(f"Moderator: Max retries ({self.max_retries}) exceeded.")
             return {
                 "max_retries_reached": True,
                 "current_retry_count": current_retries - 1
@@ -292,18 +295,18 @@ Generate the HTML content now:"""
         }
         
         if evaluator_feedback and evaluator_score is not None and evaluator_score < self.acceptance_threshold:
-            print(f"Moderator: Retry {current_retries}/{self.max_retries} due to low score ({evaluator_score})")
-            print(f"Feedback: {evaluator_feedback}")
+            logger.info(f"Moderator: Retry {current_retries}/{self.max_retries} due to low score ({evaluator_score})")
+            logger.info(f"Feedback: {evaluator_feedback}")
         elif validation_outcome == "error":
-            print(f"Moderator: Retry {current_retries}/{self.max_retries} due to validation error")
+            logger.info(f"Moderator: Retry {current_retries}/{self.max_retries} due to validation error")
         else:
-            print(f"Moderator: Initial attempt {current_retries}/{self.max_retries}")
+            logger.info(f"Moderator: Initial attempt {current_retries}/{self.max_retries}")
         
         return updates
 
     def content_generator_action(self, state: State) -> dict:
         """Generate HTML content using the LLM."""
-        print("--- Content Generator Action ---")
+        logger.info("--- Content Generator Action ---")
         sleep(3)
         try:
             # Create the generation prompt
@@ -319,7 +322,7 @@ Generate the HTML content now:"""
             elif generated_html.startswith("```"):
                 generated_html = generated_html.replace("```", "").strip()
             
-            print(f"Generated HTML length: {len(generated_html)} characters")
+            logger.info(f"Generated HTML length: {len(generated_html)} characters")
             
             return {
                 "html": generated_html,
@@ -331,7 +334,7 @@ Generate the HTML content now:"""
             }
             
         except Exception as e:
-            print(f"Content generation error: {e}")
+            logger.error(f"Content generation error: {e}")
             return {
                 "html": f"<p><span>Error during content generation: {str(e)}</span></p>",
                 "content_generation_outcome": "error",
@@ -343,7 +346,7 @@ Generate the HTML content now:"""
 
     def html_validator_action(self, state: State) -> dict:
         """Validate the generated HTML."""
-        print("--- HTML Validator Action ---")
+        logger.info("--- HTML Validator Action ---")
         sleep(3)
         html_to_validate = state.get("html", "")
         if not html_to_validate:
@@ -361,7 +364,7 @@ Generate the HTML content now:"""
             validation_result = self.html_validator.validate_and_repair(cleaned_html)
             
             if validation_result["status"] == "error":
-                print(f"Validation failed: {validation_result.get('message', 'Unknown error')}")
+                logger.warning(f"Validation failed: {validation_result.get('message', 'Unknown error')}")
                 return {
                     "validation_outcome": "error",
                     "html": validation_result.get("html", html_to_validate),
@@ -371,7 +374,7 @@ Generate the HTML content now:"""
                     )
                 }
             
-            print("Validation successful")
+            logger.info("Validation successful")
             return {
                 "html": validation_result["html"],
                 "validation_outcome": "success",
@@ -382,7 +385,7 @@ Generate the HTML content now:"""
             }
             
         except Exception as e:
-            print(f"Validation error: {e}")
+            logger.error(f"Validation error: {e}")
             return {
                 "validation_outcome": "error",
                 "messages": add_messages(
@@ -393,7 +396,7 @@ Generate the HTML content now:"""
 
     def evaluator_action(self, state: State) -> dict:
         """Evaluate the quality of generated HTML."""
-        print("--- Evaluator Action ---")
+        logger.info("--- Evaluator Action ---")
         sleep(2)
         try:
             prompt = self._get_evaluator_prompt(state)
@@ -409,10 +412,10 @@ Generate the HTML content now:"""
             if response.score > best_score_so_far:
                 new_best_score = response.score
                 new_best_html = current_html
-                print(f"New best score: {new_best_score} (previous: {best_score_so_far})")
+                logger.info(f"New best score: {new_best_score} (previous: {best_score_so_far})")
             
-            print(f"Evaluation score: {response.score}/{100}")
-            print(f"Feedback: {response.feedback}")
+            logger.info(f"Evaluation score: {response.score}/{100}")
+            logger.info(f"Feedback: {response.feedback}")
             
             return {
                 "evaluator_score": response.score,
@@ -426,7 +429,7 @@ Generate the HTML content now:"""
             }
             
         except Exception as e:
-            print(f"Evaluator error: {e}")
+            logger.error(f"Evaluator error: {e}")
             return {
                 "evaluator_score": 0,
                 "evaluator_feedback": f"Error during evaluation: {str(e)}",
@@ -473,7 +476,7 @@ Respond with a JSON object:
 
     def handle_content_error_action(self, state: State) -> dict:
         """Handle content generation errors."""
-        print("--- Handle Content Error Action ---")
+        logger.warning("--- Handle Content Error Action ---")
         return {
             "html": "<p><span>Content processing encountered an error.</span></p>",
             "messages": add_messages(
@@ -484,7 +487,7 @@ Respond with a JSON object:
 
     def prepare_final_output_action(self, state: State) -> dict:
         """Prepare final output when max retries reached."""
-        print("--- Prepare Final Output Action ---")
+        logger.info("--- Prepare Final Output Action ---")
         best_html = state.get("best_html_so_far", "<p><span>No satisfactory HTML generated.</span></p>")
         best_score = state.get("best_score_so_far", 0)
         
@@ -505,18 +508,18 @@ Respond with a JSON object:
 
     def check_content_generation_outcome(self, state: State) -> str:
         outcome = state.get("content_generation_outcome", "error")
-        print(f"Content generation outcome: {outcome}")
+        logger.info(f"Content generation outcome: {outcome}")
         return outcome
 
     def check_validation_outcome(self, state: State) -> str:
         outcome = state.get("validation_outcome", "error")
-        print(f"Validation outcome: {outcome}")
+        logger.info(f"Validation outcome: {outcome}")
         return outcome
 
     def check_evaluation_score(self, state: State) -> str:
         score = state.get("evaluator_score", 0)
         threshold = self.acceptance_threshold
-        print(f"Evaluation score: {score}, threshold: {threshold}")
+        logger.info(f"Evaluation score: {score}, threshold: {threshold}")
         
         if score >= threshold:
             return "accept"
@@ -528,7 +531,7 @@ Respond with a JSON object:
         try:
             display(Image(self.graph.get_graph().print_ascii()))
         except Exception as e:
-            print(f"Could not display graph: {e}")
+            logger.error(f"Could not display graph: {e}")
             return self.graph
 
 # Example usage (ensure GOOGLE_API_KEY is set in your environment)
@@ -537,7 +540,7 @@ if __name__ == '__main__':
     # load_dotenv() # If you use .env file for API keys
 
     if not os.getenv("GOOGLE_API_KEY"):
-        print("Please set the GOOGLE_API_KEY environment variable.")
+        logger.error("Please set the GOOGLE_API_KEY environment variable.")
     else:
         agent = HtmlAgent()
         test_description = "Create a short paragraph about the benefits of hydration, then a list of 3 tips for staying hydrated."
@@ -546,15 +549,15 @@ if __name__ == '__main__':
 
         result = agent.run(test_description, test_style_guidelines, test_context_history)
         
-        print("\n--- Final State ---")
-        # print(result) # This will print the full state dict, which can be verbose
+        logger.info("\n--- Final State ---")
+        # logger.info(result) # This will logger.info the full state dict, which can be verbose
         
-        print("\n--- Final Messages ---")
+        logger.info("\n--- Final Messages ---")
         if result and 'messages' in result:
             for msg in result['messages']:
-                print(f"{msg['role']}: {msg['content']}")
+                logger.info(f"{msg['role']}: {msg['content']}")
         
-        print("\n--- Final HTML ---")
+        logger.info("\n--- Final HTML ---")
         if result and 'html' in result:
-            print(result['html'])
+            logger.info(result['html'])
 

@@ -12,7 +12,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.checkpoint.memory import MemorySaver
 from database.content_chunk_db import ContentChunk, ContentChunkDB
-from logger import log_content_agent_event
+from new_logger import get_logger
+
+logger = get_logger()
 
 class State(TypedDict):
     messages: Annotated[List, add_messages]
@@ -20,12 +22,12 @@ class State(TypedDict):
 # Removed ContentChunk class from here
 
 class ContentAgent:
-    def __init__(self, model: str, checkpoint_path: str) -> None:
+    def __init__(self, model: str, checkpoint_path: str, debug: bool = False) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.chunk_db = ContentChunkDB(self.connection)
         # self.CS = store
         self.model_instance = ChatGoogleGenerativeAI(model=model)
-        self.html_agent = HtmlAgent(model=self.model_instance, checkpoint_path=checkpoint_path)
+        self.html_agent = HtmlAgent(model=self.model_instance, checkpoint_path=checkpoint_path, debug=debug)
         self.image_agent = ImageAgent(model=self.model_instance, checkpoint_path=checkpoint_path)
         self.document_structure = ""
         self.generated_chunks: List[Dict] = []
@@ -120,15 +122,13 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
-                log_content_agent_event(description, style_guidelines, context, response_html, "SUCCESS", self.document_structure)
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
-                print("### Error generating content chunk. ###")
+                logger.error("### Error generating content chunk. ###")
                 # OPTION 1: Add a placeholder chunk with an error status
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
                 self.generated_chunks.append(error_chunk.to_dict())
-                log_content_agent_event(description, style_guidelines, context, result["html"], "ERROR", self.document_structure)
                 return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
 
         except Exception as e:
@@ -136,7 +136,6 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)
             self.generated_chunks.append(error_chunk.to_dict())
-            log_content_agent_event(description, style_guidelines, context, str(e), "EXCEPTION")
             return f"Error in HTML generation: {str(e)}"
 
     def run_image_agent(self, detailed_instruction: str) -> str:

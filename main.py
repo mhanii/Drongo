@@ -2,10 +2,14 @@ import flask
 from flask import request, session
 
 from agents.manager import ManagerAgent
+from new_logger import get_logger
 
 from dotenv import load_dotenv
 import os
 load_dotenv()
+
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+logger = get_logger(DEBUG)
 
 app = flask.Flask(__name__)
 app.secret_key = "your_secret_key"  # Required for session
@@ -35,8 +39,8 @@ def handle_prompt():
     input_data = request.json
     response = agent.run_prompt(input_data)
 
-    print(response)
-    # print(request.json.get("text"))
+    logger.info(response)
+    # logger.info(request.json.get("text"))
     return flask.jsonify({"message": "ManagerAgent instance ready for this session (placeholder)",
                           "agent_response": "This should be the response"})
 
