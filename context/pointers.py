@@ -1,6 +1,6 @@
 from typing import Dict, Optional, Union
 import uuid
-from Agents.ManagerAgent.DB import sql_client
+from database import sql_client
 import base64
 from PIL import Image
 from io import BytesIO

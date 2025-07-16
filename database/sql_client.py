@@ -89,4 +89,3 @@ def delete_document(doc_id: str):
     cursor.execute("DELETE FROM documents WHERE id = ?", (doc_id,))
     conn.commit()
     conn.close()
-

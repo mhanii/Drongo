@@ -1,18 +1,18 @@
 from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import tool
-from ContextStore.context_store import ContextStore
+from context.store import ContextStore
 from typing_extensions import TypedDict
 from typing import Dict
 import sqlite3
 from typing import Annotated, List
-from Agents.ContentAgent.img_ag import ImageAgent
-from Agents.ContentAgent.html_ag import HtmlAgent
+from agents.sub_agents.image import ImageAgent
+from agents.sub_agents.html import HtmlAgent
 from langgraph.graph.message import add_messages
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.checkpoint.memory import MemorySaver
-from Agents.ContentAgent.content_chunk_db import ContentChunk, ContentChunkDB
-from Agents.ContentAgent.logger import log_content_agent_event
+from database.content_chunk_db import ContentChunk, ContentChunkDB
+from logger import log_content_agent_event
 
 class State(TypedDict):
     messages: Annotated[List, add_messages]
