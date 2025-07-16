@@ -3,6 +3,7 @@ from typing_extensions import TypedDict
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.graph.message import add_messages
+from langgraph.errors import GraphRecursionError  # Import the exception
 from pydantic import BaseModel
 from utils.html_validator import HTMLValidator
 import os
@@ -15,6 +16,7 @@ from time import sleep
 from new_logger import get_logger
 
 logger = get_logger()
+
 # Define State with cleaner structure
 class State(TypedDict, total=False):
     messages: Annotated[list, add_messages]
@@ -48,7 +50,7 @@ class HtmlAgent:
                  allowed_tags=["p", "span", "u", "ol", "ul", "li", "table", "tr", "td", "th", "tbody", "h1", "h2", "h3", "h4", "h5", "h6"],
                  acceptance_threshold=90,
                  max_retries=3,
-                 debug=False):
+                 debug=True):
         
         self.model = model
         self.html_validator = HTMLValidator()
@@ -59,7 +61,6 @@ class HtmlAgent:
         self.allowed_tags = allowed_tags
         self.acceptance_threshold = acceptance_threshold
         self.max_retries = max_retries
-        
         
         # Build the graph
         graph_builder = StateGraph(State)
@@ -117,7 +118,8 @@ class HtmlAgent:
         graph_builder.add_edge("prepare_final_output", END)
         
         self.graph = graph_builder.compile(checkpointer=self.connection)
-        self.config = {"configurable": {"thread_id": "1"}}
+        # Set a default config with a thread_id. We will add the recursion limit at runtime.
+        self.base_config = {"configurable": {"thread_id": "1"}}
 
     def get_context(self, description: str, style_guidelines: str = "", previous_context: str = "") -> str:
         """
@@ -134,39 +136,6 @@ class HtmlAgent:
         context_parts.append(f"Description: {description}")
         context_parts.append(f"Style Guidelines: {style_guidelines}")
         context_parts.append("")
-        
-        # Add document context if store is available
-        # if self.store and self.store.doc_manager:
-        #     docs = self.store.doc_manager.get_all_docs()
-        #     if docs:
-        #         context_parts.append("=== AVAILABLE DOCUMENTS ===")
-        #         for doc in docs:
-        #             doc_data = doc.get_doc_data()
-        #             if doc_data:
-        #                 try:
-        #                     # Assume documents are text-based
-        #                     doc_text = doc_data.decode('utf-8', errors='ignore')
-        #                     # Limit document content to avoid overwhelming the context
-        #                     if len(doc_text) > 1000:
-        #                         doc_text = doc_text[:1000] + "... [truncated]"
-        #                     context_parts.append(f"Document: {doc.get_caption()}")
-        #                     context_parts.append(f"Content: {doc_text}")
-        #                     context_parts.append("")
-        #                 except Exception as e:
-        #                     context_parts.append(f"Document: {doc.get_caption()} (Error reading: {e})")
-        #                     context_parts.append("")
-        
-        # # Add image context if store is available
-        # if self.store and self.store.img_manager:
-        #     images = self.store.img_manager.get_all_images()
-        #     if images:
-        #         context_parts.append("=== AVAILABLE IMAGES ===")
-        #         for img in images:
-        #             context_parts.append(f"Image ID: {img.get_image_id()}")
-        #             context_parts.append(f"Caption: {img.get_caption()}")
-        #             if hasattr(img, 'url') and img.url:
-        #                 context_parts.append(f"URL: {img.url}")
-        #             context_parts.append("")
         
         # Add previous context/history
         if previous_context:
@@ -235,7 +204,6 @@ Generate the HTML content now:"""
         """
         Main entry point for HTML generation.
         """
-        # Generate comprehensive context
         full_context = self.get_context(description, style_guidelines, context)
         initial_state = {
             "description": description,
@@ -249,29 +217,56 @@ Generate the HTML content now:"""
             "max_retries_reached": False,
             "messages": []
         }
-        response = self.graph.invoke(initial_state, self.config)
-        if self.debug:
-            logger.debug(f"HTML Agent Response: {response}")
-            logger.debug(f"Generated HTML: {response.get('html', '')}")
-            logger.debug(f"Validation Outcome: {response.get('validation_outcome', '')}")
-            logger.debug(f"Evaluator Feedback: {response.get('evaluator_feedback', '')}")
+        
+        # Define the configuration for this run, including the recursion limit
+        config = {**self.base_config, "recursion_limit": 15}
+        
+        custom_response = {}
 
-        custom_response = {
-            "status" : "success" if response.get("validation_outcome","") != "" else "error",
-            "html" : response.get("html","")
-        }
+        try:
+            response = self.graph.invoke(initial_state, config)
+            if self.debug:
+                logger.debug(f"HTML Agent Response: {response}")
+                logger.debug(f"Generated HTML: {response.get('html', '')}")
+                logger.debug(f"Validation Outcome: {response.get('validation_outcome', '')}")
+                logger.debug(f"Evaluator Feedback: {response.get('evaluator_feedback', '')}")
+            
+            error_html = "<p><span>Error: No satisfactory HTML generated</span></p>"
+            custom_response = {
+                "status": "success" if response.get("html") and response.get("validation_outcome") != "error" else "error",
+                "html": response.get("html", "") if response.get("validation_outcome") != "error" else error_html
+            }
+
+        except GraphRecursionError:
+            logger.error(f"Graph reached recursion limit of {config['recursion_limit']} without finishing.")
+            custom_response = {
+                "status": "error",
+                "html": "<p><span>Error: No satisfactory HTML generated</span></p>"
+            }
+        
+        except Exception as e:
+            logger.error(f"An unexpected error occurred during graph execution: {e}")
+            custom_response = {
+                "status": "error",
+                "html": f"<p><span>An unexpected error occurred: {e}</span></p>"
+            }
+
         return custom_response
 
     def moderator_action(self, state: State) -> dict:
         """Moderator manages the flow and retry logic."""
         logger.info("--- Moderator Action ---")
+        description = state.get("description", "")
+        style_guidelines = state.get("style_guidelines", "")
+        html = state.get("html","")
+        logger.info(f"Description: {description}")
+        logger.info(f"Style Guidelines: {style_guidelines}")
         
         current_retries = state.get("current_retry_count", 0)
         evaluator_feedback = state.get("evaluator_feedback")
         evaluator_score = state.get("evaluator_score")
         validation_outcome = state.get("validation_outcome")
         
-        # Check if this is a retry situation
         is_retry = (evaluator_score is not None) or (validation_outcome == "error")
         
         if is_retry:
@@ -279,9 +274,11 @@ Generate the HTML content now:"""
         
         if current_retries > self.max_retries:
             logger.warning(f"Moderator: Max retries ({self.max_retries}) exceeded.")
+            error_html = "<p><span>Error: LLM returned empty content</span></p>"
             return {
                 "max_retries_reached": True,
-                "current_retry_count": current_retries - 1
+                "current_retry_count": current_retries,
+                "html": html if html != "" else error_html
             }
         
         updates = {
@@ -300,7 +297,7 @@ Generate the HTML content now:"""
         elif validation_outcome == "error":
             logger.info(f"Moderator: Retry {current_retries}/{self.max_retries} due to validation error")
         else:
-            logger.info(f"Moderator: Initial attempt {current_retries}/{self.max_retries}")
+            logger.info(f"Moderator: Initial attempt ({current_retries}/{self.max_retries})")
         
         return updates
 
@@ -309,14 +306,10 @@ Generate the HTML content now:"""
         logger.info("--- Content Generator Action ---")
         sleep(3)
         try:
-            # Create the generation prompt
             prompt = self.get_content_generation_prompt(state)
-            
-            # Generate content
             response = self.model.invoke(prompt)
             generated_html = response.content.strip()
             
-            # Clean up any potential markdown formatting
             if generated_html.startswith("```html"):
                 generated_html = generated_html.replace("```html", "").replace("```", "").strip()
             elif generated_html.startswith("```"):
@@ -359,7 +352,6 @@ Generate the HTML content now:"""
             }
         
         try:
-            # Clean and validate HTML
             cleaned_html = self.html_validator._clean_llm_html_output(html_to_validate)
             validation_result = self.html_validator.validate_and_repair(cleaned_html)
             
@@ -533,31 +525,3 @@ Respond with a JSON object:
         except Exception as e:
             logger.error(f"Could not display graph: {e}")
             return self.graph
-
-# Example usage (ensure GOOGLE_API_KEY is set in your environment)
-if __name__ == '__main__':
-    # from dotenv import load_dotenv
-    # load_dotenv() # If you use .env file for API keys
-
-    if not os.getenv("GOOGLE_API_KEY"):
-        logger.error("Please set the GOOGLE_API_KEY environment variable.")
-    else:
-        agent = HtmlAgent()
-        test_description = "Create a short paragraph about the benefits of hydration, then a list of 3 tips for staying hydrated."
-        test_style_guidelines = "Use Arial font, 12pt. The paragraph should have normal line height. List items should be underlined."
-        test_context_history = "No previous conversation."
-
-        result = agent.run(test_description, test_style_guidelines, test_context_history)
-        
-        logger.info("\n--- Final State ---")
-        # logger.info(result) # This will logger.info the full state dict, which can be verbose
-        
-        logger.info("\n--- Final Messages ---")
-        if result and 'messages' in result:
-            for msg in result['messages']:
-                logger.info(f"{msg['role']}: {msg['content']}")
-        
-        logger.info("\n--- Final HTML ---")
-        if result and 'html' in result:
-            logger.info(result['html'])
-

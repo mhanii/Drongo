@@ -40,6 +40,7 @@ class HTMLValidator:
         if not isinstance(html_content, str):
              logger.warning(f"Invalid input type for HTML validation: {type(html_content)}. Returning empty content.")
              return '<p><span>Invalid input</span></p>'
+        
 
         try:
             if clean_llm_output:
@@ -47,7 +48,7 @@ class HTMLValidator:
             else:
                 processed_html = html_content
 
-            if not processed_html.strip():
+            if processed_html.strip() == "":
                  logger.warning("Empty HTML content after initial processing.")
                  return {"status": "error", "html": "Empty content"}
 
