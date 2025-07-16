@@ -8,11 +8,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from agents.content import ContentAgent
 from database.content_chunk_db import ContentChunkDB, ContentChunk
+from new_logger import get_logger
+
+logger = get_logger()
 
 class TestContentAgent(unittest.TestCase):
 
     def setUp(self):
         """Set up the test environment for each test."""
+        logger.info(f"\n===== Starting test: {self._testMethodName} =====")
         # This creates a new in-memory SQLite database for each test
         self.content_agent = ContentAgent(
             model="models/gemini-pro",  # This will be mocked in most tests
@@ -29,14 +33,36 @@ class TestContentAgent(unittest.TestCase):
         self.mock_image_agent = MagicMock()
         self.content_agent.image_agent = self.mock_image_agent
 
+    def tearDown(self):
+        logger.info(f"===== Finished test: {self._testMethodName} =====\n")
+
+    def _log_test_pass(self):
+        logger.info(f"Test PASSED: {self._testMethodName}")
+
+    def _log_test_fail(self, exc):
+        logger.error(f"Test FAILED: {self._testMethodName} - {exc}")
+
+    def run(self, result=None):
+        try:
+            super().run(result)
+            self._log_test_pass()
+        except AssertionError as e:
+            self._log_test_fail(e)
+            raise
+        except Exception as e:
+            logger.error(f"Test ERROR: {self._testMethodName} - {e}")
+            raise
+
     def test_initialization(self):
         """Test that the ContentAgent initializes correctly."""
+        logger.info("Starting test_initialization")
         self.assertIsInstance(self.content_agent, ContentAgent)
         self.assertIsInstance(self.content_agent.chunk_db, ContentChunkDB)
         self.assertIsNotNone(self.content_agent.agent)
 
     def test_run_html_agent_tool_success(self):
         """Test the successful execution of the `run_html_agent` tool."""
+        logger.info("Starting test_run_html_agent_tool_success")
         # Configure the mock HTML agent to return a successful result
         test_html = "<p><span>This is successful HTML.</span></p>"
         self.mock_html_agent.run.return_value = {
@@ -65,6 +91,7 @@ class TestContentAgent(unittest.TestCase):
 
     def test_run_html_agent_tool_failure(self):
         """Test the `run_html_agent` tool when the html_agent reports an error."""
+        logger.info("Starting test_run_html_agent_tool_failure")
         # Configure the mock HTML agent to return an error status
         error_html = "<p><span>Generation failed.</span></p>"
         self.mock_html_agent.run.return_value = {
@@ -92,6 +119,7 @@ class TestContentAgent(unittest.TestCase):
 
     def test_run_html_agent_tool_exception(self):
         """Test the `run_html_agent` tool when the html_agent raises an exception."""
+        logger.info("Starting test_run_html_agent_tool_exception")
         # Configure the mock HTML agent to raise an exception
         self.mock_html_agent.run.side_effect = Exception("A critical failure occurred")
 
@@ -111,6 +139,7 @@ class TestContentAgent(unittest.TestCase):
     @patch('langgraph.prebuilt.create_react_agent')
     def test_agent_run_returns_no_chunks(self, mock_create_agent):
         """Test the main `run` method when the agent generates no chunks."""
+        logger.info("Starting test_agent_run_returns_no_chunks")
         # Mock the entire react agent to simulate it not calling any tools
         mock_react_agent = MagicMock()
         mock_react_agent.invoke.return_value = {"messages": [{"role": "assistant", "content": "I did nothing."}]}
@@ -129,6 +158,7 @@ class TestContentAgent(unittest.TestCase):
     @patch('langgraph.prebuilt.create_react_agent')
     def test_agent_run_returns_only_error_chunks(self, mock_create_agent):
         """Test the `run` method when all generated chunks are errors."""
+        logger.info("Starting test_agent_run_returns_only_error_chunks")
         # This test will actually call our tool, but the tool will report an error
         self.mock_html_agent.run.return_value = {"status": "error", "html": ""}
 
@@ -151,6 +181,7 @@ class TestContentAgent(unittest.TestCase):
 
     def test_multiple_html_agent_calls_mixed_results(self):
         """Test a scenario with multiple calls to the html_agent tool with mixed results."""
+        logger.info("Starting test_multiple_html_agent_calls_mixed_results")
         # Configure the mock to return different results on subsequent calls
         self.mock_html_agent.run.side_effect = [
             {"status": "success", "html": "<p><span>First call success.</span></p>"},
