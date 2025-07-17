@@ -101,7 +101,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
     # Remove DB and cache logic from here, use self.chunk_db instead
 
-    def run_html_agent(self, description: str, style_guidelines: str, context: str = "No additional context") -> str:
+    async def run_html_agent(self, description: str, style_guidelines: str, context: str = "No additional context") -> str:
         """
         Run the HTML agent to generate high-quality HTML content based on specifications.
         This agent uses sophisticated validation, evaluation, and retry logic to ensure optimal output.
@@ -116,7 +116,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         """
         try:
             if self.websocket:
-                self.websocket.send(json.dumps({"status": "starting_html_generation"}))
+                await self.websocket.send(json.dumps({"status": "starting_html_generation"}))
             result = self.html_agent.run(description, style_guidelines, context,self.document_structure)
             response_html = result["html"]
             # Create and save ContentChunk
@@ -124,14 +124,14 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
                 if self.websocket:
-                    self.websocket.send(json.dumps({"status": "html_generation_complete", "chunk": chunk.to_dict()}))
+                    await self.websocket.send(json.dumps({"status": "html_generation_complete", "chunk": chunk.to_dict()}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
                 logger.error("### Error generating content chunk. ###")
                 if self.websocket:
-                    self.websocket.send(json.dumps({"status": "html_generation_failed"}))
+                    await self.websocket.send(json.dumps({"status": "html_generation_failed"}))
                 # OPTION 1: Add a placeholder chunk with an error status
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
@@ -140,14 +140,14 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
         except Exception as e:
             if self.websocket:
-                self.websocket.send(json.dumps({"status": "html_generation_error", "error": str(e)}))
+                await self.websocket.send(json.dumps({"status": "html_generation_error", "error": str(e)}))
             # OPTION 2: Handle exceptions gracefully and create an error chunk
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)
             self.generated_chunks.append(error_chunk.to_dict())
             return f"Error in HTML generation: {str(e)}"
 
-    def run_image_agent(self, detailed_instruction: str) -> str:
+    async def run_image_agent(self, detailed_instruction: str) -> str:
         """
         Run the advanced Image Agent for comprehensive image operations and management.
         
@@ -311,7 +311,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         else:
             return "Clean, professional styling with proper typography and spacing"
 
-    def run(self, prompt: str,document_structure: str = ""):
+    async def run(self, prompt: str,document_structure: str = ""):
         """
         Main entry point for the Content Agent. Processes user requests and coordinates
         appropriate responses using HTML and Image agents as needed.
@@ -326,7 +326,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         self.generated_chunks = []  # Reset the list for each new run
 
         prompt += f"Document Structure: {self.document_structure}"
-        response = self.agent.invoke(
+        response = await self.agent.ainvoke(
             {"messages": [{"role": "user", "content": prompt}]},
             config=self.config
             )

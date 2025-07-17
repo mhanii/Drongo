@@ -91,16 +91,16 @@ You MUST follow this sequence. Do not deviate.
 
 """
 
-    def generate_content(self, description: str, style_guidelines: str = ""):
+    async def generate_content(self, description: str, style_guidelines: str = ""):
         """
         Constructs a prompt and calls the content agent's main run function. Returns a list of generated chunks with their ids.
         """
         prompt = f"Generate HTML content with the following description: {description}\nStyle guidelines: {style_guidelines}\nDocument structure: {self.document_structure}"
         
         # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
-        return self.content_agent.run(prompt)
+        return await self.content_agent.run(prompt)
 
-    def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
+    async def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
         """
         Calls the ApplyTool to decide where/how to apply a chunk. Validates the result and returns status and location info.
 
@@ -112,7 +112,7 @@ You MUST follow this sequence. Do not deviate.
         Returns:
             dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
         """
-        result = self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
+        result = await self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
         # If error from apply_tool, propagate
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
@@ -195,9 +195,9 @@ You MUST follow this sequence. Do not deviate.
         payload["document_structure"] = self.document_structure
         return payload
     
-    def run_prompt(self, request_data: dict):
+    async def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
-        response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
+        response = await self.agent.ainvoke(payload, {"configurable": {"thread_id": "2"}})
         return response['messages'][-1]
 
 
