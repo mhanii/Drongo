@@ -20,7 +20,6 @@ class State(TypedDict):
     messages: Annotated[List, add_messages]
 
 # Removed ContentChunk class from here
-
 class ContentAgent:
     def __init__(self, model: str, checkpoint_path: str, debug: bool = False) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
