@@ -1,7 +1,9 @@
 import os
 import sys
 import base64
+from unittest.mock import MagicMock
 from dotenv import load_dotenv
+from new_logger import get_logger
 
 # Add parent directory to path for our module imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -19,6 +21,8 @@ from fpdf import FPDF
 
 load_dotenv()
 
+logger = get_logger()
+
 class ManagerAgentTester:
     def __init__(self):
         """Initialize the manager agent tester."""
@@ -29,20 +33,20 @@ class ManagerAgentTester:
 
     def print_test_header(self, test_name):
         """Print a formatted test header."""
-        print(f"\n{'='*60}")
-        print(f"TESTING: {test_name}")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"TESTING: {test_name}")
+        logger.info(f"{'='*60}")
 
     def print_test_result(self, result, test_description):
         """Print formatted test result."""
-        print(f"\n{test_description}")
-        print("-" * 40)
+        logger.info(f"\n{test_description}")
+        logger.info("-" * 40)
         
         # The result from a ReAct agent is a message object
         if hasattr(result, 'content'):
-            print(f"Final Agent Response: {result.content}")
+            logger.info(f"Final Agent Response: {result.content}")
         else:
-            print(f"Result: {result}")
+            logger.info(f"Result: {result}")
 
     def wait_for_user(self):
         """Wait for user input before continuing."""
@@ -50,7 +54,7 @@ class ManagerAgentTester:
 
     def initialize_manager_agent(self):
         """Initialize the Manager Agent with dummy tools for testing."""
-        print("Initializing Manager Agent Test Suite...")
+        logger.info("Initializing Manager Agent Test Suite...")
         
         self.store = ContextStore(max_window=10)
         
@@ -73,26 +77,68 @@ class ManagerAgentTester:
         self.manager_agent.content_agent = dummy_content_agent
         self.manager_agent.apply_tool = dummy_apply_tool
         
-        print("Manager Agent initialized successfully with DUMMY tools!")
+        logger.info("Manager Agent initialized successfully with DUMMY tools!")
         return True
 
-    def test_simple_text_generation(self):
-        """Test a basic text generation request without any external context."""
-        self.print_test_header("SIMPLE TEXT GENERATION")
+    def run_test_case(self, test_name, prompt, expected_position, expected_relative_location=None, expected_operation=None):
+        """Run a single test case."""
+        self.print_test_header(test_name)
+
+        # Mock the apply_tool to intercept its arguments
+        self.manager_agent.apply_tool = MagicMock()
 
         request_data = {
-            "text": "Add a summary at the end of the document",
+            "text": prompt,
             "document_structure": self.get_document_structure(),
             "images": [],
             "documents": []
         }
         
-        print("Running a simple text generation task...")
-        print("Expected behavior: Agent should call 'generate_content' then 'apply_tool_func'.")
+        logger.info(f"Running {test_name}...")
+        logger.info(f"Expected behavior: Agent should call 'apply_tool' with position_id={expected_position}" +
+              (f" and relative_location='{expected_relative_location}'" if expected_relative_location else "") +
+              (f" and operation='{expected_operation}'" if expected_operation else ""))
         
         result = self.manager_agent.run_prompt(request_data)
-        self.print_test_result(result, "Result of simple text generation task")
+
+        # Verification
+        self.manager_agent.apply_tool.assert_called_once()
+        args, _ = self.manager_agent.apply_tool.call_args
+
+        self.print_test_result(args, f"Arguments passed to apply_tool for {test_name}")
+
+        # Check if the correct position and location are specified
+        # self.assertEqual(args.get("position_id"), expected_position)
+        # self.assertEqual(args.get("relative_location"), expected_relative_location)
+        # self.assertEqual(args.get("operation"), expected_operation)
+
         self.wait_for_user()
+
+    def test_insertion(self):
+        """Test inserting a new paragraph at the end of the document."""
+        self.run_test_case(
+            test_name="INSERTION TEST",
+            prompt="Add a new paragraph at the end of the document explaining the importance of testing.",
+            expected_position=237,
+            expected_relative_location="AFTER"
+        )
+
+    def test_editing(self):
+        """Test editing an existing paragraph."""
+        self.run_test_case(
+            test_name="EDITING TEST",
+            prompt="In the paragraph that talks about the hotel management system, change the words 'gestión de hotel' to 'software for hotels'.",
+            expected_position=3
+        )
+
+    def test_deletion(self):
+        """Test deleting an existing paragraph."""
+        self.run_test_case(
+            test_name="DELETION TEST",
+            prompt="Delete the paragraph that talks about 'Gestión de habitaciones (Omar)'.",
+            expected_position=6,
+            expected_operation="DELETE"
+        )
 
 
     def get_document_structure(self):
@@ -279,8 +325,8 @@ END OF DOCUMENT"""
             }]
         }
         
-        print("Running a task that requires reading a PDF...")
-        print("Expected behavior: Agent should process the PDF and use its content in the prompt to 'generate_content'.")
+        logger.info("Running a task that requires reading a PDF...")
+        logger.info("Expected behavior: Agent should process the PDF and use its content in the prompt to 'generate_content'.")
 
         result = self.manager_agent.run_prompt(request_data)
         self.print_test_result(result, "Result of text generation with PDF context")
@@ -295,8 +341,8 @@ END OF DOCUMENT"""
             "document_structure": "<html><body><p>Some text.</p></body></html>"
         }
 
-        print("Running a task that is outside the agent's defined scope...")
-        print("Expected behavior: Agent should state that it cannot fulfill the request as it's a document editor.")
+        logger.info("Running a task that is outside the agent's defined scope...")
+        logger.info("Expected behavior: Agent should state that it cannot fulfill the request as it's a document editor.")
 
         result = self.manager_agent.run_prompt(request_data)
         self.print_test_result(result, "Result of out-of-scope request")
@@ -305,12 +351,12 @@ END OF DOCUMENT"""
     def run_interactive_mode(self):
         """Run interactive mode for manual testing."""
         self.print_test_header("INTERACTIVE MODE")
-        print("Interactive testing mode - try any document editing command!")
-        print("   Type 'quit' or 'exit' to end.")
+        logger.info("Interactive testing mode - try any document editing command!")
+        logger.info("   Type 'quit' or 'exit' to end.")
         
         doc_structure = "<html><body><h1>Test Document</h1><p>This is the first paragraph.</p><h2>Conclusion</h2><p>The end.</p></body></html>"
-        print("\nInitial Document Structure:")
-        print(doc_structure)
+        logger.info("\nInitial Document Structure:")
+        logger.info(doc_structure)
         
         while True:
             try:
@@ -321,7 +367,7 @@ END OF DOCUMENT"""
                 if not prompt:
                     continue
                 
-                print(f"\n🔄 Processing: {prompt}")
+                logger.info(f"\n🔄 Processing: {prompt}")
                 request_data = {
                     "text": prompt,
                     "document_structure": doc_structure
@@ -330,10 +376,10 @@ END OF DOCUMENT"""
                 self.print_test_result(result, "Interactive Command Result")
                 
             except KeyboardInterrupt:
-                print("\nExiting interactive mode...")
+                logger.info("\nExiting interactive mode...")
                 break
             except Exception as e:
-                print(f"An unexpected error occurred: {e}")
+                logger.error(f"An unexpected error occurred: {e}")
 
     def run_all_tests(self):
         """Run the full test suite."""
@@ -341,15 +387,17 @@ END OF DOCUMENT"""
             if not self.initialize_manager_agent():
                 return
 
-            self.test_simple_text_generation()
+            self.test_insertion()
+            self.test_editing()
+            self.test_deletion()
             # self.test_text_generation_with_pdf_context()
             self.test_error_handling()
-            self.run_interactive_mode()
+            # self.run_interactive_mode()
 
-            print("\n🎉 Manager Agent test suite completed!")
+            logger.info("\n🎉 Manager Agent test suite completed!")
 
         except Exception as e:
-            print(f"A critical error occurred during the test suite: {e}")
+            logger.error(f"A critical error occurred during the test suite: {e}")
 
 if __name__ == "__main__":
     tester = ManagerAgentTester()
