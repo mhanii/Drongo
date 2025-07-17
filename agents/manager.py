@@ -24,14 +24,14 @@ class State(TypedDict):
 
 
 class ManagerAgent:
-    def __init__(self, checkpoint_path: str, model: str, store: ContextStore, content_agent : ContentAgent=None, last_prompt: str = "", state: Optional[Dict] = State, websocket=None) -> None:
+    def __init__(self, checkpoint_path: str, model: str, store: ContextStore, content_agent : ContentAgent=None, last_prompt: str = "", state: Optional[Dict] = State, queue=None) -> None:
         logger.info("Manager agent initialized.")
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.model = ChatGoogleGenerativeAI(model=model)
         self.CS = store if store is not None else ContextStore()
-        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, websocket=websocket)  # Should be passed in or set after init. The checkpoint location should change if we will use database checkpoints instead of memory based.
+        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, queue=queue)  # Should be passed in or set after init. The checkpoint location should change if we will use database checkpoints instead of memory based.
         self.last_prompt = last_prompt
-        self.apply_tool = ApplyTool(self.content_agent.chunk_db, websocket=websocket)
+        self.apply_tool = ApplyTool(self.content_agent.chunk_db, queue=queue)
         self.document_structure = ""  # Will be set in handle_and_save_input
         self.agent = create_react_agent(
             model=self.model,
@@ -91,16 +91,16 @@ You MUST follow this sequence. Do not deviate.
 
 """
 
-    async def generate_content(self, description: str, style_guidelines: str = ""):
+    def generate_content(self, description: str, style_guidelines: str = ""):
         """
         Constructs a prompt and calls the content agent's main run function. Returns a list of generated chunks with their ids.
         """
         prompt = f"Generate HTML content with the following description: {description}\nStyle guidelines: {style_guidelines}\nDocument structure: {self.document_structure}"
         
         # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
-        return await self.content_agent.run(prompt)
+        return self.content_agent.run(prompt)
 
-    async def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
+    def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
         """
         Calls the ApplyTool to decide where/how to apply a chunk. Validates the result and returns status and location info.
 
@@ -112,7 +112,7 @@ You MUST follow this sequence. Do not deviate.
         Returns:
             dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
         """
-        result = await self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
+        result = self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
         # If error from apply_tool, propagate
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
@@ -195,9 +195,9 @@ You MUST follow this sequence. Do not deviate.
         payload["document_structure"] = self.document_structure
         return payload
     
-    async def run_prompt(self, request_data: dict):
+    def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
-        response = await self.agent.ainvoke(payload, {"configurable": {"thread_id": "2"}})
+        response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
         return response['messages'][-1]
 
 
