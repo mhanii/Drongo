@@ -21,8 +21,9 @@ class State(TypedDict):
 
 # Removed ContentChunk class from here
 import json
+import asyncio
 class ContentAgent:
-    def __init__(self, model: str, checkpoint_path: str, debug: bool = False, websocket=None) -> None:
+    def __init__(self, model: str, checkpoint_path: str, debug: bool = False, queue: asyncio.Queue = None) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.chunk_db = ContentChunkDB(self.connection)
         # self.CS = store
@@ -32,7 +33,7 @@ class ContentAgent:
         self.document_structure = ""
         self.generated_chunks: List[Dict] = []
         self.config = {"configurable": {"thread_id": "1"}}
-        self.websocket = websocket
+        self.queue = queue
 
         
         self.defined_tools = [
@@ -101,7 +102,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
     # Remove DB and cache logic from here, use self.chunk_db instead
 
-    async def run_html_agent(self, description: str, style_guidelines: str, context: str = "No additional context") -> str:
+    def run_html_agent(self, description: str, style_guidelines: str, context: str = "No additional context") -> str:
         """
         Run the HTML agent to generate high-quality HTML content based on specifications.
         This agent uses sophisticated validation, evaluation, and retry logic to ensure optimal output.
@@ -115,23 +116,23 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
             str: Generated HTML content with validation and quality assurance
         """
         try:
-            if self.websocket:
-                await self.websocket.send(json.dumps({"status": "starting_html_generation"}))
+            if self.queue:
+                self.queue.put_nowait(json.dumps({"status": "starting_html_generation"}))
             result = self.html_agent.run(description, style_guidelines, context,self.document_structure)
             response_html = result["html"]
             # Create and save ContentChunk
             if result["status"] == "success":
 
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
-                if self.websocket:
-                    await self.websocket.send(json.dumps({"status": "html_generation_complete", "chunk": chunk.to_dict()}))
+                if self.queue:
+                    self.queue.put_nowait(json.dumps({"status": "html_generation_complete", "chunk": chunk.to_dict()}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
                 logger.error("### Error generating content chunk. ###")
-                if self.websocket:
-                    await self.websocket.send(json.dumps({"status": "html_generation_failed"}))
+                if self.queue:
+                    self.queue.put_nowait(json.dumps({"status": "html_generation_failed"}))
                 # OPTION 1: Add a placeholder chunk with an error status
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
@@ -139,15 +140,15 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
                 return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
 
         except Exception as e:
-            if self.websocket:
-                await self.websocket.send(json.dumps({"status": "html_generation_error", "error": str(e)}))
+            if self.queue:
+                self.queue.put_nowait(json.dumps({"status": "html_generation_error", "error": str(e)}))
             # OPTION 2: Handle exceptions gracefully and create an error chunk
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)
             self.generated_chunks.append(error_chunk.to_dict())
             return f"Error in HTML generation: {str(e)}"
 
-    async def run_image_agent(self, detailed_instruction: str) -> str:
+    def run_image_agent(self, detailed_instruction: str) -> str:
         """
         Run the advanced Image Agent for comprehensive image operations and management.
         
@@ -311,7 +312,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         else:
             return "Clean, professional styling with proper typography and spacing"
 
-    async def run(self, prompt: str,document_structure: str = ""):
+    def run(self, prompt: str,document_structure: str = ""):
         """
         Main entry point for the Content Agent. Processes user requests and coordinates
         appropriate responses using HTML and Image agents as needed.
@@ -326,7 +327,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         self.generated_chunks = []  # Reset the list for each new run
 
         prompt += f"Document Structure: {self.document_structure}"
-        response = await self.agent.ainvoke(
+        response = self.agent.invoke(
             {"messages": [{"role": "user", "content": prompt}]},
             config=self.config
             )
