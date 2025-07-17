@@ -20,8 +20,9 @@ class State(TypedDict):
     messages: Annotated[List, add_messages]
 
 # Removed ContentChunk class from here
+import json
 class ContentAgent:
-    def __init__(self, model: str, checkpoint_path: str, debug: bool = False) -> None:
+    def __init__(self, model: str, checkpoint_path: str, debug: bool = False, websocket=None) -> None:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.chunk_db = ContentChunkDB(self.connection)
         # self.CS = store
@@ -31,6 +32,7 @@ class ContentAgent:
         self.document_structure = ""
         self.generated_chunks: List[Dict] = []
         self.config = {"configurable": {"thread_id": "1"}}
+        self.websocket = websocket
 
         
         self.defined_tools = [
@@ -113,17 +115,23 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
             str: Generated HTML content with validation and quality assurance
         """
         try:
+            if self.websocket:
+                self.websocket.send(json.dumps({"status": "starting_html_generation"}))
             result = self.html_agent.run(description, style_guidelines, context,self.document_structure)
             response_html = result["html"]
             # Create and save ContentChunk
             if result["status"] == "success":
 
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
+                if self.websocket:
+                    self.websocket.send(json.dumps({"status": "html_generation_complete", "chunk": chunk.to_dict()}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
                 logger.error("### Error generating content chunk. ###")
+                if self.websocket:
+                    self.websocket.send(json.dumps({"status": "html_generation_failed"}))
                 # OPTION 1: Add a placeholder chunk with an error status
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
@@ -131,6 +139,8 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
                 return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
 
         except Exception as e:
+            if self.websocket:
+                self.websocket.send(json.dumps({"status": "html_generation_error", "error": str(e)}))
             # OPTION 2: Handle exceptions gracefully and create an error chunk
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)
