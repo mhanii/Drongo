@@ -60,7 +60,7 @@ async def handle_prompt(websocket):
 
                 # If validation passes, the input_data is ready for the agent
                 logger.info(f"Processing prompt for session {session_id}")
-                response = agent.run_prompt(input_data)
+                response = await agent.run_prompt(input_data)
                 
                 logger.info(f"Agent response for {session_id}: {response.content}")
                 await websocket.send(json.dumps({
