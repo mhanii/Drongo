@@ -3452,3 +3452,8 @@ Overall, this is an excellent piece of work with no areas for improvement.
 2025-07-17 17:37:01.429 | INFO     | __main__:<module>:129 - Server shutting down.
 2025-07-17 17:40:56.071 | INFO     | __main__:main:122 - WebSocket server started on ws://localhost:8765
 2025-07-17 17:44:11.338 | INFO     | __main__:<module>:129 - Server shutting down.
+2025-07-17 17:45:07.102 | INFO     | __main__:main:122 - WebSocket server started on ws://localhost:8765
+2025-07-17 17:45:55.826 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-07-17 17:45:55.827 | INFO     | __main__:handle_prompt:32 - Created new agent session: 0f3ad508-39ba-4b95-81f2-7c285fceda0c
+2025-07-17 17:45:55.828 | INFO     | agents.manager:__init__:28 - Manager agent initialized.
+2025-07-17 17:50:40.529 | INFO     | __main__:<module>:129 - Server shutting down.
