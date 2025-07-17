@@ -90,3 +90,117 @@ You MUST follow this sequence. Do not deviate.
         *   For `DELETE` and `EDIT`, this is the element to be removed or replaced.
 
 """
+
+    def generate_content(self, description: str, style_guidelines: str = ""):
+        """
+        Constructs a prompt and calls the content agent's main run function. Returns a list of generated chunks with their ids.
+        """
+        prompt = f"Generate HTML content with the following description: {description}\nStyle guidelines: {style_guidelines}\nDocument structure: {self.document_structure}"
+        
+        # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
+        return self.content_agent.run(prompt)
+
+    def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
+        """
+        Calls the ApplyTool to decide where/how to apply a chunk. Validates the result and returns status and location info.
+
+        Args:
+            chunk_id (str): The chunk_id of the content to insert or edit (required for INSERT and EDIT).
+            type (str): The action type, one of 'INSERT', 'DELETE', or 'EDIT'.
+
+
+        Returns:
+            dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
+        """
+        result = self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
+        # If error from apply_tool, propagate
+        if "error" in result:
+            return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
+        # Validate presence of position_id
+        position_id = result.get("position_id")
+        rel_pos = result.get("relative_position")
+        if not position_id:
+            return {"status": "error", "message": "No position_id returned by apply_tool"}
+        if type.upper() == "INSERT":
+            if not rel_pos or rel_pos.upper() not in ("BEFORE", "AFTER"):
+                return {"status": "error", "message": "No valid relative_position returned by apply_tool for INSERT"}
+            return {"status": "success", "position_id": position_id, "relative_position": rel_pos}
+        else:
+            return {"status": "success", "position_id": position_id}
+    
+
+    
+    def handle_and_save_input(self, request_data: dict):
+        # if it has prompt, if it has images if it has docs etc
+        prompt = request_data.get("text","Prompt not found")
+        images = request_data.get("images",[])
+        docs = request_data.get("documents",[])
+        document_structure = request_data.get("document_structure", "")
+        self.document_structure = document_structure
+        self.last_prompt = prompt
+        payload = {}
+
+        if images:
+            for image in images:
+                image_pointer = ImagePointer(
+                    data=image["content"],
+                    filename=image["name"]
+                    )
+                self.CS.image_mgr.add(image_pointer)
+
+        if docs:
+            for doc in docs:
+                doc_pointer = DocumentPointer(
+                    data=doc["content"],
+                    filename=doc["name"]
+                    )
+                self.CS.doc_mgr.add(doc_pointer)
+
+        serialized_imgs = [
+            {   "type": "image",
+                "source_type" : "base64",
+                "mime_type" : "image/jpeg",
+                "filename": item.get_filename(),
+                "data": item.get_data()
+            }
+            for item in self.CS.image_mgr.recent()
+        ]
+        serialized_docs = []
+
+        for item in self.CS.doc_mgr.recent():
+            pdf_bytes = base64.b64decode(item.get_data())
+            file_like = BytesIO(pdf_bytes)
+
+            elements = partition_pdf(file=file_like)
+
+            text = "\n\n".join(el.text for el in elements)
+            
+            serialized_doc = {
+                "type" : "text",
+                "text" : text
+            }
+            serialized_docs.append(serialized_doc)
+
+        doc_str = {
+                "type":"text",
+                "text" : f"document_structure:{self.document_structure}"
+            }
+        
+        content = [{"type": "text", "text": prompt},doc_str] + serialized_imgs + serialized_docs 
+
+        payload["messages"] = [{
+                "role":"user",
+                "content": content
+            }]
+        payload["document_structure"] = self.document_structure
+        return payload
+    
+    def run_prompt(self, request_data: dict):
+        payload = self.handle_and_save_input(request_data)
+        response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
+        return response['messages'][-1]
+
+
+    # Remove the old apply_tool method; use self.apply_tool.apply instead
+
+# agent = ManagerAgent("checkpoint.sqlite","models/gemini-2.0-flash",ContextStore("1",[],[]))
