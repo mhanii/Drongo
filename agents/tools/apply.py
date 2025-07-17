@@ -3,9 +3,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from database.content_chunk_db import ContentChunkDB
 class ApplyTool:
-    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro"):
+    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro", websocket=None):
         self.model = ChatGoogleGenerativeAI(model=model)
         self.content_db = content_db
+        self.websocket = websocket
 
     def get_prompt(self, type: str, document_structure: str, chunk_html: str, last_prompt: str):
         """
@@ -84,6 +85,8 @@ Return a JSON object with:
         Decide where to apply a chunk in the document structure using the LLM.
         For type 'INSERT', returns position_id and relative_position ('AFTER' or 'BEFORE').
         """
+        if self.websocket:
+            self.websocket.send(json.dumps({"status": "applying_chunk", "chunk_id": chunk_id, "type": type}))
         chunk_html = ""
         if type.upper() == "INSERT" or type.upper() == "EDIT":
             chunk = self.content_db.load_content_chunk(chunk_id)

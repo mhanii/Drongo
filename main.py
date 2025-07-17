@@ -34,7 +34,8 @@ async def handle_prompt(websocket):
     agent = ManagerAgent(
         checkpoint_path="data/manager_checkpoint.sqlite",
         model="models/gemini-2.5-pro",
-        store=None
+        store=None,
+        websocket=websocket
     )
     agent_store[session_id] = agent
 
