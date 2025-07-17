@@ -1,14 +1,15 @@
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
+import asyncio
 
 from database.content_chunk_db import ContentChunkDB
 class ApplyTool:
-    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro", websocket=None):
+    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro",  queue: asyncio.Queue = None):
         self.model = ChatGoogleGenerativeAI(model=model)
         self.content_db = content_db
-        self.websocket = websocket
+        self.queue = queue
 
-    def get_prompt(self, type: str, document_structure: str, chunk_html: str, last_prompt: str):
+    def get_prompt(self, type: str, document_structure: str,  last_prompt: str, chunk_html: str = ""):
         """
         Generate the LLM prompt based on the apply type.
         """
@@ -26,7 +27,7 @@ New Content to Insert:
 
 **User's Goal**
 The user's original request was: "{last_prompt}"
-{last_prompt}
+
 
 
 CRITICAL INSTRUCTIONS:
@@ -44,6 +45,8 @@ Return a JSON object with:
 You are a document editing assistant. Here is the current document structure (HTML with position_id attributes):
 
 {document_structure}
+
+The user's original request was: "{last_prompt}"
 
 Task: Decide which position_id should be deleted from the document. 
 Return a JSON object with:
@@ -63,7 +66,6 @@ New Content to Use for Replacement:
 
 **User's Goal**
 The user's original request was: "{last_prompt}"
-{last_prompt}
 
 
 CRITICAL INSTRUCTIONS:
@@ -80,21 +82,23 @@ Return a JSON object with:
         else:
             return f"Unknown apply type: {type}"
 
-    async def apply(self, chunk_id: str, type: str, document_structure: str, last_prompt: str):
+    def apply(self, type: str, chunk_id: str,  document_structure: str, last_prompt: str):
         """
         Decide where to apply a chunk in the document structure using the LLM.
         For type 'INSERT', returns position_id and relative_position ('AFTER' or 'BEFORE').
         """
-        if self.websocket:
-            await self.websocket.send(json.dumps({"status": "applying_chunk", "chunk_id": chunk_id, "type": type}))
+
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"status": "applying_chunk", "chunk_id": chunk_id, "type": type}))
         chunk_html = ""
         if type.upper() == "INSERT" or type.upper() == "EDIT":
             chunk = self.content_db.load_content_chunk(chunk_id)
             if not chunk:
                 return {"error": f"Chunk with id {chunk_id} not found."}
             chunk_html = chunk.html
+
         prompt = self.get_prompt(type, document_structure, chunk_html, last_prompt)
-        response = await self.model.ainvoke(prompt)
+        response =  self.model.invoke(prompt)
         try:
             # Strip Markdown code block markers if present
             content = response.content.strip()

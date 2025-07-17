@@ -59,12 +59,15 @@ You MUST follow this sequence. Do not deviate.
 2.  **STEP 1: GENERATE (Only if new content is needed):**
     *   If the request requires creating new text (e.g., "add a paragraph," "summarize this," "rewrite the title"), you **MUST** call the `generate_content` tool first.
     *   This tool will return a list of content "chunks".
+        ** DON'T RETRY TO GENERATE IF THE USER ASKED FOR OR IF THE GENERATION FAILED BECAUSE OF A FIXABLE ERROR **
 
 3.  **STEP 2: APPLY (Always the final action):**
     *   To perform any modification on the document, you **MUST** call the `apply_tool_func` tool. This is your only way to change the document.
     *   You must provide the correct parameters based on your analysis.
+    *   You Don't need to infer the location, it will be decided by the apply tool.
+        ** DELETE type doesn't need a chunk_id.
 
-**Your Tools (Revised Definitions):**
+**Your Tools:**
 
 ---
 
@@ -76,18 +79,16 @@ You MUST follow this sequence. Do not deviate.
 
 ---
 
-`apply_tool_func(action_type: str, target_location: str, chunk_id: Optional[str] = None, relative_position: Optional[str] = None)`
+`apply_tool_func(action_type: str,  chunk_id: Optional[str] = None)`
 *   **Description:** This tool applies a structural change to the document. It can insert, delete, or edit content at a specified location. Use it to make all document modifications. You must specify the action type, the target location (by selector or position_id), and, for inserts/edits, the chunk_id of the content to use. For inserts, also specify whether to insert BEFORE or AFTER the target.
 *   **Purpose:** Executes a specific change on the document structure.
 *   **Parameters:**
     *   `action_type` (str): **REQUIRED.** Must be one of the following exact strings:
         *   `"INSERT"`: To add a new content chunk.
-        *   `"DELETE"`: To remove an existing element.
+        *   `"DELETE"`: To remove an existing element. No need to provide a chunk_id
         *   `"EDIT"`: To replace an existing element with a new content chunk.
 
-    *   `target_location` (str): **REQUIRED.** A precise CSS selector or description identifying the target HTML element(s).
-        *   For `INSERT`, this is the *anchor element* for the insertion.
-        *   For `DELETE` and `EDIT`, this is the element to be removed or replaced.
+
 
 """
 
@@ -100,13 +101,13 @@ You MUST follow this sequence. Do not deviate.
         # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
         return self.content_agent.run(prompt)
 
-    def apply_tool_func(self, chunk_id: str, type: str, target_location: str = None, relative_position: str = None):
+    def apply_tool_func(self, type: str, chunk_id: str = ""):
         """
         Calls the ApplyTool to decide where/how to apply a chunk. Validates the result and returns status and location info.
 
         Args:
-            chunk_id (str): The chunk_id of the content to insert or edit (required for INSERT and EDIT).
             type (str): The action type, one of 'INSERT', 'DELETE', or 'EDIT'.
+            chunk_id (str): The chunk_id of the content to insert or edit (required for INSERT and EDIT).
 
 
         Returns:

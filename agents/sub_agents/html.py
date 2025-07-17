@@ -267,7 +267,7 @@ Generate the HTML content now:"""
         evaluator_score = state.get("evaluator_score")
         validation_outcome = state.get("validation_outcome")
         
-        is_retry = (evaluator_score is not None) or (validation_outcome == "error")
+        is_retry = (evaluator_score is None) or (validation_outcome == "error")
         
         if is_retry:
             current_retries += 1
