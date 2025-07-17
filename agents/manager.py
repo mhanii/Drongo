@@ -24,14 +24,14 @@ class State(TypedDict):
 
 
 class ManagerAgent:
-    def __init__(self, checkpoint_path: str, model: str, store: ContextStore, content_agent : ContentAgent=None, last_prompt: str = "", state: Optional[Dict] = State) -> None:
+    def __init__(self, checkpoint_path: str, model: str, store: ContextStore, content_agent : ContentAgent=None, last_prompt: str = "", state: Optional[Dict] = State, websocket=None) -> None:
         logger.info("Manager agent initialized.")
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.model = ChatGoogleGenerativeAI(model=model)
         self.CS = store if store is not None else ContextStore()
-        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path)  # Should be passed in or set after init. The checkpoint location should change if we will use database checkpoints instead of memory based.
+        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, websocket=websocket)  # Should be passed in or set after init. The checkpoint location should change if we will use database checkpoints instead of memory based.
         self.last_prompt = last_prompt
-        self.apply_tool = ApplyTool(self.content_agent.chunk_db)
+        self.apply_tool = ApplyTool(self.content_agent.chunk_db, websocket=websocket)
         self.document_structure = ""  # Will be set in handle_and_save_input
         self.agent = create_react_agent(
             model=self.model,
