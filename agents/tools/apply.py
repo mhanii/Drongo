@@ -80,13 +80,13 @@ Return a JSON object with:
         else:
             return f"Unknown apply type: {type}"
 
-    def apply(self, chunk_id: str, type: str, document_structure: str, last_prompt: str):
+    async def apply(self, chunk_id: str, type: str, document_structure: str, last_prompt: str):
         """
         Decide where to apply a chunk in the document structure using the LLM.
         For type 'INSERT', returns position_id and relative_position ('AFTER' or 'BEFORE').
         """
         if self.websocket:
-            self.websocket.send(json.dumps({"status": "applying_chunk", "chunk_id": chunk_id, "type": type}))
+            await self.websocket.send(json.dumps({"status": "applying_chunk", "chunk_id": chunk_id, "type": type}))
         chunk_html = ""
         if type.upper() == "INSERT" or type.upper() == "EDIT":
             chunk = self.content_db.load_content_chunk(chunk_id)
@@ -94,7 +94,7 @@ Return a JSON object with:
                 return {"error": f"Chunk with id {chunk_id} not found."}
             chunk_html = chunk.html
         prompt = self.get_prompt(type, document_structure, chunk_html, last_prompt)
-        response = self.model.invoke(prompt)
+        response = await self.model.ainvoke(prompt)
         try:
             # Strip Markdown code block markers if present
             content = response.content.strip()
