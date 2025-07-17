@@ -31,11 +31,14 @@ async def handle_prompt(websocket):
     session_id = str(uuid.uuid4())
     logger.info(f"Created new agent session: {session_id}")
 
+    # --- CHANGE: Create a dedicated message queue for this client ---
+    message_queue = asyncio.Queue()
+
     agent = ManagerAgent(
         checkpoint_path="data/manager_checkpoint.sqlite",
         model="models/gemini-2.5-pro",
         store=None,
-        websocket=websocket
+        queue=message_queue
     )
     agent_store[session_id] = agent
 
@@ -60,7 +63,20 @@ async def handle_prompt(websocket):
 
                 # If validation passes, the input_data is ready for the agent
                 logger.info(f"Processing prompt for session {session_id}")
-                response = await agent.run_prompt(input_data)
+
+                # --- CHANGE: Create a sender task to forward messages from the queue ---
+                async def sender(queue, ws):
+                    while True:
+                        message = await queue.get()
+                        if message is None:  # A way to signal the end
+                            break
+                        await ws.send(message)
+                        queue.task_done()
+
+                sender_task = asyncio.create_task(sender(message_queue, websocket))
+
+                # --- CHANGE: Run the agent's synchronous logic in a separate thread ---
+                response = await asyncio.to_thread(agent.run_prompt, input_data)
                 
                 logger.info(f"Agent response for {session_id}: {response.content}")
                 await websocket.send(json.dumps({
@@ -68,6 +84,10 @@ async def handle_prompt(websocket):
                     "agent_response": response.content,
                     "session_id": session_id # Good practice to return the session_id
                 }))
+
+                # --- CHANGE: Signal the sender to stop and wait for it to finish ---
+                await message_queue.put(None)
+                await sender_task
 
             except json.JSONDecodeError:
                 logger.error("Failed to decode JSON message.")
