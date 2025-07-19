@@ -113,7 +113,7 @@ You MUST follow this sequence. Do not deviate.
         Returns:
             dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
         """
-        result = self.apply_tool.apply(chunk_id, type, self.document_structure, self.last_prompt)
+        result = self.apply_tool.apply(type, chunk_id, self.document_structure, self.last_prompt)
         # If error from apply_tool, propagate
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
