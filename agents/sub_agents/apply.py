@@ -214,6 +214,13 @@ Return a JSON object with:
         """
         Main entry point for the apply graph.
         """
+        logger.info(f"--- Running Apply Agent ---")
+        logger.info(f"Apply Type: {apply_type}")
+        logger.info(f"Document Structure Length: {len(document_structure)}")
+        logger.info(f"Last Prompt: {last_prompt}")
+        logger.info(f"Chunk ID: {chunk_id}")
+        logger.info(f"Chunk HTML Length: {len(chunk_html)}")
+
         initial_state = {
             "apply_type": apply_type,
             "document_structure": document_structure,
@@ -242,5 +249,8 @@ Return a JSON object with:
                 "status": "error",
                 "message": f"An unexpected error occurred: {e}"
             }
+
+        logger.info(f"--- Apply Agent Finished ---")
+        logger.info(f"Final Response: {custom_response}")
 
         return custom_response
