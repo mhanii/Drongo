@@ -94,7 +94,7 @@ class ApplyAgent:
         Generate the LLM prompt based on the apply type.
         """
         if type == ApplyType.INSERT:
-            return f\"\"\"
+            return f"""
 You are an expert document editing assistant. Your task is to determine the precise location to insert a new HTML chunk into an existing document.
 
 ### Current Document Structure
@@ -157,7 +157,7 @@ CRITICAL INSTRUCTIONS:
 Task: Decide the best position to REPLACE with this chunk.
 Return a JSON object with:
 - position_id: the position_id of the element to replace
-\"\"\"
+"""
         # Extend for other types as needed
         else:
             return f"Unknown apply type: {type}"
