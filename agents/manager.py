@@ -59,7 +59,7 @@ You MUST follow this sequence. Do not deviate.
 2.  **STEP 1: GENERATE (Only if new content is needed):**
     *   If the request requires creating new text (e.g., "add a paragraph," "summarize this," "rewrite the title"), you **MUST** call the `generate_content` tool first.
     *   This tool will return a list of content "chunks".
-        ** DON'T RETRY TO GENERATE IF THE USER ASKED FOR OR IF THE GENERATION FAILED BECAUSE OF A FIXABLE ERROR **
+        ** DON'T RETRY TO GENERATE UNLESS THE USER ASKED FOR OR IF THE GENERATION FAILED BECAUSE OF A FIXABLE ERROR **
 
 3.  **STEP 2: APPLY (Always the final action):**
     *   To perform any modification on the document, you **MUST** call the `apply_tool_func` tool. This is your only way to change the document.
@@ -71,7 +71,7 @@ You MUST follow this sequence. Do not deviate.
 
 ---
 
-`generate_content(description: str, style_guidelines: str)`
+`generate_content(description: str, style_guidelines: str)` SHOULD ONLY BE USED IF NECESSARY.
 *   **Purpose:** Delegates all content creation to a specialized writing agent.
 *   **Use When:** The user asks to write, create, generate, summarize, or add any new text.
 *   **Output:** Returns a list of one or more generated content chunks. **The key for the identifier is `chunk_id`**.
@@ -118,16 +118,9 @@ You MUST follow this sequence. Do not deviate.
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
         # Validate presence of position_id
-        position_id = result.get("position_id")
-        rel_pos = result.get("relative_position")
-        if not position_id:
-            return {"status": "error", "message": "No position_id returned by apply_tool"}
-        if type.upper() == "INSERT":
-            if not rel_pos or rel_pos.upper() not in ("BEFORE", "AFTER"):
-                return {"status": "error", "message": "No valid relative_position returned by apply_tool for INSERT"}
-            return {"status": "success", "position_id": position_id, "relative_position": rel_pos}
-        else:
-            return {"status": "success", "position_id": position_id}
+
+        return {"status": "success", "message": result["message"]}
+    
     
 
     
