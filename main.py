@@ -36,7 +36,7 @@ async def handle_prompt(websocket):
 
     agent = ManagerAgent(
         checkpoint_path="data/manager_checkpoint.sqlite",
-        model="models/gemini-2.5-pro",
+        model="models/gemini-2.0-flash",
         store=None,
         queue=message_queue
     )
@@ -80,8 +80,8 @@ async def handle_prompt(websocket):
                 
                 logger.info(f"Agent response for {session_id}: {response.content}")
                 await websocket.send(json.dumps({
-                    "message": "Prompt processed successfully.",
-                    "agent_response": response.content,
+                    "type": "agent_text",
+                    "content": response.content,
                     "session_id": session_id # Good practice to return the session_id
                 }))
 
