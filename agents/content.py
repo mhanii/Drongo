@@ -125,6 +125,7 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
                 if self.queue:
+                    self.queue.put_nowait(json.dumps({"type":"content_chunk","content":chunk.html,"status":"success"}))
                     self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"success"}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())

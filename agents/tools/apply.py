@@ -11,7 +11,7 @@ from new_logger import get_logger
 logger = get_logger()
 
 class ApplyTool:
-    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.5-pro",  queue: asyncio.Queue = None):
+    def __init__(self, content_db : ContentChunkDB, model: str = "models/gemini-2.0-flash",  queue: asyncio.Queue = None):
         self.model = ChatGoogleGenerativeAI(model=model)
         self.content_db = content_db
         self.queue = queue
