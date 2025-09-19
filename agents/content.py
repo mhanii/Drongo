@@ -125,15 +125,15 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
 
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
                 if self.queue:
-                    self.queue.put_nowait(json.dumps({"type":"content_chunk","content":chunk.html,"status":"success"}))
-                    self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"success"}))
+                    self.queue.put_nowait(json.dumps({"type":"content_chunk","content":chunk.html,"status":"continuing"}))
+                    # self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"success"}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
                 logger.error("### Error generating content chunk. ###")
-                if self.queue:
-                    self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"error"}))
+                # if self.queue:
+                    # self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"error"}))
                 # OPTION 1: Add a placeholder chunk with an error status
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
@@ -141,8 +141,8 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
                 return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
 
         except Exception as e:
-            if self.queue:
-                    self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"exception","error": e}))
+            # if self.queue:
+                    # self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"exception","error": e}))
             # OPTION 2: Handle exceptions gracefully and create an error chunk
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)

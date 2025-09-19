@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langgraph.graph import StateGraph, START, END, MessagesState
+from langgraph.types import interrupt, Command
 from langgraph.graph.message import  add_messages # Ensure this is correctly used or messages are plain lists
 from typing import Annotated, List, Optional,Dict
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -11,6 +11,8 @@ from context.store import ContextStore
 from typing_extensions import TypedDict
 import sqlite3
 import base64
+import datetime
+import json
 from io import BytesIO
 from unstructured.partition.pdf import partition_pdf
 from agents.tools.apply import ApplyTool
@@ -36,13 +38,13 @@ class ManagerAgent:
         self.document_structure = ""  # Will be set in handle_and_save_input
         self.agent = create_react_agent(
             model=self.model,
-            tools=[self.generate_content, self.apply_tool_func],
+            tools=[self.generate_content, self.apply_tool_func,self.read_document],
             debug=True,
             # checkpointer=SqliteSaver(self.connection),
             checkpointer=MemorySaver(),
             prompt=self.get_prompt()
         )
-
+        self.queue = queue
     
     def get_prompt(self):
         return """**You are the Manager Agent, a specialized AI orchestrator within a document editing application. Your single purpose is to translate user requests into a sequence of precise tool calls. You do not write or edit content directly.**
@@ -57,7 +59,8 @@ class ManagerAgent:
 You MUST follow this sequence. Do not deviate.
 
 1.  **ANALYZE:** First, analyze the user's request. Is the user asking to ADD new content, DELETE existing content, or EDIT existing content?
-
+1.5. READ DOCUMENT (Optional):
+    If you think you need more context you could run the read_doument tool.
 2.  **STEP 1: GENERATE (Only if new content is needed):**
     *   If the request requires creating new text (e.g., "add a paragraph," "summarize this," "rewrite the title"), you **MUST** call the `generate_content` tool first.
     *   This tool will return a list of content "chunks".
@@ -72,6 +75,9 @@ You MUST follow this sequence. Do not deviate.
 **Your Tools:**
 
 ---
+read_document(asHTML: bool = False)
+    retrieves the document for you
+
 
 `generate_content(description: str, style_guidelines: str)` SHOULD ONLY BE USED IF NECESSARY.
 *   **Purpose:** Delegates all content creation to a specialized writing agent.
@@ -93,6 +99,32 @@ You MUST follow this sequence. Do not deviate.
 
 
 """
+
+    def read_document(self,asHTML: bool = False):
+        """
+        Retrieves the document as text if ran with asHTML = False, or the document as html if otherwise.
+        Args:
+            asHTML (bool) : Wether it should be in HTML format. Text otherwise.
+
+        Returns:
+            str : (document as plain text or html string)
+        """
+        interrupt_payload = {
+            "type": "tool_call",
+            "tool_name":"read_document",
+            "as_html": asHTML,
+            "timestamp": datetime.datetime.now().isoformat(),
+            "message": "Reading document"
+        }
+        if self.queue:
+            self.queue.put_nowait(json.dumps(interrupt_payload))
+        response = interrupt(interrupt_payload)
+        
+        # Extract content from response
+        if isinstance(response, dict):
+            return response.get("content", f"No content received from client")
+        else:
+            return str(response)
 
     def generate_content(self, description: str, style_guidelines: str = ""):
         """
@@ -195,6 +227,10 @@ You MUST follow this sequence. Do not deviate.
         payload = self.handle_and_save_input(request_data)
         response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
         return response['messages'][-1]
+
+    def handle_client_tool_response(self,data:dict):
+        self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
+
 
 
     # Remove the old apply_tool method; use self.apply_tool.apply instead

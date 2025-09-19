@@ -1,7 +1,7 @@
 import asyncio
 import websockets
 import json
-import uuid  # Import the UUID library for unique session IDs
+import uuid
 from agents.manager import ManagerAgent
 from new_logger import get_logger
 from dotenv import load_dotenv
@@ -12,133 +12,201 @@ load_dotenv()
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 logger = get_logger(DEBUG)
 
+# Global agent store to persist agents across requests
 agent_store = {}
 
 async def handler(websocket, path):
-    """Routes incoming websocket connections based on the path."""
-    logger.info(f"New connection on path: {path}")
-    if path == "/prompt":
-        await handle_prompt(websocket)
-    elif path == "/tool-message":
-        await handle_tool_message(websocket)
-    else:
-        logger.warning(f"Connection attempt on unknown path: {path}")
-        await websocket.close(code=1011, reason=f"Unknown path: {path}")
-
-async def handle_prompt(websocket):
-    """Handles the lifecycle of a prompt-response session with an agent."""
-    # --- CHANGE: Use UUID for a robust, unique session ID ---
-    session_id = str(uuid.uuid4())
-    logger.info(f"Created new agent session: {session_id}")
-
-    # --- CHANGE: Create a dedicated message queue for this client ---
-    message_queue = asyncio.Queue()
-
-    agent = ManagerAgent(
-        checkpoint_path="data/manager_checkpoint.sqlite",
-        model="models/gemini-2.0-flash",
-        store=None,
-        queue=message_queue
-    )
-    agent_store[session_id] = agent
-
+    """Main handler for all websocket connections."""
+    logger.info(f"New connection established")
+    
     try:
         async for message in websocket:
             try:
-                input_data = json.loads(message)
-
-                # --- CHANGE: Updated and more robust input validation ---
-                required_fields = {
-                    "text": str,
-                    "images": list,
-                    "documents": list,
-                    "document_structure": str
-                }
-
-                for field, field_type in required_fields.items():
-                    if field not in input_data:
-                        raise ValueError(f"Required field '{field}' is missing.")
-                    if not isinstance(input_data[field], field_type):
-                        raise ValueError(f"Field '{field}' must be of type {field_type.__name__}.")
-
-                # If validation passes, the input_data is ready for the agent
-                logger.info(f"Processing prompt for session {session_id}")
-
-                # --- CHANGE: Create a sender task to forward messages from the queue ---
-                async def sender(queue, ws):
-                    while True:
-                        message = await queue.get()
-                        if message is None:  # A way to signal the end
-                            break
-                        await ws.send(message)
-                        queue.task_done()
-
-                sender_task = asyncio.create_task(sender(message_queue, websocket))
-
-                # --- CHANGE: Run the agent's synchronous logic in a separate thread ---
-                response = await asyncio.to_thread(agent.run_prompt, input_data)
+                data = json.loads(message)
+                message_type = data.get("type")
                 
-                logger.info(f"Agent response for {session_id}: {response.content}")
-                await websocket.send(json.dumps({
-                    "type": "agent_text",
-                    "content": response.content,
-                    "session_id": session_id # Good practice to return the session_id
-                }))
-
-                # --- CHANGE: Signal the sender to stop and wait for it to finish ---
-                await message_queue.put(None)
-                await sender_task
-
+                if message_type == "handshake":
+                    await handle_handshake(websocket, data)
+                elif message_type == "prompt":
+                    await handle_prompt(websocket, data)
+                elif message_type == "tool_response":
+                    await handle_tool_response(websocket, data)
+                else:
+                    await websocket.send(json.dumps({
+                        "error": f"Unknown message type: {message_type}"
+                    }))
+                    
             except json.JSONDecodeError:
-                logger.error("Failed to decode JSON message.")
-                await websocket.send(json.dumps({"error": "Invalid JSON format."}))
-            except ValueError as ve:
-                logger.error(f"Invalid input data: {ve}")
-                await websocket.send(json.dumps({"error": str(ve)}))
+                logger.error("Failed to decode JSON message")
+                await websocket.send(json.dumps({"error": "Invalid JSON format"}))
             except Exception as e:
-                logger.error(f"An unexpected error occurred in handle_prompt: {e}", exc_info=DEBUG)
-                await websocket.send(json.dumps({"error": "An unexpected server error occurred."}))
-
+                logger.error(f"Error processing message: {e}", exc_info=DEBUG)
+                await websocket.send(json.dumps({"error": "Server error occurred"}))
+                
     except websockets.exceptions.ConnectionClosed as e:
-        logger.info(f"Connection closed for session {session_id} (Code: {e.code}, Reason: {e.reason})")
-    finally:
+        logger.info(f"Connection closed (Code: {e.code}, Reason: {e.reason})")
+
+async def handle_handshake(websocket, data):
+    """Handle handshake requests to establish session."""
+    # Check if client provided a session_id to resume
+    session_id = data.get("session_id")
+    
+    if session_id:
+        # Validate that the session exists
         if session_id in agent_store:
-            logger.info(f"Cleaning up agent for session {session_id}")
-            del agent_store[session_id]
+            logger.info(f"Handshake for session: {session_id}")
+            await websocket.send(json.dumps({
+                "type": "handshake",
+                "session_id": session_id,
+            }))
+        else:
+            logger.info(f"Session not found, creating new session: {session_id}")
+            # Create new session with provided ID
+            session_id = str(uuid.uuid4())
+            logger.info(f"Created new session: {session_id}")
+            await websocket.send(json.dumps({
+                "type": "handshake",
+                "session_id": session_id,
+            }))
+    else:
+        # Create new session
+        session_id = str(uuid.uuid4())
+        logger.info(f"Created new session: {session_id}")
+        await websocket.send(json.dumps({
+            "type": "handshake_response",
+            "status": "created",
+            "session_id": session_id,
+            "message": "New session created"
+        }))
 
-async def handle_tool_message(websocket):
-    """Handles incoming messages from a tool."""
-    try:
-        async for message in websocket:
+async def handle_prompt(websocket, data):
+    """Handle prompt requests."""
+    # Get or create session
+    session_id = data.get("session_id")
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        logger.info(f"Created new session: {session_id}")
+    
+    # Validate required fields
+    required_fields = ["text", "images", "documents", "document_structure"]
+    for field in required_fields:
+        if field not in data:
+            await websocket.send(json.dumps({
+                "error": f"Required field '{field}' is missing"
+            }))
+            return
+    
+    # Get or create agent for this session
+    if session_id not in agent_store:
+        message_queue = asyncio.Queue()
+        agent = ManagerAgent(
+            checkpoint_path="data/manager_checkpoint.sqlite",
+            model="models/gemini-2.0-flash",
+            store=None,
+            queue=message_queue
+        )
+        agent_store[session_id] = {
+            "agent": agent,
+            "queue": message_queue
+        }
+        logger.info(f"Created new agent for session: {session_id}")
+    
+    agent_data = agent_store[session_id]
+    agent = agent_data["agent"]
+    message_queue = agent_data["queue"]
+    
+    # Create sender task for real-time messages
+    async def sender():
+        while True:
             try:
-                tool_data = json.loads(message)
-                session_id = tool_data.get("session_id")
-                if not session_id or not isinstance(session_id, str):
-                    await websocket.send(json.dumps({"error": "session_id is missing or invalid."}))
-                    continue
-                
-                agent = agent_store.get(session_id)
-                if not agent:
-                    await websocket.send(json.dumps({"error": f"Agent not found for session_id: {session_id}."}))
-                    continue
-
-                # Placeholder for your actual logic to handle the tool's response
-                # agent.handle_tool_response(tool_data)
-
-                logger.info(f"Received tool message for session {session_id}: {tool_data}")
-                await websocket.send(json.dumps({"status": "received"}))
-
-            except json.JSONDecodeError:
-                logger.error("Failed to decode JSON message.")
-                await websocket.send(json.dumps({"error": "Invalid JSON format."}))
+                message = await asyncio.wait_for(message_queue.get(), timeout=0.1)
+                if message is None:  # End signal
+                    break
+                await websocket.send(message)
+                message_queue.task_done()
+            except asyncio.TimeoutError:
+                continue
             except Exception as e:
-                logger.error(f"An error occurred in handle_tool_message: {e}", exc_info=DEBUG)
-                await websocket.send(json.dumps({"error": "An unexpected error occurred."}))
+                logger.error(f"Error in sender: {e}")
+                break
+    
+    sender_task = asyncio.create_task(sender())
+    
+    try:
+        # Run agent
+        response = await asyncio.to_thread(agent.run_prompt, data)
+        
+        # Handle interrupts
+        if "__interrupt__" in response:
+            interrupt_info = response["__interrupt__"][0]
+            logger.info(f"Interrupt info: {interrupt_info}")
+        
+        # Send final response
+        await websocket.send(json.dumps({
+            "type": "agent_text",
+            "status": "end",
+            "content": response.content,
+            "session_id": session_id
+        }))
+        
+    except Exception as e:
+        logger.error(f"Error running agent: {e}", exc_info=DEBUG)
+        await websocket.send(json.dumps({
+            "error": "Agent processing error",
+            "session_id": session_id
+        }))
+    finally:
+        # Stop sender
+        await message_queue.put(None)
+        try:
+            await asyncio.wait_for(sender_task, timeout=1.0)
+        except asyncio.TimeoutError:
+            sender_task.cancel()
 
-    except websockets.exceptions.ConnectionClosed as e:
-        logger.info(f"Tool message connection closed (Code: {e.code}, Reason: {e.reason}).")
+async def handle_tool_response(websocket, data):
+    """Handle tool response messages."""
+    session_id = data.get("session_id")
+    if not session_id:
+        await websocket.send(json.dumps({"error": "session_id is required"}))
+        return
+    
+    if session_id not in agent_store:
+        await websocket.send(json.dumps({
+            "error": f"No active session found: {session_id}"
+        }))
+        return
+    
+    agent_data = agent_store[session_id]
+    agent = agent_data["agent"]
+    
+    try:
+        # Process tool response (implement based on your agent's needs)
+        
+        logger.info(f"Processed tool response for session {session_id}")
+        logger.info(data)
+        agent.handle_client_tool_response(data)
+
+        await websocket.send(json.dumps({
+            "type": "tool_response_ack",
+            "status": "received",
+            "session_id": session_id
+        }))
+        
+    except Exception as e:
+        logger.error(f"Error handling tool response: {e}", exc_info=DEBUG)
+        await websocket.send(json.dumps({
+            "error": "Tool response processing error",
+            "session_id": session_id
+        }))
+
+def cleanup_session(session_id):
+    """Clean up a specific session."""
+    if session_id in agent_store:
+        logger.info(f"Cleaning up session: {session_id}")
+        del agent_store[session_id]
 
 async def main():
+    """Start the WebSocket server."""
     async with websockets.serve(handler, "localhost", 8765):
         logger.info("WebSocket server started on ws://localhost:8765")
         await asyncio.Future()  # run forever
@@ -147,4 +215,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("Server shutting down.")
+        logger.info("Server shutting down")
+        # Clean up all sessions
+        for session_id in list(agent_store.keys()):
+            cleanup_session(session_id)

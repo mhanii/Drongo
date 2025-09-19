@@ -5252,3 +5252,869 @@ No improvements are needed.
 2025-07-30 23:52:19.507 | INFO     | __main__:handle_prompt:32 - Created new agent session: b5b0f95f-efd0-4812-b754-99cf82c28500
 2025-07-30 23:52:19.507 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
 2025-07-30 23:53:02.483 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session b5b0f95f-efd0-4812-b754-99cf82c28500
+2025-09-14 18:34:09.910 | INFO     | __main__:main:143 - WebSocket server started on ws://localhost:8765
+2025-09-14 18:34:22.295 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 18:34:22.296 | INFO     | __main__:handle_prompt:32 - Created new agent session: 053c8bba-81ef-4982-b7d7-168db4b8434c
+2025-09-14 18:34:22.298 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 18:35:23.501 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 053c8bba-81ef-4982-b7d7-168db4b8434c
+2025-09-14 18:35:23.510 | INFO     | __main__:<module>:150 - Server shutting down.
+2025-09-14 19:29:11.475 | INFO     | __main__:main:143 - WebSocket server started on ws://localhost:8765
+2025-09-14 19:29:24.227 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:29:24.228 | INFO     | __main__:handle_prompt:32 - Created new agent session: 9a181f89-b357-487d-a866-c6b63d096be6
+2025-09-14 19:29:24.229 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:39:38.230 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 9a181f89-b357-487d-a866-c6b63d096be6
+2025-09-14 19:40:08.801 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:40:08.803 | INFO     | __main__:handle_prompt:32 - Created new agent session: 06e32171-38be-406c-b9df-8a7589a9aee3
+2025-09-14 19:40:08.804 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:41:09.977 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 06e32171-38be-406c-b9df-8a7589a9aee3
+2025-09-14 19:41:51.796 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:41:51.797 | INFO     | __main__:handle_prompt:32 - Created new agent session: 36f51da6-84e6-4cfd-9970-42c1c22a58ef
+2025-09-14 19:41:51.797 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:43:09.081 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 36f51da6-84e6-4cfd-9970-42c1c22a58ef
+2025-09-14 19:43:57.832 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:43:57.833 | INFO     | __main__:handle_prompt:32 - Created new agent session: 05a6b199-5189-40fe-901c-fdeec3291591
+2025-09-14 19:43:57.833 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:43:58.145 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 05a6b199-5189-40fe-901c-fdeec3291591
+2025-09-14 19:43:58.505 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:43:58.505 | INFO     | __main__:handle_prompt:32 - Created new agent session: 801504d0-4a25-4114-b36d-080ce63ec293
+2025-09-14 19:43:58.506 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:44:00.014 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 801504d0-4a25-4114-b36d-080ce63ec293
+2025-09-14 19:44:00.632 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:44:00.633 | INFO     | __main__:handle_prompt:32 - Created new agent session: ebc193aa-4ea6-4569-bdc9-bfb0c3087500
+2025-09-14 19:44:00.635 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:45:16.031 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session ebc193aa-4ea6-4569-bdc9-bfb0c3087500
+2025-09-14 19:45:45.130 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:45:45.131 | INFO     | __main__:handle_prompt:32 - Created new agent session: 2d26efec-7845-4718-aa6b-79d1cd92d276
+2025-09-14 19:45:45.132 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:46:17.137 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 2d26efec-7845-4718-aa6b-79d1cd92d276
+2025-09-14 19:46:29.686 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:46:29.687 | INFO     | __main__:handle_prompt:32 - Created new agent session: 8291ab00-3f89-4e8b-991f-4e7fb98cee9f
+2025-09-14 19:46:29.688 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:47:21.536 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 8291ab00-3f89-4e8b-991f-4e7fb98cee9f
+2025-09-14 19:47:57.159 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:47:57.161 | INFO     | __main__:handle_prompt:32 - Created new agent session: ea9b8d42-fcad-454f-8596-04452496b5c9
+2025-09-14 19:47:57.162 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:48:50.690 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session ea9b8d42-fcad-454f-8596-04452496b5c9
+2025-09-14 19:49:08.114 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:49:08.114 | INFO     | __main__:handle_prompt:32 - Created new agent session: 9e4b72e2-5bd8-4ade-9be2-6061694f4bad
+2025-09-14 19:49:08.115 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:49:38.121 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 9e4b72e2-5bd8-4ade-9be2-6061694f4bad
+2025-09-14 19:51:29.357 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:51:29.358 | INFO     | __main__:handle_prompt:32 - Created new agent session: 13ae7fde-b774-4d5c-a87d-23d9bfecfb22
+2025-09-14 19:51:29.359 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:52:01.747 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 13ae7fde-b774-4d5c-a87d-23d9bfecfb22
+2025-09-14 19:52:20.149 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:52:20.150 | INFO     | __main__:handle_prompt:32 - Created new agent session: 0c448e36-6a16-4e95-9ea0-f068c6300317
+2025-09-14 19:52:20.151 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:53:34.598 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 0c448e36-6a16-4e95-9ea0-f068c6300317
+2025-09-14 19:54:01.030 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:54:01.031 | INFO     | __main__:handle_prompt:32 - Created new agent session: 74c8ade8-f38a-45e8-b5c1-4acb9d8c7caf
+2025-09-14 19:54:01.031 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:54:33.051 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 74c8ade8-f38a-45e8-b5c1-4acb9d8c7caf
+2025-09-14 19:55:11.868 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 19:55:11.873 | INFO     | __main__:handle_prompt:32 - Created new agent session: 858c445f-eee3-40ae-9325-0ec7378cb3ab
+2025-09-14 19:55:11.878 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 19:56:03.407 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 858c445f-eee3-40ae-9325-0ec7378cb3ab
+2025-09-14 20:03:08.632 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:03:08.634 | INFO     | __main__:handle_prompt:32 - Created new agent session: 52642d54-3452-4419-8742-ea455e354c87
+2025-09-14 20:03:08.635 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:03:49.398 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 52642d54-3452-4419-8742-ea455e354c87
+2025-09-14 20:10:37.743 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:10:37.744 | INFO     | __main__:handle_prompt:32 - Created new agent session: 9eec2c0d-d805-4856-8f36-b48294b186e8
+2025-09-14 20:10:37.745 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:11:53.723 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 9eec2c0d-d805-4856-8f36-b48294b186e8
+2025-09-14 20:11:54.213 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:11:54.214 | INFO     | __main__:handle_prompt:32 - Created new agent session: 68abf639-c1dc-4733-ae65-53ac63fb6b0d
+2025-09-14 20:11:54.215 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:13:19.313 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 68abf639-c1dc-4733-ae65-53ac63fb6b0d
+2025-09-14 20:14:09.460 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:14:09.461 | INFO     | __main__:handle_prompt:32 - Created new agent session: 5a5b2836-f84c-4ec8-94ac-db9d8e9c378c
+2025-09-14 20:14:09.462 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:16:02.283 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 5a5b2836-f84c-4ec8-94ac-db9d8e9c378c
+2025-09-14 20:16:52.307 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:16:52.308 | INFO     | __main__:handle_prompt:32 - Created new agent session: af3cc44a-027e-4028-944c-428555fa635b
+2025-09-14 20:16:52.309 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:25:04.681 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session af3cc44a-027e-4028-944c-428555fa635b
+2025-09-14 20:28:24.733 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:28:24.734 | INFO     | __main__:handle_prompt:32 - Created new agent session: 125b767a-04ff-4acd-8e32-a7b9a23ee88f
+2025-09-14 20:28:24.736 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:28:44.974 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 125b767a-04ff-4acd-8e32-a7b9a23ee88f
+2025-09-14 20:28:45.504 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:28:45.505 | INFO     | __main__:handle_prompt:32 - Created new agent session: b0dc4fde-0cbf-4e1d-a19e-7b9274a3de94
+2025-09-14 20:28:45.506 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:28:45.794 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session b0dc4fde-0cbf-4e1d-a19e-7b9274a3de94
+2025-09-14 20:28:50.979 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:28:50.980 | INFO     | __main__:handle_prompt:32 - Created new agent session: 9f94ae27-a198-46a7-afb3-cd208d9a3fd1
+2025-09-14 20:28:50.981 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 20:28:51.469 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 9f94ae27-a198-46a7-afb3-cd208d9a3fd1
+2025-09-14 20:47:55.197 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 20:47:55.198 | INFO     | __main__:handle_prompt:32 - Created new agent session: cc78e048-aee6-4ebe-af2b-1c5146bdfd75
+2025-09-14 20:47:55.199 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:32:26.062 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session cc78e048-aee6-4ebe-af2b-1c5146bdfd75
+2025-09-14 21:32:26.537 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:32:26.538 | INFO     | __main__:handle_prompt:32 - Created new agent session: eac72562-72aa-44df-a58d-f3fa8792c01e
+2025-09-14 21:32:26.539 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:33:55.849 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session eac72562-72aa-44df-a58d-f3fa8792c01e
+2025-09-14 21:34:18.221 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:34:18.223 | INFO     | __main__:handle_prompt:32 - Created new agent session: 05058654-2c76-4639-ad22-28eda6daa2e7
+2025-09-14 21:34:18.223 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:34:48.647 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 05058654-2c76-4639-ad22-28eda6daa2e7
+2025-09-14 21:35:34.756 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:35:34.757 | INFO     | __main__:handle_prompt:32 - Created new agent session: cbe4cce0-726a-4c70-a207-c889129e151f
+2025-09-14 21:35:34.758 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:35:35.644 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session cbe4cce0-726a-4c70-a207-c889129e151f
+2025-09-14 21:35:36.082 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:35:36.083 | INFO     | __main__:handle_prompt:32 - Created new agent session: 4d5f89bd-160d-48b4-8093-ef1b2c040bd3
+2025-09-14 21:35:36.083 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:36:24.467 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 4d5f89bd-160d-48b4-8093-ef1b2c040bd3
+2025-09-14 21:36:26.703 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:36:26.704 | INFO     | __main__:handle_prompt:32 - Created new agent session: 93248a3b-49ce-4c97-bbc7-99e5f47ed61d
+2025-09-14 21:36:26.705 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:36:28.702 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 93248a3b-49ce-4c97-bbc7-99e5f47ed61d
+2025-09-14 21:36:29.072 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:36:29.074 | INFO     | __main__:handle_prompt:32 - Created new agent session: 54adde65-a083-4fd2-81c6-03f092e8f401
+2025-09-14 21:36:29.075 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:37:01.554 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 54adde65-a083-4fd2-81c6-03f092e8f401
+2025-09-14 21:37:01.967 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:37:01.968 | INFO     | __main__:handle_prompt:32 - Created new agent session: e896a224-7f46-435d-9590-d275c2f24dfc
+2025-09-14 21:37:01.969 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:39:12.626 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session e896a224-7f46-435d-9590-d275c2f24dfc
+2025-09-14 21:39:13.212 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:39:13.214 | INFO     | __main__:handle_prompt:32 - Created new agent session: b7e779ec-213b-43bc-9a48-88ca8d3fbe46
+2025-09-14 21:39:13.215 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:40:03.845 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session b7e779ec-213b-43bc-9a48-88ca8d3fbe46
+2025-09-14 21:40:04.270 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 21:40:04.270 | INFO     | __main__:handle_prompt:32 - Created new agent session: 02d1f965-7b5a-4cd4-b88d-a87f3e8db7a4
+2025-09-14 21:40:04.271 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 21:41:13.756 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 02d1f965-7b5a-4cd4-b88d-a87f3e8db7a4
+2025-09-14 22:10:56.706 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 22:10:56.708 | INFO     | __main__:handle_prompt:32 - Created new agent session: 43e9cf3f-ff52-4262-9f21-13545efc2367
+2025-09-14 22:10:56.709 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 22:12:03.441 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 43e9cf3f-ff52-4262-9f21-13545efc2367
+2025-09-14 22:15:56.850 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 22:15:56.851 | INFO     | __main__:handle_prompt:32 - Created new agent session: b27a5905-7df1-4c5b-b034-472c91920636
+2025-09-14 22:15:56.853 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-14 22:16:35.835 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session b27a5905-7df1-4c5b-b034-472c91920636
+2025-09-14 22:20:19.902 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-14 22:20:19.903 | INFO     | __main__:handle_prompt:32 - Created new agent session: e11e8672-89af-4716-96c7-d20972e0a457
+2025-09-14 22:20:19.904 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-15 01:51:56.322 | INFO     | __main__:main:143 - WebSocket server started on ws://localhost:8765
+2025-09-15 01:52:01.603 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 01:52:01.605 | INFO     | __main__:handle_prompt:32 - Created new agent session: fe99f1ae-c536-44e4-905c-3d967621fa1f
+2025-09-15 01:52:01.606 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-15 01:57:16.808 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session fe99f1ae-c536-44e4-905c-3d967621fa1f
+2025-09-15 01:57:17.294 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 01:57:17.295 | INFO     | __main__:handle_prompt:32 - Created new agent session: 66201516-99f6-479b-bc64-9fef26e09894
+2025-09-15 01:57:17.296 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-15 01:58:11.857 | ERROR    | __main__:handle_prompt:96 - Invalid input data: Required field 'text' is missing.
+2025-09-15 02:00:55.005 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 66201516-99f6-479b-bc64-9fef26e09894
+2025-09-15 02:00:55.615 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 02:00:55.617 | INFO     | __main__:handle_prompt:32 - Created new agent session: 130e9e6c-992b-4c79-b7cf-238243a98e60
+2025-09-15 02:00:55.618 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-15 02:01:20.783 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 130e9e6c-992b-4c79-b7cf-238243a98e60
+2025-09-15 02:01:22.321 | INFO     | __main__:handle_prompt:81 - Agent response for 130e9e6c-992b-4c79-b7cf-238243a98e60: Okay, I have received the document structure. I am ready for your request. What would you like to do with the document? Please be specific about the action you want to take (ADD, DELETE, or EDIT) and the content involved.
+2025-09-15 02:05:41.361 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session 130e9e6c-992b-4c79-b7cf-238243a98e60
+2025-09-15 02:05:41.369 | INFO     | __main__:<module>:150 - Server shutting down.
+2025-09-15 02:06:22.609 | INFO     | __main__:main:143 - WebSocket server started on ws://localhost:8765
+2025-09-15 02:06:26.531 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 02:06:26.532 | INFO     | __main__:handle_prompt:32 - Created new agent session: a8c6d586-1293-4fb9-a05f-a3b0542d5856
+2025-09-15 02:06:26.533 | INFO     | agents.manager:__init__:29 - Manager agent initialized.
+2025-09-15 02:06:56.828 | INFO     | __main__:handle_prompt:65 - Processing prompt for session a8c6d586-1293-4fb9-a05f-a3b0542d5856
+2025-09-15 02:06:59.820 | INFO     | agents.sub_agents.html:moderator_action:258 - --- Moderator Action ---
+2025-09-15 02:06:59.821 | INFO     | agents.sub_agents.html:moderator_action:262 - Description: Add some html to the document with different styles for testing purposes.
+2025-09-15 02:06:59.822 | INFO     | agents.sub_agents.html:moderator_action:263 - Style Guidelines: html styles
+2025-09-15 02:06:59.823 | INFO     | agents.sub_agents.html:moderator_action:300 - Moderator: Initial attempt (0/3)
+2025-09-15 02:06:59.825 | INFO     | agents.sub_agents.html:content_generator_action:306 - --- Content Generator Action ---
+2025-09-15 02:07:08.376 | INFO     | agents.sub_agents.html:content_generator_action:318 - Generated HTML length: 2513 characters
+2025-09-15 02:07:08.377 | INFO     | agents.sub_agents.html:check_content_generation_outcome:503 - Content generation outcome: success
+2025-09-15 02:07:08.379 | INFO     | agents.sub_agents.html:html_validator_action:342 - --- HTML Validator Action ---
+2025-09-15 02:07:11.383 | INFO     | agents.sub_agents.html:html_validator_action:369 - Validation successful
+2025-09-15 02:07:11.384 | INFO     | agents.sub_agents.html:check_validation_outcome:508 - Validation outcome: success
+2025-09-15 02:07:11.385 | INFO     | agents.sub_agents.html:evaluator_action:391 - --- Evaluator Action ---
+2025-09-15 02:07:14.571 | INFO     | agents.sub_agents.html:evaluator_action:407 - New best score: 100 (previous: -1)
+2025-09-15 02:07:14.572 | INFO     | agents.sub_agents.html:evaluator_action:409 - Evaluation score: 100/100
+2025-09-15 02:07:14.573 | INFO     | agents.sub_agents.html:evaluator_action:410 - Feedback: The HTML content perfectly fulfills the requirements. It adheres to all specified rules, including using only allowed tags, correct span placement, valid table structure, hex color codes, inline styling, and appropriate heading hierarchy. The content is well-structured, semantically correct, and styled consistently. The text is clear and well-written. There are no areas for improvement.
+2025-09-15 02:07:14.574 | INFO     | agents.sub_agents.html:check_evaluation_score:514 - Evaluation score: 100, threshold: 90
+2025-09-15 02:07:20.954 | INFO     | agents.tools.apply:apply:25 - --- Applying Chunk ---
+2025-09-15 02:07:20.954 | INFO     | agents.tools.apply:apply:26 - Type: INSERT
+2025-09-15 02:07:20.955 | INFO     | agents.tools.apply:apply:27 - Chunk ID: 90e5dff7-4cd9-4528-8980-2d509fd79b3c
+2025-09-15 02:07:20.955 | INFO     | agents.tools.apply:apply:28 - Document Structure Length: 36
+2025-09-15 02:07:20.956 | INFO     | agents.tools.apply:apply:29 - Last Prompt: Add some html to the document with different stlyes for testing purposes. don't ask any question. just act
+2025-09-15 02:07:20.957 | INFO     | agents.tools.apply:apply:47 - Loaded chunk HTML with length: 2436
+2025-09-15 02:07:20.957 | INFO     | agents.sub_agents.apply:run:238 - --- Running Apply Agent ---
+2025-09-15 02:07:20.957 | INFO     | agents.sub_agents.apply:run:239 - Apply Type: ApplyType.INSERT
+2025-09-15 02:07:20.958 | INFO     | agents.sub_agents.apply:run:240 - Document Structure Length: 36
+2025-09-15 02:07:20.958 | INFO     | agents.sub_agents.apply:run:241 - Last Prompt: Add some html to the document with different stlyes for testing purposes. don't ask any question. just act
+2025-09-15 02:07:20.959 | INFO     | agents.sub_agents.apply:run:242 - Chunk ID: 90e5dff7-4cd9-4528-8980-2d509fd79b3c
+2025-09-15 02:07:20.959 | INFO     | agents.sub_agents.apply:run:243 - Chunk HTML Length: 2436
+2025-09-15 02:07:20.964 | INFO     | agents.sub_agents.apply:moderator_action:75 - --- Moderator Action ---
+2025-09-15 02:07:20.965 | INFO     | agents.sub_agents.apply:location_decider_action:172 - --- Location Decider Action ---
+2025-09-15 02:07:21.934 | INFO     | agents.sub_agents.apply:location_decider_action:183 - Content generated by apply tool call: ```json
+{
+  "position_id": "0",
+  "relative_position": "AFTER"
+}
+```
+2025-09-15 02:07:21.935 | INFO     | agents.sub_agents.apply:check_location_decider_outcome:231 - Location decider outcome: success
+2025-09-15 02:07:21.937 | INFO     | agents.sub_agents.apply:run:268 - Unparsed response:{'messages': [], 'apply_type': <ApplyType.INSERT: 'INSERT'>, 'document_structure': '<body><p position-id="0"></p></body>', 'last_prompt': "Add some html to the document with different stlyes for testing purposes. don't ask any question. just act", 'chunk_id': '90e5dff7-4cd9-4528-8980-2d509fd79b3c', 'chunk_html': '<h1><span style="font-size: 24px; color: #333333; font-weight: bold;">Welcome to Our Styled Page</span></h1>\n<p style="margin-bottom: 10px;"><span style="font-size: 14px; color: #666666;">This is a paragraph with some basic styling. We\'re testing different HTML elements and their appearance.</span></p>\n<h2><span style="font-size: 20px; color: #333333;">List of Items</span></h2>\n<ol style="margin-bottom: 10px;">\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Item 1: A simple list item.</span></li>\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Item 2: Another item in the list.</span></li>\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Item 3: The final item on the list.</span></li>\n</ol>\n<h3><span style="font-size: 18px; color: #333333;">An Unordered List</span></h3>\n<ul style="margin-bottom: 10px;">\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Unordered Item 1</span></li>\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Unordered Item 2</span></li>\n<li style="margin-left: 20px;"><span style="font-size: 14px; color: #666666;">Unordered Item 3</span></li>\n</ul>\n<h4><span style="font-size: 16px; color: #333333;">Data Table Example</span></h4>\n<table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">\n<tbody>\n<tr>\n<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #333333;">Header 1</span></th>\n<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #333333;">Header 2</span></th>\n</tr>\n<tr>\n<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #666666;">Data 1</span></td>\n<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #666666;">Data 2</span></td>\n</tr>\n<tr>\n<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #666666;">Data 3</span></td>\n<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><span style="font-size: 14px; color: #666666;">Data 4</span></td>\n</tr>\n</tbody>\n</table>\n<p><span style="font-size: 14px; color: #666666;">And here is some <u><span style="color: #0000FF;">underlined text</span></u> with a different color.</span></p>', 'outcome': 'success', 'position_id': '0', 'relative_position': 'AFTER', 'current_retry_count': 1, 'max_retries_reached': False}
+2025-09-15 02:07:21.937 | INFO     | agents.sub_agents.apply:run:283 - --- Apply Agent Finished ---
+2025-09-15 02:07:21.938 | INFO     | agents.sub_agents.apply:run:284 - Final Response: {'status': 'success', 'position_id': '0', 'relative_position': 'AFTER'}
+2025-09-15 02:07:21.938 | INFO     | agents.tools.apply:apply:57 - --- Apply Tool Finished ---
+2025-09-15 02:07:21.938 | INFO     | agents.tools.apply:apply:58 - Result: {'status': 'success', 'position_id': '0', 'relative_position': 'AFTER'}
+2025-09-15 02:07:22.954 | INFO     | __main__:handle_prompt:81 - Agent response for a8c6d586-1293-4fb9-a05f-a3b0542d5856: OK. The content has been added to the document.
+2025-09-15 02:59:23.203 | INFO     | __main__:handle_prompt:106 - Cleaning up agent for session a8c6d586-1293-4fb9-a05f-a3b0542d5856
+2025-09-15 02:59:23.210 | INFO     | __main__:<module>:150 - Server shutting down.
+2025-09-15 03:00:01.794 | INFO     | __main__:main:147 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:03:21.372 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:03:21.373 | INFO     | __main__:handle_prompt:32 - Created new agent session: 88339ceb-c2a2-49a2-9e31-a9f56ffc6579
+2025-09-15 03:03:21.374 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:03:48.194 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 88339ceb-c2a2-49a2-9e31-a9f56ffc6579
+2025-09-15 03:03:49.476 | INFO     | __main__:handle_prompt:85 - Agent response for 88339ceb-c2a2-49a2-9e31-a9f56ffc6579: 
+2025-09-15 03:05:27.180 | INFO     | __main__:handle_prompt:110 - Cleaning up agent for session 88339ceb-c2a2-49a2-9e31-a9f56ffc6579
+2025-09-15 03:05:27.182 | INFO     | __main__:<module>:154 - Server shutting down.
+2025-09-15 03:05:56.818 | INFO     | __main__:main:148 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:06:09.239 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:06:09.241 | INFO     | __main__:handle_prompt:32 - Created new agent session: 0a4b0292-a8f6-4b8a-944c-4896e96ad52e
+2025-09-15 03:06:09.242 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:06:40.641 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 0a4b0292-a8f6-4b8a-944c-4896e96ad52e
+2025-09-15 03:06:41.959 | INFO     | __main__:handle_prompt:84 - Agent response for 0a4b0292-a8f6-4b8a-944c-4896e96ad52e: content='' additional_kwargs={'function_call': {'name': 'read_document', 'arguments': '{"asHTML": true}'}} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--f89713cc-48e5-4b32-b84c-98e7e2e0fd26-0' tool_calls=[{'name': 'read_document', 'args': {'asHTML': True}, 'id': '2efbf66c-1f94-460b-9f56-78ee7a0d5ab5', 'type': 'tool_call'}] usage_metadata={'input_tokens': 1030, 'output_tokens': 6, 'total_tokens': 1036, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:06:41.959 | INFO     | __main__:handle_prompt:86 - Agent response for 0a4b0292-a8f6-4b8a-944c-4896e96ad52e: 
+2025-09-15 03:07:37.538 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session 0a4b0292-a8f6-4b8a-944c-4896e96ad52e
+2025-09-15 03:07:37.541 | INFO     | __main__:<module>:155 - Server shutting down.
+2025-09-15 03:09:10.117 | INFO     | __main__:main:148 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:10:24.005 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:10:24.006 | INFO     | __main__:handle_prompt:32 - Created new agent session: 2be9b98e-f358-4555-a086-b661c8e98cf1
+2025-09-15 03:10:24.007 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:10:53.249 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 2be9b98e-f358-4555-a086-b661c8e98cf1
+2025-09-15 03:10:54.578 | INFO     | __main__:handle_prompt:84 - Agent response for 2be9b98e-f358-4555-a086-b661c8e98cf1: content='Okay, I have read the document.\n\n1.  **ANALYZE:** The user is asking me to read the document. I have already done this. No further action is required based on the current request.' additional_kwargs={} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--99cb61d3-1ef2-499d-a157-a0de2d685c8d-0' usage_metadata={'input_tokens': 1224, 'output_tokens': 45, 'total_tokens': 1269, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:10:54.580 | INFO     | __main__:handle_prompt:86 - Agent response for 2be9b98e-f358-4555-a086-b661c8e98cf1: Okay, I have read the document.
+
+1.  **ANALYZE:** The user is asking me to read the document. I have already done this. No further action is required based on the current request.
+2025-09-15 03:11:40.621 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 2be9b98e-f358-4555-a086-b661c8e98cf1
+2025-09-15 03:11:42.911 | INFO     | __main__:handle_prompt:84 - Agent response for 2be9b98e-f358-4555-a086-b661c8e98cf1: content='I am unable to call the read\\_document tool. It seems to be failing due to an internal error. I will inform the user.' additional_kwargs={} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--f30bec01-6cdd-4f43-b694-e3dd235f0443-0' usage_metadata={'input_tokens': 1554, 'output_tokens': 29, 'total_tokens': 1583, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:11:42.911 | INFO     | __main__:handle_prompt:86 - Agent response for 2be9b98e-f358-4555-a086-b661c8e98cf1: I am unable to call the read\_document tool. It seems to be failing due to an internal error. I will inform the user.
+2025-09-15 03:13:02.141 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session 2be9b98e-f358-4555-a086-b661c8e98cf1
+2025-09-15 03:13:02.148 | INFO     | __main__:<module>:155 - Server shutting down.
+2025-09-15 03:13:29.106 | INFO     | __main__:main:148 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:14:51.238 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:14:51.239 | INFO     | __main__:handle_prompt:32 - Created new agent session: d9c8fb90-0d2f-4796-88c9-ad187251f4ac
+2025-09-15 03:14:51.240 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:15:15.847 | INFO     | __main__:handle_prompt:65 - Processing prompt for session d9c8fb90-0d2f-4796-88c9-ad187251f4ac
+2025-09-15 03:15:17.797 | INFO     | __main__:handle_prompt:84 - Agent response for d9c8fb90-0d2f-4796-88c9-ad187251f4ac: content='Okay, I have read the document.\n\n1.  **ANALYZE:** The user is asking me to read the document. This is for testing purposes. No action is needed.' additional_kwargs={} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--02709f31-45ad-4164-91ef-beea73225afa-0' usage_metadata={'input_tokens': 1227, 'output_tokens': 39, 'total_tokens': 1266, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:15:17.797 | INFO     | __main__:handle_prompt:86 - Agent response for d9c8fb90-0d2f-4796-88c9-ad187251f4ac: Okay, I have read the document.
+
+1.  **ANALYZE:** The user is asking me to read the document. This is for testing purposes. No action is needed.
+2025-09-15 03:16:19.330 | INFO     | __main__:handle_prompt:65 - Processing prompt for session d9c8fb90-0d2f-4796-88c9-ad187251f4ac
+2025-09-15 03:16:20.119 | INFO     | __main__:handle_prompt:84 - Agent response for d9c8fb90-0d2f-4796-88c9-ad187251f4ac: content='' additional_kwargs={'function_call': {'name': 'read_document', 'arguments': '{"asHTML": false}'}} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--867855c7-84d0-44f0-abbe-8e54ac814275-0' tool_calls=[{'name': 'read_document', 'args': {'asHTML': False}, 'id': '09778591-eab7-4e0f-a64e-8c2046a34707', 'type': 'tool_call'}] usage_metadata={'input_tokens': 1497, 'output_tokens': 6, 'total_tokens': 1503, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:16:20.120 | INFO     | __main__:handle_prompt:86 - Agent response for d9c8fb90-0d2f-4796-88c9-ad187251f4ac: 
+2025-09-15 03:22:12.153 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session d9c8fb90-0d2f-4796-88c9-ad187251f4ac
+2025-09-15 03:23:46.364 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:23:46.365 | INFO     | __main__:handle_prompt:32 - Created new agent session: fba2e95f-42e2-4895-b562-7391019994a1
+2025-09-15 03:23:46.366 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:23:47.823 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session fba2e95f-42e2-4895-b562-7391019994a1
+2025-09-15 03:23:48.231 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:23:48.232 | INFO     | __main__:handle_prompt:32 - Created new agent session: bdd54fd0-11a2-40ca-858b-3e1014766ec8
+2025-09-15 03:23:48.232 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:24:15.529 | INFO     | __main__:handle_prompt:65 - Processing prompt for session bdd54fd0-11a2-40ca-858b-3e1014766ec8
+2025-09-15 03:24:17.880 | INFO     | __main__:handle_prompt:84 - Agent response for bdd54fd0-11a2-40ca-858b-3e1014766ec8: content="I already have the document structure, I don't need to read it again.\n\n1.  **ANALYZE:** The user is asking to use the read document tool again, but I already have the document structure. I will skip this step.\n2.  **APPLY:** There is nothing to apply, so I will respond to the user." additional_kwargs={} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--84deab43-6015-4af4-b1cd-6a3e15b5309b-0' usage_metadata={'input_tokens': 1228, 'output_tokens': 74, 'total_tokens': 1302, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:24:17.881 | INFO     | __main__:handle_prompt:86 - Agent response for bdd54fd0-11a2-40ca-858b-3e1014766ec8: I already have the document structure, I don't need to read it again.
+
+1.  **ANALYZE:** The user is asking to use the read document tool again, but I already have the document structure. I will skip this step.
+2.  **APPLY:** There is nothing to apply, so I will respond to the user.
+2025-09-15 03:24:52.759 | INFO     | __main__:handle_prompt:65 - Processing prompt for session bdd54fd0-11a2-40ca-858b-3e1014766ec8
+2025-09-15 03:24:53.272 | INFO     | __main__:handle_prompt:84 - Agent response for bdd54fd0-11a2-40ca-858b-3e1014766ec8: content='' additional_kwargs={'function_call': {'name': 'read_document', 'arguments': '{"asHTML": true}'}} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--1f2a2702-b486-4aa0-b894-e4bbed930978-0' tool_calls=[{'name': 'read_document', 'args': {'asHTML': True}, 'id': 'a4ea4209-fafe-4aac-979a-a93457b441cc', 'type': 'tool_call'}] usage_metadata={'input_tokens': 1533, 'output_tokens': 6, 'total_tokens': 1539, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:24:53.273 | INFO     | __main__:handle_prompt:86 - Agent response for bdd54fd0-11a2-40ca-858b-3e1014766ec8: 
+2025-09-15 03:24:53.278 | ERROR    | __main__:handle_prompt:101 - Invalid input data: Required field 'text' is missing.
+2025-09-15 03:25:52.006 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session bdd54fd0-11a2-40ca-858b-3e1014766ec8
+2025-09-15 03:25:52.557 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:25:52.558 | INFO     | __main__:handle_prompt:32 - Created new agent session: 43a12f5d-9410-4e73-8833-3bdffa090d1b
+2025-09-15 03:25:52.559 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:26:04.114 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 43a12f5d-9410-4e73-8833-3bdffa090d1b
+2025-09-15 03:26:05.371 | INFO     | __main__:handle_prompt:84 - Agent response for 43a12f5d-9410-4e73-8833-3bdffa090d1b: content='Okay, I will use the `read_document` tool to retrieve the document.' additional_kwargs={'function_call': {'name': 'read_document', 'arguments': '{}'}} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--b2ad5035-01c0-4b2b-8635-9dcd91d67e8e-0' tool_calls=[{'name': 'read_document', 'args': {}, 'id': 'ef794808-5f4b-46fe-b6ab-75f562251eb8', 'type': 'tool_call'}] usage_metadata={'input_tokens': 1039, 'output_tokens': 20, 'total_tokens': 1059, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:26:05.372 | INFO     | __main__:handle_prompt:86 - Agent response for 43a12f5d-9410-4e73-8833-3bdffa090d1b: Okay, I will use the `read_document` tool to retrieve the document.
+2025-09-15 03:26:18.204 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 43a12f5d-9410-4e73-8833-3bdffa090d1b
+2025-09-15 03:26:18.242 | ERROR    | __main__:handle_prompt:101 - Invalid input data: Found AIMessages with tool_calls that do not have a corresponding ToolMessage. Here are the first few of those tool calls: [{'name': 'read_document', 'args': {}, 'id': 'ef794808-5f4b-46fe-b6ab-75f562251eb8', 'type': 'tool_call'}].
+
+Every tool call (LLM requesting to call a tool) in the message history MUST have a corresponding ToolMessage (result of a tool invocation to return to the LLM) - this is required by most LLM providers.
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_CHAT_HISTORY
+2025-09-15 03:26:47.308 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 43a12f5d-9410-4e73-8833-3bdffa090d1b
+2025-09-15 03:26:47.318 | ERROR    | __main__:handle_prompt:101 - Invalid input data: Found AIMessages with tool_calls that do not have a corresponding ToolMessage. Here are the first few of those tool calls: [{'name': 'read_document', 'args': {}, 'id': 'ef794808-5f4b-46fe-b6ab-75f562251eb8', 'type': 'tool_call'}].
+
+Every tool call (LLM requesting to call a tool) in the message history MUST have a corresponding ToolMessage (result of a tool invocation to return to the LLM) - this is required by most LLM providers.
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_CHAT_HISTORY
+2025-09-15 03:26:53.175 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session 43a12f5d-9410-4e73-8833-3bdffa090d1b
+2025-09-15 03:26:53.178 | INFO     | __main__:<module>:155 - Server shutting down.
+2025-09-15 03:27:24.259 | INFO     | __main__:main:148 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:28:31.395 | INFO     | __main__:handler:19 - New connection on path: /prompt
+2025-09-15 03:28:31.396 | INFO     | __main__:handle_prompt:32 - Created new agent session: 7a0b4185-d83b-47a4-807b-513043c96371
+2025-09-15 03:28:31.397 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:28:51.395 | INFO     | __main__:handle_prompt:65 - Processing prompt for session 7a0b4185-d83b-47a4-807b-513043c96371
+2025-09-15 03:28:53.088 | INFO     | __main__:handle_prompt:84 - Agent response for 7a0b4185-d83b-47a4-807b-513043c96371: content='Okay, I will use the `read_document` tool for testing purposes.' additional_kwargs={'function_call': {'name': 'read_document', 'arguments': '{"asHTML": true}'}} response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'model_name': 'gemini-2.0-flash', 'safety_ratings': []} id='run--82eda99a-e935-4b13-b838-5ec6863d60fd-0' tool_calls=[{'name': 'read_document', 'args': {'asHTML': True}, 'id': 'd7499d6d-e66a-4b51-9474-21ae17500f5b', 'type': 'tool_call'}] usage_metadata={'input_tokens': 1236, 'output_tokens': 23, 'total_tokens': 1259, 'input_token_details': {'cache_read': 0}}
+2025-09-15 03:28:53.088 | INFO     | __main__:handle_prompt:86 - Agent response for 7a0b4185-d83b-47a4-807b-513043c96371: Okay, I will use the `read_document` tool for testing purposes.
+2025-09-15 03:28:53.093 | ERROR    | __main__:handle_prompt:101 - Invalid input data: Required field 'text' is missing.
+2025-09-15 03:41:02.539 | INFO     | __main__:handle_prompt:111 - Cleaning up agent for session 7a0b4185-d83b-47a4-807b-513043c96371
+2025-09-15 03:41:02.542 | INFO     | __main__:<module>:155 - Server shutting down.
+2025-09-15 03:41:31.281 | INFO     | __main__:main:174 - WebSocket server started on ws://localhost:8765
+2025-09-15 03:42:02.066 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 03:42:56.967 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 03:43:25.829 | INFO     | __main__:handle_prompt:53 - Created new session: 1e97255a-0c80-4b4f-adba-2d392bcfc4e2
+2025-09-15 03:43:25.829 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 03:43:26.174 | INFO     | __main__:handle_prompt:77 - Created new agent for session: 1e97255a-0c80-4b4f-adba-2d392bcfc4e2
+2025-09-15 04:03:46.608 | INFO     | __main__:<module>:181 - Server shutting down
+2025-09-15 04:03:46.609 | INFO     | __main__:cleanup_session:168 - Cleaning up session: 1e97255a-0c80-4b4f-adba-2d392bcfc4e2
+2025-09-15 04:04:28.765 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-15 04:04:34.621 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:05:17.788 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:05:17.795 | INFO     | __main__:handle_handshake:74 - Created new session: 65b2e655-7170-43df-a3cd-27ae7dc9be43
+2025-09-15 04:05:57.248 | INFO     | __main__:handle_prompt:88 - Created new session: f181f527-b0d0-46cd-95af-7aa15f02cb18
+2025-09-15 04:05:57.249 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:05:57.770 | INFO     | __main__:handle_prompt:112 - Created new agent for session: f181f527-b0d0-46cd-95af-7aa15f02cb18
+2025-09-15 04:07:13.961 | INFO     | __main__:handle_prompt:88 - Created new session: d4a348e3-f34b-4ed6-b375-665a37afab56
+2025-09-15 04:07:13.962 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:07:14.590 | INFO     | __main__:handle_prompt:112 - Created new agent for session: d4a348e3-f34b-4ed6-b375-665a37afab56
+2025-09-15 04:09:17.206 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:09:17.211 | INFO     | __main__:handle_handshake:74 - Created new session: 06148b8d-58e9-49a2-bcfa-b0fb3bb65bd4
+2025-09-15 04:10:29.442 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:10:29.449 | INFO     | __main__:handle_handshake:74 - Created new session: 6568dff3-fb32-43ec-9b5f-ebba8b91286a
+2025-09-15 04:10:54.471 | INFO     | __main__:handle_prompt:88 - Created new session: 6b261cbe-20f0-4a77-8bda-293a3442cc5b
+2025-09-15 04:10:54.471 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:10:54.696 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 6b261cbe-20f0-4a77-8bda-293a3442cc5b
+2025-09-15 04:16:37.387 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:16:37.395 | INFO     | __main__:handle_handshake:74 - Created new session: ec93d55d-53ad-4504-a972-0cebae3307bc
+2025-09-15 04:17:12.081 | INFO     | __main__:handle_prompt:88 - Created new session: 55f8af3f-051d-4481-be95-c0f65c5714c0
+2025-09-15 04:17:12.082 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:17:12.439 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 55f8af3f-051d-4481-be95-c0f65c5714c0
+2025-09-15 04:19:24.952 | INFO     | __main__:<module>:216 - Server shutting down
+2025-09-15 04:19:24.953 | INFO     | __main__:cleanup_session:203 - Cleaning up session: f181f527-b0d0-46cd-95af-7aa15f02cb18
+2025-09-15 04:19:24.953 | INFO     | __main__:cleanup_session:203 - Cleaning up session: d4a348e3-f34b-4ed6-b375-665a37afab56
+2025-09-15 04:19:24.953 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 6b261cbe-20f0-4a77-8bda-293a3442cc5b
+2025-09-15 04:19:24.953 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 55f8af3f-051d-4481-be95-c0f65c5714c0
+2025-09-15 04:19:57.848 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-15 04:20:23.159 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:20:23.171 | INFO     | __main__:handle_handshake:74 - Created new session: aded1240-d1bf-42e9-9f1a-73d076b69e2d
+2025-09-15 04:21:23.912 | INFO     | __main__:handle_prompt:88 - Created new session: 4d67eb0c-4dbd-4cea-90c0-2422f780f1d6
+2025-09-15 04:21:23.914 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:21:24.832 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 4d67eb0c-4dbd-4cea-90c0-2422f780f1d6
+2025-09-15 04:24:16.378 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:24:16.385 | INFO     | __main__:handle_handshake:74 - Created new session: c8bd8f89-6f11-4d01-814b-6674f45c6c80
+2025-09-15 04:24:35.637 | INFO     | __main__:handle_prompt:88 - Created new session: 76fc1281-5b0f-4059-968f-747559ede204
+2025-09-15 04:24:35.638 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:24:36.054 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 76fc1281-5b0f-4059-968f-747559ede204
+2025-09-15 04:35:48.053 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:35:48.064 | INFO     | __main__:handle_handshake:74 - Created new session: 1ea083e5-18b6-489e-b979-9f29edb55a1d
+2025-09-15 04:36:04.328 | INFO     | __main__:handle_prompt:88 - Created new session: e42fc1be-69c5-460a-b3bd-8cffebccd2bd
+2025-09-15 04:36:04.330 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:36:04.772 | INFO     | __main__:handle_prompt:112 - Created new agent for session: e42fc1be-69c5-460a-b3bd-8cffebccd2bd
+2025-09-15 04:42:31.619 | INFO     | __main__:<module>:216 - Server shutting down
+2025-09-15 04:42:31.620 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 4d67eb0c-4dbd-4cea-90c0-2422f780f1d6
+2025-09-15 04:42:31.621 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 76fc1281-5b0f-4059-968f-747559ede204
+2025-09-15 04:42:31.621 | INFO     | __main__:cleanup_session:203 - Cleaning up session: e42fc1be-69c5-460a-b3bd-8cffebccd2bd
+2025-09-15 04:44:32.623 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-15 04:45:37.489 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:45:37.493 | INFO     | __main__:handle_handshake:74 - Created new session: d1d9fc43-e201-44aa-827d-f2b7df4b1c23
+2025-09-15 04:46:29.876 | INFO     | __main__:handle_prompt:88 - Created new session: cd584574-86b0-4839-9140-9ea3645092ec
+2025-09-15 04:46:29.877 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:46:30.134 | INFO     | __main__:handle_prompt:112 - Created new agent for session: cd584574-86b0-4839-9140-9ea3645092ec
+2025-09-15 04:46:31.301 | INFO     | __main__:handle_prompt:88 - Created new session: 92f2d90b-c642-4aad-8eb1-ead87f49525f
+2025-09-15 04:46:31.301 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:46:31.505 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 92f2d90b-c642-4aad-8eb1-ead87f49525f
+2025-09-15 04:47:45.565 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:47:45.571 | INFO     | __main__:handle_handshake:74 - Created new session: b87f4bb0-34c1-43b2-926f-a24ef6632946
+2025-09-15 04:50:58.754 | INFO     | __main__:handle_prompt:88 - Created new session: c1597a2f-0fcc-4206-94cf-6d7eb24a4f5d
+2025-09-15 04:50:58.755 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:50:59.027 | INFO     | __main__:handle_prompt:112 - Created new agent for session: c1597a2f-0fcc-4206-94cf-6d7eb24a4f5d
+2025-09-15 04:52:11.967 | INFO     | __main__:handle_prompt:88 - Created new session: d4b70813-1529-426b-b5fd-75dfaf75fc39
+2025-09-15 04:52:11.968 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:52:12.187 | INFO     | __main__:handle_prompt:112 - Created new agent for session: d4b70813-1529-426b-b5fd-75dfaf75fc39
+2025-09-15 04:53:03.276 | INFO     | __main__:handle_prompt:88 - Created new session: 2398fdec-e53d-4545-b219-dd78cf3903f7
+2025-09-15 04:53:03.277 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 04:53:03.643 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 2398fdec-e53d-4545-b219-dd78cf3903f7
+2025-09-15 04:55:26.239 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:55:26.247 | INFO     | __main__:handle_handshake:74 - Created new session: e1cea12a-7502-4557-bdf5-dadd84688f9b
+2025-09-15 04:57:11.127 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 04:57:11.132 | INFO     | __main__:handle_handshake:74 - Created new session: ce4996c1-50c3-4c15-9965-36adb77a606e
+2025-09-15 09:13:16.186 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:13:16.188 | INFO     | __main__:handle_handshake:74 - Created new session: 62724b96-cfe7-4610-bd5b-139dc926c2db
+2025-09-15 09:14:27.691 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:14:27.757 | INFO     | __main__:handle_handshake:74 - Created new session: 73bec6a0-b693-4066-989a-77d364a92350
+2025-09-15 09:15:43.063 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:15:43.076 | INFO     | __main__:handle_handshake:74 - Created new session: 6baf5e85-bf42-4f86-bb31-238a2ec0bd63
+2025-09-15 09:25:45.066 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:25:45.070 | INFO     | __main__:handle_handshake:74 - Created new session: 011ae253-26f7-4c34-a612-49b45a5dd904
+2025-09-15 09:30:28.342 | INFO     | __main__:<module>:216 - Server shutting down
+2025-09-15 09:30:28.342 | INFO     | __main__:cleanup_session:203 - Cleaning up session: cd584574-86b0-4839-9140-9ea3645092ec
+2025-09-15 09:30:28.342 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 92f2d90b-c642-4aad-8eb1-ead87f49525f
+2025-09-15 09:30:28.343 | INFO     | __main__:cleanup_session:203 - Cleaning up session: c1597a2f-0fcc-4206-94cf-6d7eb24a4f5d
+2025-09-15 09:30:28.343 | INFO     | __main__:cleanup_session:203 - Cleaning up session: d4b70813-1529-426b-b5fd-75dfaf75fc39
+2025-09-15 09:30:28.343 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 2398fdec-e53d-4545-b219-dd78cf3903f7
+2025-09-15 09:31:51.923 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-15 09:34:44.454 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:34:44.519 | INFO     | __main__:handle_handshake:74 - Created new session: 6d038e80-218d-48d3-a51d-733a79d4d218
+2025-09-15 09:36:15.387 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:36:15.393 | INFO     | __main__:handle_handshake:74 - Created new session: 77bee6df-3164-4ac9-a91f-a5c8caa7d6b8
+2025-09-15 09:37:09.659 | INFO     | __main__:handle_prompt:88 - Created new session: e0f26d04-7c2b-4915-aa28-f238cdeaaf33
+2025-09-15 09:37:09.660 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 09:37:10.065 | INFO     | __main__:handle_prompt:112 - Created new agent for session: e0f26d04-7c2b-4915-aa28-f238cdeaaf33
+2025-09-15 09:37:56.992 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:37:57.003 | INFO     | __main__:handle_handshake:74 - Created new session: 6d360cc9-6a61-4519-b04e-64068cc87d6a
+2025-09-15 09:38:02.006 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:38:02.013 | INFO     | __main__:handle_handshake:74 - Created new session: 027a5613-6dcc-4ee4-88ce-80734c8369bc
+2025-09-15 09:39:07.640 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:39:07.648 | INFO     | __main__:handle_handshake:74 - Created new session: fa6296da-9ec1-48dc-9f03-b0987c00a974
+2025-09-15 09:40:00.100 | INFO     | __main__:handle_prompt:88 - Created new session: 54276a42-47e3-41cb-ab14-1f464e20f101
+2025-09-15 09:40:00.103 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 09:40:00.459 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 54276a42-47e3-41cb-ab14-1f464e20f101
+2025-09-15 09:46:50.683 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:46:50.689 | INFO     | __main__:handle_handshake:74 - Created new session: a4cc280b-9c50-4d43-86cd-5117430f4460
+2025-09-15 09:48:51.986 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:48:51.992 | INFO     | __main__:handle_handshake:74 - Created new session: fdb2a4a8-fdfe-4d2f-ac35-e6b10d2ccb08
+2025-09-15 09:49:24.707 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:49:24.718 | INFO     | __main__:handle_handshake:74 - Created new session: dac839a8-a05f-452b-85c3-6ccdb5930b48
+2025-09-15 09:52:24.248 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:52:24.255 | INFO     | __main__:handle_handshake:74 - Created new session: 9157cc09-6ecf-4741-a647-b806e34dfa61
+2025-09-15 09:53:15.424 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:53:15.431 | INFO     | __main__:handle_handshake:74 - Created new session: fb58fc5a-b421-463d-92a5-3d61a68ee345
+2025-09-15 09:54:46.409 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:54:46.414 | INFO     | __main__:handle_handshake:74 - Created new session: 18c1bf8d-0d23-49f8-a587-084405c46b4e
+2025-09-15 09:55:08.896 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:55:08.924 | INFO     | __main__:handle_handshake:74 - Created new session: da6f81ee-259d-4870-a2dd-0983fe262e60
+2025-09-15 09:55:38.589 | INFO     | __main__:handle_prompt:88 - Created new session: 03d455e0-4d1b-4c66-a181-aa28c31ec16b
+2025-09-15 09:55:38.589 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 09:55:38.850 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 03d455e0-4d1b-4c66-a181-aa28c31ec16b
+2025-09-15 09:57:55.520 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:57:55.530 | INFO     | __main__:handle_handshake:74 - Created new session: 2dac5d9b-b486-4cb7-94b5-cb76098164c8
+2025-09-15 09:57:58.705 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 09:57:58.719 | INFO     | __main__:handle_handshake:74 - Created new session: d64f2c0b-45c4-49f3-b753-eb23bb1af73c
+2025-09-15 09:58:27.757 | INFO     | __main__:handle_prompt:88 - Created new session: 6e2fb3b9-ff13-4187-bb34-7defbc73c370
+2025-09-15 09:58:27.757 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 09:58:28.048 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 6e2fb3b9-ff13-4187-bb34-7defbc73c370
+2025-09-15 10:02:21.573 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:02:21.580 | INFO     | __main__:handle_handshake:74 - Created new session: 5d7753b4-5517-4288-8f44-225d4825f5ae
+2025-09-15 10:04:20.162 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:04:20.168 | INFO     | __main__:handle_handshake:74 - Created new session: a3c586f4-8309-4ea8-813d-57ae86460dcf
+2025-09-15 10:07:31.694 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:07:31.700 | INFO     | __main__:handle_handshake:74 - Created new session: d5114976-57f7-4c59-a3f5-a529ad9fc0ee
+2025-09-15 10:07:37.078 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:07:37.084 | INFO     | __main__:handle_handshake:74 - Created new session: b450ca37-1d1a-4b04-927c-40a38769f629
+2025-09-15 10:09:50.074 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:09:50.078 | INFO     | __main__:handle_handshake:74 - Created new session: c8cb2642-a473-46b2-bdb0-ad1abebee590
+2025-09-15 10:10:49.174 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:10:49.178 | INFO     | __main__:handle_handshake:74 - Created new session: 4f668954-fe88-4691-a039-6e1459b5309b
+2025-09-15 10:11:10.905 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:11:10.910 | INFO     | __main__:handle_handshake:74 - Created new session: 9b534a4a-4b81-4974-89fb-2211d3dfec8d
+2025-09-15 10:12:02.472 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:12:02.479 | INFO     | __main__:handle_handshake:74 - Created new session: b579ce7b-0f33-4e82-87ad-55bcab8ce032
+2025-09-15 10:14:54.900 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:14:54.907 | INFO     | __main__:handle_handshake:74 - Created new session: 899ed37f-3b62-4d8f-85ea-87c2ccdf8b78
+2025-09-15 10:14:59.145 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:14:59.152 | INFO     | __main__:handle_handshake:74 - Created new session: 1bdf5505-345b-4dcc-ba5c-b0ab127437b5
+2025-09-15 10:16:11.424 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:16:11.440 | INFO     | __main__:handle_handshake:74 - Created new session: fa9172ed-8952-4534-b47c-6660b151a7fd
+2025-09-15 10:17:11.187 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:17:11.195 | INFO     | __main__:handle_handshake:74 - Created new session: 2950eed7-c463-412a-bffc-5e680a76cf20
+2025-09-15 10:17:34.010 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:17:34.017 | INFO     | __main__:handle_handshake:74 - Created new session: 2cc409ab-b78d-4b19-ae35-4d2413699a2f
+2025-09-15 10:19:48.126 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:19:48.135 | INFO     | __main__:handle_handshake:74 - Created new session: f320dadb-2fcd-4737-b1f7-ec41c300779c
+2025-09-15 10:20:48.142 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:20:48.148 | INFO     | __main__:handle_handshake:74 - Created new session: 63c9a025-6fbe-4a8a-be16-a86b654db95c
+2025-09-15 10:22:00.188 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:22:00.198 | INFO     | __main__:handle_handshake:74 - Created new session: c5f15217-5c9c-4bc7-b239-259fe2c5b541
+2025-09-15 10:22:19.975 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:22:19.978 | INFO     | __main__:handle_handshake:74 - Created new session: 35f81bd3-4835-4628-a9f4-131d915560b3
+2025-09-15 10:22:24.599 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:22:24.605 | INFO     | __main__:handle_handshake:74 - Created new session: 11d09e5a-d194-4154-b7a7-40e6e2889d23
+2025-09-15 10:23:00.261 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 10:23:00.268 | INFO     | __main__:handle_handshake:74 - Created new session: d7cf48f1-d175-442a-b89b-4fe707409766
+2025-09-15 12:21:10.597 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:21:10.600 | INFO     | __main__:handle_handshake:74 - Created new session: 7ce1ea71-5914-4890-a841-a1372ba7c9f4
+2025-09-15 12:21:42.043 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:21:42.049 | INFO     | __main__:handle_handshake:74 - Created new session: 1e041301-61eb-4f43-b923-c94b6dd54284
+2025-09-15 12:22:44.499 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:22:44.508 | INFO     | __main__:handle_handshake:74 - Created new session: 59a5c82e-f204-4f55-8f5b-7381495b4fb7
+2025-09-15 12:23:17.696 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:23:17.722 | INFO     | __main__:handle_handshake:74 - Created new session: fcba584b-e09c-4862-bf08-e1ed7917ad68
+2025-09-15 12:25:08.709 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:25:08.717 | INFO     | __main__:handle_handshake:74 - Created new session: b8028783-fe0e-41df-b04f-7ebdecebca8d
+2025-09-15 12:32:22.804 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:32:22.807 | INFO     | __main__:handle_handshake:74 - Created new session: 77700afd-b011-48f4-a13d-46dec25fcf98
+2025-09-15 12:32:24.398 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:32:24.402 | INFO     | __main__:handle_handshake:74 - Created new session: 49d6c16f-ac0d-4e20-b931-35cb5d631dd9
+2025-09-15 12:32:43.148 | INFO     | __main__:<module>:216 - Server shutting down
+2025-09-15 12:32:43.149 | INFO     | __main__:cleanup_session:203 - Cleaning up session: e0f26d04-7c2b-4915-aa28-f238cdeaaf33
+2025-09-15 12:32:43.150 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 54276a42-47e3-41cb-ab14-1f464e20f101
+2025-09-15 12:32:43.151 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 03d455e0-4d1b-4c66-a181-aa28c31ec16b
+2025-09-15 12:32:43.151 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 6e2fb3b9-ff13-4187-bb34-7defbc73c370
+2025-09-15 12:33:42.535 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-15 12:33:49.828 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:33:49.831 | INFO     | __main__:handle_handshake:74 - Created new session: a92bd49c-aaa2-4162-9456-92b8539d6318
+2025-09-15 12:39:45.933 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:39:45.936 | INFO     | __main__:handle_handshake:74 - Created new session: 79b263cd-a13b-4c26-811a-7204593028b1
+2025-09-15 12:39:50.259 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:39:50.264 | INFO     | __main__:handle_handshake:74 - Created new session: 3620947a-75fa-4031-8a87-a5a789242350
+2025-09-15 12:43:15.432 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:43:15.436 | INFO     | __main__:handle_handshake:74 - Created new session: 81e7b663-345b-4914-b194-28e57f4df17b
+2025-09-15 12:43:26.235 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:43:27.144 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:43:28.942 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:43:29.850 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:43:53.472 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:44:40.128 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:44:59.621 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:45:38.855 | INFO     | __main__:handle_prompt:88 - Created new session: 7725eef9-cdcf-45b4-9dd0-e07a202ab7db
+2025-09-15 12:45:38.856 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-15 12:45:39.333 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 7725eef9-cdcf-45b4-9dd0-e07a202ab7db
+2025-09-15 12:48:47.588 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:48:47.594 | INFO     | __main__:handle_handshake:74 - Created new session: 2eefb969-74b0-4132-808c-bb3dd147b0e4
+2025-09-15 12:48:51.218 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:48:51.220 | INFO     | __main__:handle_handshake:74 - Created new session: 4bc9c62d-de72-4ace-a4b5-32b4eb457073
+2025-09-15 12:50:00.661 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:50:15.222 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 12:50:17.600 | INFO     | __main__:handler:20 - New connection established
+2025-09-15 13:38:37.134 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:19:22.459 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-16 22:20:19.769 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:22:18.463 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:23:14.797 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:23:14.807 | INFO     | __main__:handle_handshake:74 - Created new session: eae1506a-ce9c-4324-9933-d3abafe595c5
+2025-09-16 22:25:03.354 | INFO     | __main__:handle_prompt:88 - Created new session: 4ef74787-89f1-4e90-bd99-c1500723406b
+2025-09-16 22:25:03.355 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-16 22:25:03.793 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 4ef74787-89f1-4e90-bd99-c1500723406b
+2025-09-16 22:25:41.701 | INFO     | __main__:handle_prompt:88 - Created new session: 5f7d86ae-2d8d-4747-910b-caddecd04ece
+2025-09-16 22:25:41.701 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-16 22:25:41.991 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 5f7d86ae-2d8d-4747-910b-caddecd04ece
+2025-09-16 22:29:59.407 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:29:59.429 | INFO     | __main__:handle_handshake:74 - Created new session: a381fd8f-2b54-4474-a29e-db6b776e626f
+2025-09-16 22:30:41.377 | INFO     | __main__:handle_prompt:88 - Created new session: af7733a7-8e58-49c8-a13d-9041162c44d4
+2025-09-16 22:30:41.378 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-16 22:30:41.690 | INFO     | __main__:handle_prompt:112 - Created new agent for session: af7733a7-8e58-49c8-a13d-9041162c44d4
+2025-09-16 22:36:21.540 | INFO     | __main__:handler:20 - New connection established
+2025-09-16 22:37:04.042 | INFO     | __main__:handle_prompt:88 - Created new session: 3219c76a-11fe-4a97-af46-c51fae0caf12
+2025-09-16 22:37:04.043 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-16 22:37:04.408 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 3219c76a-11fe-4a97-af46-c51fae0caf12
+2025-09-16 22:37:39.074 | INFO     | __main__:handle_prompt:88 - Created new session: cc774d95-c166-4f64-b503-e995ad80bba2
+2025-09-16 22:37:39.075 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-16 22:37:39.551 | INFO     | __main__:handle_prompt:112 - Created new agent for session: cc774d95-c166-4f64-b503-e995ad80bba2
+2025-09-17 00:54:43.277 | INFO     | __main__:handler:47 - Connection closed (Code: 1006, Reason: )
+2025-09-17 20:31:47.805 | INFO     | __main__:main:209 - WebSocket server started on ws://localhost:8765
+2025-09-17 20:31:51.276 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:31:55.036 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:35:17.079 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:36:46.897 | INFO     | __main__:handle_prompt:88 - Created new session: 4f367cf2-6236-44fa-a960-69d8e85abae1
+2025-09-17 20:36:46.899 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 20:36:50.038 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 4f367cf2-6236-44fa-a960-69d8e85abae1
+2025-09-17 20:39:51.237 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:40:51.139 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:40:54.889 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:42:23.548 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:43:24.352 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:44:10.051 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 20:44:12.130 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:10:37.280 | INFO     | __main__:<module>:216 - Server shutting down
+2025-09-17 21:10:37.280 | INFO     | __main__:cleanup_session:203 - Cleaning up session: 4f367cf2-6236-44fa-a960-69d8e85abae1
+2025-09-17 21:15:38.326 | INFO     | __main__:main:210 - WebSocket server started on ws://localhost:8765
+2025-09-17 21:17:08.640 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:18:43.637 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:19:30.583 | INFO     | __main__:handle_prompt:88 - Created new session: 733fd8f8-bb9e-458b-9b1f-85b2f6477a09
+2025-09-17 21:19:30.584 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 21:19:31.189 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 733fd8f8-bb9e-458b-9b1f-85b2f6477a09
+2025-09-17 21:26:34.185 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:27:35.939 | INFO     | __main__:handle_prompt:88 - Created new session: 6b80ff79-b849-4d79-8764-16ff27e10119
+2025-09-17 21:27:35.940 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 21:27:36.806 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 6b80ff79-b849-4d79-8764-16ff27e10119
+2025-09-17 21:29:09.794 | INFO     | __main__:<module>:217 - Server shutting down
+2025-09-17 21:29:09.794 | INFO     | __main__:cleanup_session:204 - Cleaning up session: 733fd8f8-bb9e-458b-9b1f-85b2f6477a09
+2025-09-17 21:29:09.794 | INFO     | __main__:cleanup_session:204 - Cleaning up session: 6b80ff79-b849-4d79-8764-16ff27e10119
+2025-09-17 21:30:26.891 | INFO     | __main__:main:210 - WebSocket server started on ws://localhost:8765
+2025-09-17 21:30:47.700 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:30:47.770 | INFO     | __main__:handle_handshake:74 - Created new session: ddad7764-bad9-4174-8233-4f649a1288a7
+2025-09-17 21:32:40.888 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:32:40.892 | INFO     | __main__:handle_handshake:74 - Created new session: 2bbd1819-f47c-4137-8ca0-6bc206ccdd10
+2025-09-17 21:34:18.720 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:34:18.723 | INFO     | __main__:handle_handshake:74 - Created new session: b2e63119-0a5e-43d7-a8a0-7d4eae77e6f6
+2025-09-17 21:34:20.576 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:34:20.579 | INFO     | __main__:handle_handshake:74 - Created new session: 0386e2fa-7b96-4387-9006-40e5958c5ae8
+2025-09-17 21:34:32.784 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:34:32.790 | INFO     | __main__:handle_handshake:74 - Created new session: 36b7e15f-52f6-46fc-8231-ffa41e04c781
+2025-09-17 21:34:43.170 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:34:43.176 | INFO     | __main__:handle_handshake:74 - Created new session: b6596c90-23b1-453d-875a-76346b009a21
+2025-09-17 21:34:44.575 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:34:44.578 | INFO     | __main__:handle_handshake:74 - Created new session: 8b31ea30-e2de-4cd8-a4ca-2c1f33f6bf1d
+2025-09-17 21:35:29.925 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:35:29.929 | INFO     | __main__:handle_handshake:74 - Created new session: 6622c3f1-9c1e-4c64-bb9d-5808c4daa9b6
+2025-09-17 21:35:32.843 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:35:32.846 | INFO     | __main__:handle_handshake:74 - Created new session: 865f0c0a-9d31-4765-8704-56edce682d4d
+2025-09-17 21:35:44.036 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:35:44.042 | INFO     | __main__:handle_handshake:74 - Created new session: ee7613e7-3410-457a-8e5e-e6b06e3ae756
+2025-09-17 21:35:58.398 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:35:58.403 | INFO     | __main__:handle_handshake:74 - Created new session: ef947eca-2c8b-42ad-ad9e-18c98ef59d69
+2025-09-17 21:36:31.756 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:36:31.760 | INFO     | __main__:handle_handshake:74 - Created new session: 51e9f5d7-c37d-49f4-8b25-a1bf30ca5e90
+2025-09-17 21:36:33.731 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:36:33.736 | INFO     | __main__:handle_handshake:74 - Created new session: 665b49c5-80fc-4ca3-be1c-2ddaa99e8167
+2025-09-17 21:37:22.158 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:37:22.162 | INFO     | __main__:handle_handshake:74 - Created new session: 5817e676-c010-4f93-868e-2eac5fb06c20
+2025-09-17 21:44:02.533 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:44:02.538 | INFO     | __main__:handle_handshake:74 - Created new session: 6fd1c063-59c6-451a-9073-4f42c87c7e58
+2025-09-17 21:44:05.216 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:44:05.218 | INFO     | __main__:handle_handshake:74 - Created new session: f096b9a9-d760-4995-8c12-097d7f25699d
+2025-09-17 21:44:38.254 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:44:38.259 | INFO     | __main__:handle_handshake:74 - Created new session: 9f177088-c35f-4699-9c88-069cad7247af
+2025-09-17 21:44:58.873 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:44:58.877 | INFO     | __main__:handle_handshake:74 - Created new session: 2de6479d-7b87-4c45-9456-05d8ad362014
+2025-09-17 21:45:37.133 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:45:37.138 | INFO     | __main__:handle_handshake:74 - Created new session: bb3f0850-5f76-4cf7-88ec-2905ae5db8d9
+2025-09-17 21:46:05.235 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:46:05.242 | INFO     | __main__:handle_handshake:74 - Created new session: 5426aab6-b411-46fa-afa7-0d9822d97c96
+2025-09-17 21:46:09.442 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:46:09.446 | INFO     | __main__:handle_handshake:74 - Created new session: eee9b682-6b1e-4cbd-a396-a523af5eb2a0
+2025-09-17 21:46:12.454 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:46:12.460 | INFO     | __main__:handle_handshake:74 - Created new session: 25ab871a-f5dd-4196-b360-c7702b5e0a02
+2025-09-17 21:46:16.815 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:46:16.820 | INFO     | __main__:handle_handshake:74 - Created new session: d5236c52-b778-4bd2-9dcc-0d97ceb9c4c5
+2025-09-17 21:47:05.386 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 21:47:05.395 | INFO     | __main__:handle_handshake:74 - Created new session: 6d7373a4-16b5-48df-96ae-cd378f6f0688
+2025-09-17 21:47:56.785 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:00:25.495 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:02:59.900 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:10:25.138 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:10:25.161 | INFO     | __main__:handle_handshake:74 - Created new session: 7b2ec640-b47f-4f17-b454-0f30be8b6c8b
+2025-09-17 22:11:05.064 | INFO     | __main__:handle_prompt:88 - Created new session: aa97e4e2-9a23-438c-b462-5302a4f49dde
+2025-09-17 22:11:05.065 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:11:06.357 | INFO     | __main__:handle_prompt:112 - Created new agent for session: aa97e4e2-9a23-438c-b462-5302a4f49dde
+2025-09-17 22:20:56.533 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:20:56.572 | INFO     | __main__:handle_handshake:74 - Created new session: 3f89699e-45ed-4383-8a19-44fbd05205ae
+2025-09-17 22:21:32.306 | INFO     | __main__:handle_prompt:88 - Created new session: b9fa2d86-f88d-4ab8-aba1-69313642110b
+2025-09-17 22:21:32.307 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:21:33.586 | INFO     | __main__:handle_prompt:112 - Created new agent for session: b9fa2d86-f88d-4ab8-aba1-69313642110b
+2025-09-17 22:25:29.031 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:25:29.066 | INFO     | __main__:handle_handshake:74 - Created new session: ef811b41-1d6d-4052-abff-40d8973cdf8f
+2025-09-17 22:26:02.985 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:26:04.342 | INFO     | __main__:handle_prompt:112 - Created new agent for session: ef811b41-1d6d-4052-abff-40d8973cdf8f
+2025-09-17 22:26:05.807 | INFO     | __main__:handle_tool_response:186 - Processed tool response for session ef811b41-1d6d-4052-abff-40d8973cdf8f
+2025-09-17 22:26:05.821 | ERROR    | __main__:handle_tool_response:195 - Error handling tool response: 'Logger' object has no attribute 'inf'
+2025-09-17 22:29:18.745 | INFO     | __main__:<module>:217 - Server shutting down
+2025-09-17 22:29:18.746 | INFO     | __main__:cleanup_session:204 - Cleaning up session: aa97e4e2-9a23-438c-b462-5302a4f49dde
+2025-09-17 22:29:18.746 | INFO     | __main__:cleanup_session:204 - Cleaning up session: b9fa2d86-f88d-4ab8-aba1-69313642110b
+2025-09-17 22:29:18.747 | INFO     | __main__:cleanup_session:204 - Cleaning up session: ef811b41-1d6d-4052-abff-40d8973cdf8f
+2025-09-17 22:30:07.451 | INFO     | __main__:main:210 - WebSocket server started on ws://localhost:8765
+2025-09-17 22:32:42.349 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:32:42.415 | INFO     | __main__:handle_handshake:74 - Created new session: e18eccd8-23a5-43aa-9cf8-35a2d7eeabec
+2025-09-17 22:33:26.304 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:33:26.838 | INFO     | __main__:handle_prompt:112 - Created new agent for session: e18eccd8-23a5-43aa-9cf8-35a2d7eeabec
+2025-09-17 22:33:27.964 | INFO     | __main__:handle_tool_response:186 - Processed tool response for session e18eccd8-23a5-43aa-9cf8-35a2d7eeabec
+2025-09-17 22:33:27.969 | INFO     | __main__:handle_tool_response:187 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': {}, 'session_id': 'e18eccd8-23a5-43aa-9cf8-35a2d7eeabec'}
+2025-09-17 22:34:17.828 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:34:17.860 | INFO     | __main__:handle_handshake:74 - Created new session: a4e67ce1-db75-413b-bbf1-027d97295d26
+2025-09-17 22:34:21.398 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:34:21.420 | INFO     | __main__:handle_handshake:74 - Created new session: 9cbd5bda-d7eb-4378-af17-5675b811201f
+2025-09-17 22:35:01.047 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:35:02.555 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 9cbd5bda-d7eb-4378-af17-5675b811201f
+2025-09-17 22:35:03.499 | INFO     | __main__:handle_tool_response:186 - Processed tool response for session 9cbd5bda-d7eb-4378-af17-5675b811201f
+2025-09-17 22:35:03.500 | INFO     | __main__:handle_tool_response:187 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': {}, 'session_id': '9cbd5bda-d7eb-4378-af17-5675b811201f'}
+2025-09-17 22:44:16.001 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:44:16.037 | INFO     | __main__:handle_handshake:74 - Created new session: a1830da0-b8df-4ff7-9ff1-0c46cbd9bf14
+2025-09-17 22:45:37.577 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:45:37.676 | INFO     | __main__:handle_handshake:74 - Created new session: eaef53c3-c522-4f1c-a696-4207dbf9917e
+2025-09-17 22:45:57.239 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:45:59.121 | INFO     | __main__:handle_prompt:112 - Created new agent for session: eaef53c3-c522-4f1c-a696-4207dbf9917e
+2025-09-17 22:46:00.506 | INFO     | __main__:handle_tool_response:186 - Processed tool response for session eaef53c3-c522-4f1c-a696-4207dbf9917e
+2025-09-17 22:46:00.513 | INFO     | __main__:handle_tool_response:187 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': 'eaef53c3-c522-4f1c-a696-4207dbf9917e'}
+2025-09-17 22:53:29.315 | INFO     | __main__:<module>:217 - Server shutting down
+2025-09-17 22:53:29.315 | INFO     | __main__:cleanup_session:204 - Cleaning up session: e18eccd8-23a5-43aa-9cf8-35a2d7eeabec
+2025-09-17 22:53:29.315 | INFO     | __main__:cleanup_session:204 - Cleaning up session: 9cbd5bda-d7eb-4378-af17-5675b811201f
+2025-09-17 22:53:29.316 | INFO     | __main__:cleanup_session:204 - Cleaning up session: eaef53c3-c522-4f1c-a696-4207dbf9917e
+2025-09-17 22:54:51.275 | INFO     | __main__:main:210 - WebSocket server started on ws://localhost:8765
+2025-09-17 22:55:28.264 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:55:28.290 | INFO     | __main__:handle_handshake:74 - Created new session: 200116b9-4471-4198-80e4-d450f8f30a54
+2025-09-17 22:56:07.116 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 22:56:10.313 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 200116b9-4471-4198-80e4-d450f8f30a54
+2025-09-17 22:56:14.621 | ERROR    | __main__:handle_tool_response:195 - Error handling tool response: 'dict' object has no attribute 'content'
+2025-09-17 22:57:36.027 | INFO     | __main__:<module>:217 - Server shutting down
+2025-09-17 22:57:36.028 | INFO     | __main__:cleanup_session:204 - Cleaning up session: 200116b9-4471-4198-80e4-d450f8f30a54
+2025-09-17 22:58:40.391 | INFO     | __main__:main:211 - WebSocket server started on ws://localhost:8765
+2025-09-17 22:59:09.257 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 22:59:09.354 | INFO     | __main__:handle_handshake:74 - Created new session: 1c951d80-bef4-4cba-a51b-fdefa4cddfe5
+2025-09-17 23:00:00.019 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-17 23:00:04.140 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 1c951d80-bef4-4cba-a51b-fdefa4cddfe5
+2025-09-17 23:00:07.250 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 1c951d80-bef4-4cba-a51b-fdefa4cddfe5
+2025-09-17 23:00:07.264 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': '1c951d80-bef4-4cba-a51b-fdefa4cddfe5'}
+2025-09-17 23:13:20.252 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 23:13:20.302 | INFO     | __main__:handle_handshake:74 - Created new session: 4f604623-090c-4d68-ba97-b2fb33ec7608
+2025-09-17 23:44:00.651 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 23:44:00.818 | INFO     | __main__:handle_handshake:74 - Created new session: 41c27954-ae68-419c-b4b2-41f24290e033
+2025-09-17 23:50:49.203 | INFO     | __main__:handler:20 - New connection established
+2025-09-17 23:50:49.209 | INFO     | __main__:handle_handshake:74 - Created new session: 79721f02-0048-4065-80b0-f7d1e89e4586
+2025-09-18 00:32:24.176 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:32:24.217 | INFO     | __main__:handle_handshake:74 - Created new session: 7896e7b2-42f7-4bbf-9f35-557664cd24f6
+2025-09-18 00:33:24.445 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:33:24.610 | INFO     | __main__:handle_handshake:74 - Created new session: ceef13db-410f-43c3-95c8-800d4d8f9230
+2025-09-18 00:34:16.038 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:34:16.080 | INFO     | __main__:handle_handshake:74 - Created new session: e7976e22-eed3-4269-9989-9e20a7b29522
+2025-09-18 00:34:51.263 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:34:51.306 | INFO     | __main__:handle_handshake:74 - Created new session: f01bdd4b-b41d-4e85-a7cf-0ecd75117177
+2025-09-18 00:40:57.224 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:40:57.490 | INFO     | __main__:handle_handshake:74 - Created new session: 175b343e-afd7-4d56-8baa-9234cc73bd68
+2025-09-18 00:45:17.314 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:45:17.375 | INFO     | __main__:handle_handshake:74 - Created new session: d28bd045-83c8-47d2-8577-18354b18919b
+2025-09-18 00:46:39.240 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 00:46:39.301 | INFO     | __main__:handle_handshake:74 - Created new session: 0d4c19f2-215e-45e3-8e1e-36fa6c6e15e3
+2025-09-18 00:49:16.324 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 00:49:17.609 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 0d4c19f2-215e-45e3-8e1e-36fa6c6e15e3
+2025-09-18 00:49:21.496 | INFO     | agents.sub_agents.html:moderator_action:258 - --- Moderator Action ---
+2025-09-18 00:49:21.498 | INFO     | agents.sub_agents.html:moderator_action:262 - Description: different styled text for testing purposes
+2025-09-18 00:49:21.499 | INFO     | agents.sub_agents.html:moderator_action:263 - Style Guidelines: different font size, font family, and color
+2025-09-18 00:49:21.500 | INFO     | agents.sub_agents.html:moderator_action:300 - Moderator: Initial attempt (0/3)
+2025-09-18 00:49:21.504 | INFO     | agents.sub_agents.html:content_generator_action:306 - --- Content Generator Action ---
+2025-09-18 00:49:26.280 | INFO     | agents.sub_agents.html:content_generator_action:318 - Generated HTML length: 552 characters
+2025-09-18 00:49:26.282 | INFO     | agents.sub_agents.html:check_content_generation_outcome:503 - Content generation outcome: success
+2025-09-18 00:49:26.289 | INFO     | agents.sub_agents.html:html_validator_action:342 - --- HTML Validator Action ---
+2025-09-18 00:49:29.306 | INFO     | agents.sub_agents.html:html_validator_action:369 - Validation successful
+2025-09-18 00:49:29.311 | INFO     | agents.sub_agents.html:check_validation_outcome:508 - Validation outcome: success
+2025-09-18 00:49:29.318 | INFO     | agents.sub_agents.html:evaluator_action:391 - --- Evaluator Action ---
+2025-09-18 00:49:32.455 | INFO     | agents.sub_agents.html:evaluator_action:407 - New best score: 100 (previous: -1)
+2025-09-18 00:49:32.457 | INFO     | agents.sub_agents.html:evaluator_action:409 - Evaluation score: 100/100
+2025-09-18 00:49:32.460 | INFO     | agents.sub_agents.html:evaluator_action:410 - Feedback: The HTML content perfectly fulfills all requirements. It accurately represents different styled text, adhering to the specified style guidelines for font size, font family, and color. The HTML structure is well-formed, semantic, and properly structured, following all rules. The content is clear and well-written. All rules are followed precisely, including the use of only allowed tags, text encapsulation in <span> tags, correct placement of <span> tags, and the use of inline styles. The use of HEX format for colors is also correct.
+2025-09-18 00:49:32.464 | INFO     | agents.sub_agents.html:check_evaluation_score:514 - Evaluation score: 100, threshold: 90
+2025-09-18 00:49:35.293 | INFO     | agents.tools.apply:apply:25 - --- Applying Chunk ---
+2025-09-18 00:49:35.298 | INFO     | agents.tools.apply:apply:26 - Type: INSERT
+2025-09-18 00:49:35.302 | INFO     | agents.tools.apply:apply:27 - Chunk ID: 9534e4b4-d224-4190-a062-e871ada4466f
+2025-09-18 00:49:35.305 | INFO     | agents.tools.apply:apply:28 - Document Structure Length: 496
+2025-09-18 00:49:35.309 | INFO     | agents.tools.apply:apply:29 - Last Prompt: could you add some different styled text to this document of testing purposes, could be any thing, just don't ask furthor questions
+2025-09-18 00:49:35.316 | INFO     | agents.tools.apply:apply:47 - Loaded chunk HTML with length: 643
+2025-09-18 00:49:35.319 | INFO     | agents.sub_agents.apply:run:238 - --- Running Apply Agent ---
+2025-09-18 00:49:35.323 | INFO     | agents.sub_agents.apply:run:239 - Apply Type: ApplyType.INSERT
+2025-09-18 00:49:35.327 | INFO     | agents.sub_agents.apply:run:240 - Document Structure Length: 496
+2025-09-18 00:49:35.331 | INFO     | agents.sub_agents.apply:run:241 - Last Prompt: could you add some different styled text to this document of testing purposes, could be any thing, just don't ask furthor questions
+2025-09-18 00:49:35.336 | INFO     | agents.sub_agents.apply:run:242 - Chunk ID: 9534e4b4-d224-4190-a062-e871ada4466f
+2025-09-18 00:49:35.339 | INFO     | agents.sub_agents.apply:run:243 - Chunk HTML Length: 643
+2025-09-18 00:49:35.370 | INFO     | agents.sub_agents.apply:moderator_action:75 - --- Moderator Action ---
+2025-09-18 00:49:35.398 | INFO     | agents.sub_agents.apply:location_decider_action:172 - --- Location Decider Action ---
+2025-09-18 00:49:36.827 | INFO     | agents.sub_agents.apply:location_decider_action:183 - Content generated by apply tool call: ```json
+{
+  "position_id": "docs-internal-guid-1dbf39f4-7fff-2a7a-d3b4-084ea8b5bb41",
+  "relative_position": "AFTER"
+}
+```
+2025-09-18 00:49:36.829 | INFO     | agents.sub_agents.apply:check_location_decider_outcome:231 - Location decider outcome: success
+2025-09-18 00:49:36.833 | INFO     | agents.sub_agents.apply:run:268 - Unparsed response:{'messages': [], 'apply_type': <ApplyType.INSERT: 'INSERT'>, 'document_structure': '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-1dbf39f4-7fff-2a7a-d3b4-084ea8b5bb41"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">asdfasdfasdfasdfggg</span></p></b><br class="Apple-interchange-newline">', 'last_prompt': "could you add some different styled text to this document of testing purposes, could be any thing, just don't ask furthor questions", 'chunk_id': '9534e4b4-d224-4190-a062-e871ada4466f', 'chunk_html': '<p style="margin-bottom:0px; margin-top:0px;"><span>\n</span><span style="font-size:12px; font-family: Arial; color:#000000;">This is a </span><span>\n</span><span style="font-size:16px; font-family: Verdana; color:#FF0000;">test </span><span>\n</span><span style="font-size:20px; font-family: \'Times New Roman\'; color:#0000FF;">paragraph </span><span>\n</span><span style="font-size:24px; font-family: Arial; color:#333333;">with </span><span>\n</span><span style="font-size:28px; font-family: Courier; color:#008000;">different </span><span>\n</span><span style="font-size:32px; font-family: Arial; color:#800080;">styles.</span><span>\n</span></p>', 'outcome': 'success', 'position_id': 'docs-internal-guid-1dbf39f4-7fff-2a7a-d3b4-084ea8b5bb41', 'relative_position': 'AFTER', 'current_retry_count': 1, 'max_retries_reached': False}
+2025-09-18 00:49:36.834 | INFO     | agents.sub_agents.apply:run:283 - --- Apply Agent Finished ---
+2025-09-18 00:49:36.835 | INFO     | agents.sub_agents.apply:run:284 - Final Response: {'status': 'success', 'position_id': 'docs-internal-guid-1dbf39f4-7fff-2a7a-d3b4-084ea8b5bb41', 'relative_position': 'AFTER'}
+2025-09-18 00:49:36.836 | INFO     | agents.tools.apply:apply:57 - --- Apply Tool Finished ---
+2025-09-18 00:49:36.837 | INFO     | agents.tools.apply:apply:58 - Result: {'status': 'success', 'position_id': 'docs-internal-guid-1dbf39f4-7fff-2a7a-d3b4-084ea8b5bb41', 'relative_position': 'AFTER'}
+2025-09-18 01:19:31.116 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 01:19:31.164 | INFO     | __main__:handle_handshake:74 - Created new session: c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 01:21:24.790 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 01:21:26.313 | INFO     | __main__:handle_prompt:112 - Created new agent for session: c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 01:21:27.339 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 01:21:27.342 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': 'c1913899-3ea0-4c00-bad4-010c2bd40274'}
+2025-09-18 01:46:42.219 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 01:46:42.362 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': 'c1913899-3ea0-4c00-bad4-010c2bd40274'}
+2025-09-18 01:46:43.667 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 01:46:43.667 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': 'c1913899-3ea0-4c00-bad4-010c2bd40274'}
+2025-09-18 01:50:22.878 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 01:50:22.990 | INFO     | __main__:handle_handshake:74 - Created new session: bcd70cb9-6f35-40ee-a374-c209ec1408c5
+2025-09-18 01:51:31.912 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 01:51:35.659 | INFO     | __main__:handle_prompt:112 - Created new agent for session: bcd70cb9-6f35-40ee-a374-c209ec1408c5
+2025-09-18 01:52:11.274 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 01:52:11.306 | INFO     | __main__:handle_handshake:74 - Created new session: 732db572-54ee-4047-91e4-87943f73c6da
+2025-09-18 01:53:11.879 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 01:53:18.219 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 732db572-54ee-4047-91e4-87943f73c6da
+2025-09-18 01:53:20.843 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 732db572-54ee-4047-91e4-87943f73c6da
+2025-09-18 01:53:20.852 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': '732db572-54ee-4047-91e4-87943f73c6da'}
+2025-09-18 01:59:33.593 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 01:59:33.644 | INFO     | __main__:handle_handshake:74 - Created new session: 1d3f8837-83ae-4fa3-8f8d-2c6e619468fe
+2025-09-18 02:00:26.921 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 02:00:26.955 | INFO     | __main__:handle_handshake:74 - Created new session: f4e692c1-5cd1-4379-81a2-07879dec014f
+2025-09-18 02:01:00.107 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 02:01:04.873 | INFO     | __main__:handle_prompt:112 - Created new agent for session: f4e692c1-5cd1-4379-81a2-07879dec014f
+2025-09-18 02:01:06.977 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session f4e692c1-5cd1-4379-81a2-07879dec014f
+2025-09-18 02:01:06.982 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': 'f4e692c1-5cd1-4379-81a2-07879dec014f'}
+2025-09-18 04:10:42.510 | INFO     | __main__:handler:47 - Connection closed (Code: 1006, Reason: )
+2025-09-18 13:34:03.286 | INFO     | __main__:<module>:218 - Server shutting down
+2025-09-18 13:34:03.287 | INFO     | __main__:cleanup_session:205 - Cleaning up session: 1c951d80-bef4-4cba-a51b-fdefa4cddfe5
+2025-09-18 13:34:03.287 | INFO     | __main__:cleanup_session:205 - Cleaning up session: 0d4c19f2-215e-45e3-8e1e-36fa6c6e15e3
+2025-09-18 13:34:03.288 | INFO     | __main__:cleanup_session:205 - Cleaning up session: c1913899-3ea0-4c00-bad4-010c2bd40274
+2025-09-18 13:34:03.288 | INFO     | __main__:cleanup_session:205 - Cleaning up session: bcd70cb9-6f35-40ee-a374-c209ec1408c5
+2025-09-18 13:34:03.289 | INFO     | __main__:cleanup_session:205 - Cleaning up session: 732db572-54ee-4047-91e4-87943f73c6da
+2025-09-18 13:34:03.289 | INFO     | __main__:cleanup_session:205 - Cleaning up session: f4e692c1-5cd1-4379-81a2-07879dec014f
+2025-09-18 13:34:57.325 | INFO     | __main__:main:211 - WebSocket server started on ws://localhost:8765
+2025-09-18 13:37:52.660 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 13:37:52.700 | INFO     | __main__:handle_handshake:74 - Created new session: b0b079dc-7c41-41db-a26b-acd13b374aac
+2025-09-18 13:38:08.664 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 13:38:09.626 | INFO     | __main__:handle_prompt:112 - Created new agent for session: b0b079dc-7c41-41db-a26b-acd13b374aac
+2025-09-18 13:38:37.371 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 13:38:37.405 | INFO     | __main__:handle_handshake:74 - Created new session: 80759f90-50cc-4fe9-b7a5-034e0a082116
+2025-09-18 13:39:03.592 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 13:39:04.885 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 80759f90-50cc-4fe9-b7a5-034e0a082116
+2025-09-18 13:39:05.847 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 80759f90-50cc-4fe9-b7a5-034e0a082116
+2025-09-18 13:39:05.849 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': '80759f90-50cc-4fe9-b7a5-034e0a082116'}
+2025-09-18 13:59:55.943 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 13:59:55.990 | INFO     | __main__:handle_handshake:74 - Created new session: 2676509c-52fe-4d01-b6ff-743269d0dcb1
+2025-09-18 14:03:22.425 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 14:03:22.471 | INFO     | __main__:handle_handshake:74 - Created new session: 7264dc9f-90e9-48be-bb61-7864357c80d5
+2025-09-18 14:04:00.499 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 14:04:01.257 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 7264dc9f-90e9-48be-bb61-7864357c80d5
+2025-09-18 14:04:01.939 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 7264dc9f-90e9-48be-bb61-7864357c80d5
+2025-09-18 14:04:01.949 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': '7264dc9f-90e9-48be-bb61-7864357c80d5'}
+2025-09-18 14:39:45.548 | INFO     | __main__:handler:47 - Connection closed (Code: 1006, Reason: )
+2025-09-18 15:36:01.457 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 15:36:01.479 | INFO     | __main__:handle_handshake:74 - Created new session: 9dde6cfe-a906-4a8f-aa19-7dc702eea4e3
+2025-09-18 15:36:04.399 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 15:36:04.414 | INFO     | __main__:handle_handshake:74 - Created new session: cc7d98dc-ee58-4601-962f-7cf020db0b5b
+2025-09-18 15:36:22.130 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 15:36:22.435 | INFO     | __main__:handle_prompt:112 - Created new agent for session: cc7d98dc-ee58-4601-962f-7cf020db0b5b
+2025-09-18 15:36:59.316 | ERROR    | __main__:handler:43 - Error processing message: "'name'"
+2025-09-18 15:38:29.198 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 15:38:29.215 | INFO     | __main__:handle_handshake:74 - Created new session: 72b9069d-549e-4125-8914-b19ea4a92d41
+2025-09-18 15:38:52.555 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-18 15:38:53.057 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 72b9069d-549e-4125-8914-b19ea4a92d41
+2025-09-18 15:38:54.092 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 72b9069d-549e-4125-8914-b19ea4a92d41
+2025-09-18 15:38:54.094 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'content': '\x03asdfasdfasdfasdfggg\n', 'session_id': '72b9069d-549e-4125-8914-b19ea4a92d41'}
+2025-09-18 15:58:36.807 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 15:58:36.817 | INFO     | __main__:handle_handshake:74 - Created new session: 21861569-0fdc-4a98-8b77-6f800012b688
+2025-09-18 16:08:07.728 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:08:07.739 | INFO     | __main__:handle_handshake:74 - Created new session: ec4cea35-7221-4745-945c-6c3aa107996b
+2025-09-18 16:08:10.859 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:08:10.876 | INFO     | __main__:handle_handshake:74 - Created new session: 55ad3eae-8494-49f4-88ae-9843a4b10fce
+2025-09-18 16:09:26.677 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:09:26.699 | INFO     | __main__:handle_handshake:74 - Created new session: 5e6d666d-61a2-4c3f-82c5-76d8e50a0f29
+2025-09-18 16:10:29.847 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:10:29.866 | INFO     | __main__:handle_handshake:74 - Created new session: a33a33af-5f57-4cca-a1a5-bdb9f5a82daa
+2025-09-18 16:17:41.672 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:17:41.679 | INFO     | __main__:handle_handshake:74 - Created new session: 623c6ea2-1108-4248-8bc5-2cb10731d2c5
+2025-09-18 16:21:19.897 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:21:19.915 | INFO     | __main__:handle_handshake:74 - Created new session: 2146f7ca-d37f-4c16-af08-27d96bf0f40c
+2025-09-18 16:29:27.435 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 16:29:27.447 | INFO     | __main__:handle_handshake:74 - Created new session: 51ecaae9-0387-4a8c-99cd-d4a55cda0471
+2025-09-18 17:08:50.499 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 17:08:50.528 | INFO     | __main__:handle_handshake:74 - Created new session: dfc62e5d-e7fa-4e91-8d89-3bea6dcc28d6
+2025-09-18 17:09:02.029 | INFO     | __main__:handler:47 - Connection closed (Code: 1006, Reason: )
+2025-09-18 20:03:17.760 | INFO     | __main__:handler:20 - New connection established
+2025-09-18 20:03:17.820 | INFO     | __main__:handle_handshake:74 - Created new session: 35080778-06eb-40a2-95fc-b17a51c2e83f
+2025-09-19 15:07:22.147 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:07:22.156 | INFO     | __main__:handle_handshake:74 - Created new session: f971dc5c-8f70-4141-a898-b6b5d4ad25a2
+2025-09-19 15:08:30.630 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:08:30.634 | INFO     | __main__:handle_handshake:74 - Created new session: e984b0f3-7f9f-4d54-afad-f76420efe136
+2025-09-19 15:18:05.550 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:18:05.578 | INFO     | __main__:handle_handshake:74 - Created new session: aa164267-4910-40d6-9521-1d5ceabce06d
+2025-09-19 15:22:49.859 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:22:49.927 | INFO     | __main__:handle_handshake:74 - Created new session: ec77d2ea-4c82-4e9f-960d-7a3dd6149a77
+2025-09-19 15:24:22.491 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:24:22.510 | INFO     | __main__:handle_handshake:74 - Created new session: a6139320-333c-4899-9d05-429cc5b9921f
+2025-09-19 15:24:58.991 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:24:59.190 | INFO     | __main__:handle_handshake:74 - Created new session: 6f0106e5-49f4-47a1-8f4a-983eb0d242c0
+2025-09-19 15:26:59.597 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:26:59.611 | INFO     | __main__:handle_handshake:74 - Created new session: 5965bd68-7213-40c7-b50e-2eacf29e7886
+2025-09-19 15:29:27.057 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:29:27.065 | INFO     | __main__:handle_handshake:74 - Created new session: d4af1f50-7d5c-479a-bca6-4bf56ca51cba
+2025-09-19 15:30:49.008 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:30:49.093 | INFO     | __main__:handle_handshake:74 - Created new session: a710c564-80fb-4bdc-acc6-29fa19464fa5
+2025-09-19 15:32:02.389 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:32:02.449 | INFO     | __main__:handle_handshake:74 - Created new session: be58d039-81b9-49cd-8671-e13d387be842
+2025-09-19 15:34:20.535 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:34:20.542 | INFO     | __main__:handle_handshake:74 - Created new session: 9d16b94a-de92-4612-abc5-2a78253d6bf6
+2025-09-19 15:35:34.518 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:35:34.556 | INFO     | __main__:handle_handshake:74 - Created new session: 76dd80d1-1fde-4244-ad30-feb3ff135aff
+2025-09-19 15:36:22.839 | INFO     | __main__:handler:20 - New connection established
+2025-09-19 15:36:22.895 | INFO     | __main__:handle_handshake:74 - Created new session: 10a5011a-e0a2-4423-a203-0f1f5daa2ef1
