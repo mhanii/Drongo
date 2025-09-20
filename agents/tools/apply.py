@@ -20,7 +20,7 @@ class ApplyTool:
     def apply(self, type: str, chunk_id: str,  document_structure: str, last_prompt: str):
         """
         Decide where to apply a chunk in the document structure using the LLM.
-        For type 'INSERT', returns position_id and relative_position ('AFTER' or 'BEFORE').
+        Returns the start and end position IDs for the apply action.
         """
         logger.info(f"--- Applying Chunk ---")
         logger.info(f"Type: {type}")
@@ -59,7 +59,9 @@ class ApplyTool:
 
         custom_response = {
             "status": result.get("status","error"),
-            "message": "Request applied to the document" if result.get("status","error") == "success" else "Couldn't apply the request to the document."
+            "message": "Request applied to the document" if result.get("status","error") == "success" else "Couldn't apply the request to the document.",
+            "data_position_id_start": result.get("data_position_id_start"),
+            "data_position_id_end": result.get("data_position_id_end")
         }
         if self.queue:
             self.queue.put_nowait(json.dumps({"type":"END","process":"APPLY", "chunk_id": chunk_id, "status": custom_response["status"]}))

@@ -10,6 +10,8 @@ from typing import Annotated, List, Optional
 from time import sleep
 from new_logger import get_logger
 from agents.tools.enums import ApplyType
+from langgraph.types import interrupt
+import datetime
 
 # Assuming new_logger and enums are set up correctly
 logger = get_logger(True)
@@ -24,7 +26,8 @@ class State(TypedDict, total=False):
 
     # outcome
     outcome: str
-    data_position_id: str
+    data_position_id_start: str
+    data_position_id_end: str
     # Retry management
     current_retry_count: int
     max_retries_reached: bool
@@ -52,7 +55,7 @@ class ApplyAgent:
             "moderator",
             self.decide_moderator_next_step,
             {
-                "decide_location": "location_decider",
+                "location_decider": "location_decider",
                 "handle_error": "handle_error"
             }
         )
@@ -68,7 +71,7 @@ class ApplyAgent:
 
         graph_builder.add_conditional_edges(
             "send_apply_request",
-            self.self.check_outcome,
+            self.check_outcome,
             {
                 "success" : END,
                 "error":"handle_error"
@@ -104,78 +107,64 @@ class ApplyAgent:
 
         return updates
 
-    def get_prompt(self, document_structure: str,  last_prompt: str, chunk_html: str = ""):
+    def get_prompt(self, apply_type: ApplyType, document_structure: str,  last_prompt: str, chunk_html: str = ""):
         """
         Generate the LLM prompt based on the apply type.
         """
-        if type == ApplyType.INSERT:
-            return f"""
-You are an expert document editing assistant. Your task is to determine the precise location to insert a new HTML chunk into an existing document.
-
+        base_prompt = f"""
+You are an expert document editing assistant.
 ### Current Document Structure
 Here is the document, which is a sequence of HTML elements. Each element has a unique `data-position-id`.
 
 {document_structure}
+
+**User's Goal**
+The user's original request was: "{last_prompt}"
+
+CRITICAL INSTRUCTIONS:
+- You must return ONLY a single, valid JSON object and nothing else.
+"""
+
+        if apply_type == ApplyType.INSERT:
+            return base_prompt + f"""
+Your task is to determine the precise location to insert a new HTML chunk into an existing document.
 
 New Content to Insert:
 {chunk_html}
 
-**User's Goal**
-The user's original request was: "{last_prompt}"
-
-
-
-CRITICAL INSTRUCTIONS:
-If the user wants to add to the end: You MUST find the VERY LAST element in the document that has a data-position-id attribute. Use that element's ID for your data-position-id.
-If the user specifies another position: Use the data-position-id they are referring to.
-You must return ONLY a single, valid JSON object and nothing else.
+If the user wants to add to the end: You MUST find the VERY LAST element in the document that has a data-position-id attribute. Use that element's ID for your `data-position-id-start` and `data-position-id-end`.
+If the user specifies another position: Use the data-position-id they are referring to for both `data-position-id-start` and `data-position-id-end`.
 
 Task: Decide the best position to insert this chunk.
 Return a JSON object with:
-- data-position-id: the data-position-id of the element to insert after
+- data-position-id-start: the data-position-id of the element to insert after.
+- data-position-id-end: the same as data-position-id-start for insertion.
 """
-        elif type == ApplyType.DELETE:
-            return f"""
-You are a document editing assistant. Here is the current document structure (HTML with data-position-id attributes):
-
-{document_structure}
-
-The user's original request was: "{last_prompt}"
-
-Task: Decide which data-position-id should be deleted from the document.
+        elif apply_type == ApplyType.DELETE:
+            return base_prompt + f"""
+Task: Decide which data-position-id range should be deleted from the document.
 Return a JSON object with:
-- data-position-id-start: the data-position-id from where to begin the delete
-- data-position-id-end: the data-position-id from where to end the delete
-
+- data-position-id-start: the data-position-id from where to begin the delete.
+- data-position-id-end: the data-position-id where the deletion ends.
 """
-        elif type == ApplyType.EDIT:
-            return f"""
-You are an expert document editing assistant. Your task is to determine the precise location in the document to REPLACE with a new HTML chunk.
-
-### Current Document Structure
-Here is the document, which is a sequence of HTML elements. Each element has a unique `data-position-id`.
-
-{document_structure}
+        elif apply_type == ApplyType.EDIT:
+            return base_prompt + f"""
+Your task is to determine the precise location in the document to REPLACE with a new HTML chunk.
 
 New Content to Use for Replacement:
 {chunk_html}
 
-**User's Goal**
-The user's original request was: "{last_prompt}"
-
-
-CRITICAL INSTRUCTIONS:
-- You must identify the SINGLE element whose content should be replaced with the new chunk.
+- You must identify the element or range of elements whose content should be replaced with the new chunk.
 - If the user specifies a position, use the data-position-id they are referring to.
-- If the user describes the content to edit, find the best matching element.
-- You must return ONLY a single, valid JSON object and nothing else.
+- If the user describes the content to edit, find the best matching element(s).
 
 Task: Decide the best position to REPLACE with this chunk.
 Return a JSON object with:
-- data-position-id: the data-position-id of the element to replace
+- data-position-id-start: the data-position-id of the element to start the replacement from.
+- data-position-id-end: the data-position-id of the element to end the replacement at.
 """
         else:
-            return f"Unknown apply type: {type}"
+            return f"Unknown apply type: {apply_type}"
 
     def location_decider_action(self, state: State) -> dict:
         """Decide where to apply a chunk in the document structure using the LLM."""
@@ -205,8 +194,8 @@ Return a JSON object with:
                 logger.debug(result)
                 return {
                     "outcome": "success",
-                    "data_position_id": result.get("data-position-id", "-1"),
-                    "relative_position": result.get("relative_position", "NONE")
+                    "data_position_id_start": result.get("data-position-id-start", "-1"),
+                    "data_position_id_end": result.get("data-position-id-end", "-1")
                 }
             except json.JSONDecodeError as e: # Catch specific error
                 logger.error(f"Error parsing apply response from LLM: {e}")
@@ -222,8 +211,12 @@ Return a JSON object with:
         interrupt_payload = {
             "type": "tool_call",
             "tool_name":"apply",
-            "action": state.get("apply_type"),
-            "data": state.get("chunk_html", "")
+            "action": state.get("apply_type").value,
+            "data": {
+                "chunk_html": state.get("chunk_html", ""),
+                "data_position_id_start": state.get("data_position_id_start"),
+                "data_position_id_end": state.get("data_position_id_end"),
+            },
             "timestamp": datetime.datetime.now().isoformat(),
             "message": "Applying change"
         }
@@ -253,7 +246,7 @@ Return a JSON object with:
             return "handle_error"
         if state.get("max_retries_reached", False):
             return "handle_error"
-        return "decide_location"
+        return "location_decider"
 
     def check_outcome(self, state: State) -> str:
         outcome = state.get("outcome")
@@ -279,8 +272,8 @@ Return a JSON object with:
             "chunk_html": chunk_html,
 
             "outcome":"N/A",
-            "data_position_id": "-1", # FIX: Changed to string for consistency
-            "relative_position":"NONE",
+            "data_position_id_start": "-1",
+            "data_position_id_end": "-1",
             "current_retry_count": 0,
             "max_retries_reached": False,
             "messages": []
@@ -298,8 +291,8 @@ Return a JSON object with:
 
             custom_response = {
                 "status" : "error" if response.get("outcome") != "success" else "success" ,
-                "data_position_id" : response.get("data_position_id","-1"),
-                "relative_position" : response.get("relative_position","NONE")
+                "data_position_id_start" : response.get("data_position_id_start","-1"),
+                "data_position_id_end" : response.get("data_position_id_end","-1")
             }
 
         except Exception as e:

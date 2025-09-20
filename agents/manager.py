@@ -88,12 +88,12 @@ read_document(asHTML: bool = False)
 ---
 
 `apply_tool_func(action_type: str,  chunk_id: Optional[str] = None)`
-*   **Description:** This tool applies a structural change to the document. It can insert, delete, or edit content at a specified location. Use it to make all document modifications. You must specify the action type, the target location (by selector or position_id), and, for inserts/edits, the chunk_id of the content to use. For inserts, also specify whether to insert BEFORE or AFTER the target.
+*   **Description:** This tool applies a structural change to the document. It can insert, delete, or edit content. Use it to make all document modifications. You must specify the action type, and for inserts/edits, the chunk_id of the content to use.
 *   **Purpose:** Executes a specific change on the document structure.
 *   **Parameters:**
     *   `action_type` (str): **REQUIRED.** Must be one of the following exact strings:
         *   `"INSERT"`: To add a new content chunk.
-        *   `"DELETE"`: To remove an existing element. No need to provide a chunk_id
+        *   `"DELETE"`: To remove an existing element. No need to provide a chunk_id.
         *   `"EDIT"`: To replace an existing element with a new content chunk.
 
 
@@ -145,13 +145,12 @@ read_document(asHTML: bool = False)
 
 
         Returns:
-            dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
+            dict: {"status": "success", ...} with position_id_start and position_id_end if valid, otherwise an error dict.
         """
         result = self.apply_tool.apply(type, chunk_id, self.document_structure, self.last_prompt)
         # If error from apply_tool, propagate
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
-        # Validate presence of position_id
 
         return {"status": "success", "message": result["message"]}
     
@@ -233,7 +232,7 @@ read_document(asHTML: bool = False)
             self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
         elif data.get('tool_name','') == 'apply':
             logger.info(data)
-            self.agent.invoke(Command(resume={"status":"success"}),{"configurable": {"thread_id": "2"}}) # will default to success for testing
+            self.agent.invoke(Command(resume=data.get('content',{})),{"configurable": {"thread_id": "2"}})
 
 
     # Remove the old apply_tool method; use self.apply_tool.apply instead

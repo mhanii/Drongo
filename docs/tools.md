@@ -10,14 +10,12 @@ This document describes the tools used by the agents in the document editing app
 -   **Use When:** The user asks to write, create, generate, summarize, or add any new text.
 -   **Output:** Returns a list of one or more generated content chunks, each with a unique `chunk_id`.
 
-### `apply_tool_func(action_type: str, target_location: str, chunk_id: Optional[str] = None, relative_position: Optional[str] = None)`
+### `apply_tool_func(action_type: str, chunk_id: Optional[str] = None)`
 
 -   **Purpose:** Applies a structural change to the document.
 -   **Parameters:**
     -   `action_type` (str): **REQUIRED.** Must be one of `"INSERT"`, `"DELETE"`, or `"EDIT"`.
-    -   `target_location` (str): **REQUIRED.** A precise CSS selector or description identifying the target HTML element.
     -   `chunk_id` (str): **REQUIRED for 'INSERT' and 'EDIT'**. The `chunk_id` of the content received from the `generate_content` tool.
-    -   `relative_position` (str): **REQUIRED *only* when `action_type` is "INSERT"**. Must be one of `"BEFORE"` or `"AFTER"`.
 
 ## ContentAgent Tools
 

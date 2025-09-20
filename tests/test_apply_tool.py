@@ -59,46 +59,71 @@ class TestApplyTool(unittest.TestCase):
     def test_successful_insert(self):
         """Test a successful INSERT operation."""
         logger.info("Starting test_successful_insert")
-        self._configure_mock_model({"position_id": "pos-123", "relative_position": "AFTER"})
+        self._configure_mock_model({"data-position-id-start": "pos-123", "data-position-id-end": "pos-123"})
         self._configure_mock_db("<p>New Content</p>")
 
-        result = self.apply_tool.apply(
-            type="INSERT",
-            chunk_id="chunk-abc",
-            document_structure="<div position_id='pos-123'></div>",
-            last_prompt="add a new paragraph"
-        )
+        with patch('agents.sub_agents.apply.ApplyAgent.run') as mock_run:
+            mock_run.return_value = {
+                "status": "success",
+                "data_position_id_start": "pos-123",
+                "data_position_id_end": "pos-123"
+            }
+            result = self.apply_tool.apply(
+                type="INSERT",
+                chunk_id="chunk-abc",
+                document_structure="<div data-position-id='pos-123'></div>",
+                last_prompt="add a new paragraph"
+            )
 
-        self.assertEqual(result, {"position_id": "pos-123", "relative_position": "AFTER"})
+        self.assertEqual(result['status'], 'success')
+        self.assertEqual(result['data_position_id_start'], 'pos-123')
+        self.assertEqual(result['data_position_id_end'], 'pos-123')
+
 
     def test_successful_delete(self):
         """Test a successful DELETE operation."""
         logger.info("Starting test_successful_delete")
-        self._configure_mock_model({"position_id": "pos-456"})
+        self._configure_mock_model({"data-position-id-start": "pos-456", "data-position-id-end": "pos-457"})
 
-        result = self.apply_tool.apply(
-            type="DELETE",
-            chunk_id="",
-            document_structure="<div position_id='pos-456'></div>",
-            last_prompt="remove the second paragraph"
-        )
+        with patch('agents.sub_agents.apply.ApplyAgent.run') as mock_run:
+            mock_run.return_value = {
+                "status": "success",
+                "data_position_id_start": "pos-456",
+                "data_position_id_end": "pos-457"
+            }
+            result = self.apply_tool.apply(
+                type="DELETE",
+                chunk_id="",
+                document_structure="<div data-position-id='pos-456'></div><div data-position-id='pos-457'></div>",
+                last_prompt="remove the second paragraph"
+            )
 
-        self.assertEqual(result, {"position_id": "pos-456"})
+        self.assertEqual(result['status'], 'success')
+        self.assertEqual(result['data_position_id_start'], 'pos-456')
+        self.assertEqual(result['data_position_id_end'], 'pos-457')
 
     def test_successful_edit(self):
         """Test a successful EDIT operation."""
         logger.info("Starting test_successful_edit")
-        self._configure_mock_model({"position_id": "pos-789"})
+        self._configure_mock_model({"data-position-id-start": "pos-789", "data-position-id-end": "pos-789"})
         self._configure_mock_db("<p>Updated Content</p>")
 
-        result = self.apply_tool.apply(
-            type="EDIT",
-            chunk_id="chunk-def",
-            document_structure="<div position_id='pos-789'></div>",
-            last_prompt="change the third paragraph"
-        )
+        with patch('agents.sub_agents.apply.ApplyAgent.run') as mock_run:
+            mock_run.return_value = {
+                "status": "success",
+                "data_position_id_start": "pos-789",
+                "data_position_id_end": "pos-789"
+            }
+            result = self.apply_tool.apply(
+                type="EDIT",
+                chunk_id="chunk-def",
+                document_structure="<div data-position-id='pos-789'></div>",
+                last_prompt="change the third paragraph"
+            )
 
-        self.assertEqual(result, {"position_id": "pos-789"})
+        self.assertEqual(result['status'], 'success')
+        self.assertEqual(result['data_position_id_start'], 'pos-789')
+        self.assertEqual(result['data_position_id_end'], 'pos-789')
 
     def test_invalid_apply_type(self):
         """Test an invalid apply type."""
@@ -106,7 +131,7 @@ class TestApplyTool(unittest.TestCase):
         result = self.apply_tool.apply(
             type="INVALID",
             chunk_id="chunk-abc",
-            document_structure="<div position_id='pos-123'></div>",
+            document_structure="<div data-position-id='pos-123'></div>",
             last_prompt="do something invalid"
         )
 
@@ -121,7 +146,7 @@ class TestApplyTool(unittest.TestCase):
         result = self.apply_tool.apply(
             type="INSERT",
             chunk_id="chunk-nonexistent",
-            document_structure="<div position_id='pos-123'></div>",
+            document_structure="<div data-position-id='pos-123'></div>",
             last_prompt="add a new paragraph"
         )
 
@@ -131,18 +156,21 @@ class TestApplyTool(unittest.TestCase):
     def test_llm_error(self):
         """Test when the LLM returns an error."""
         logger.info("Starting test_llm_error")
-        self.mock_model.invoke.side_effect = Exception("LLM Error")
-        self._configure_mock_db("<p>New Content</p>")
 
-        result = self.apply_tool.apply(
-            type="INSERT",
-            chunk_id="chunk-abc",
-            document_structure="<div position_id='pos-123'></div>",
-            last_prompt="add a new paragraph"
-        )
+        with patch('agents.sub_agents.apply.ApplyAgent.run') as mock_run:
+            mock_run.side_effect = Exception("LLM Error")
+            self._configure_mock_db("<p>New Content</p>")
 
-        self.assertIn("error", result)
-        self.assertIn("Failed to parse LLM response", result["error"])
+            result = self.apply_tool.apply(
+                type="INSERT",
+                chunk_id="chunk-abc",
+                document_structure="<div data-position-id='pos-123'></div>",
+                last_prompt="add a new paragraph"
+            )
+
+        self.assertIn("status", result)
+        self.assertEqual(result["status"], "error")
+
 
     @unittest.skipIf(os.environ.get("RUN_INTEGRATION_TESTS") != "true", "Skipping integration test")
     def test_insert_with_real_llm(self):
@@ -155,14 +183,14 @@ class TestApplyTool(unittest.TestCase):
         result = apply_tool.apply(
             type="INSERT",
             chunk_id="chunk-abc",
-            document_structure="<div position_id='pos-123'></div><div position_id='pos-456'></div>",
+            document_structure="<div data-position-id='pos-123'></div><div data-position-id='pos-456'></div>",
             last_prompt="add a new paragraph after the first one"
         )
 
-        self.assertIn("position_id", result)
-        self.assertIn("relative_position", result)
-        self.assertEqual(result["position_id"], "pos-123")
-        self.assertEqual(result["relative_position"], "AFTER")
+        self.assertIn("data_position_id_start", result)
+        self.assertIn("data_position_id_end", result)
+        self.assertEqual(result["data_position_id_start"], "pos-123")
+        self.assertEqual(result["data_position_id_end"], "pos-123")
 
 
 if __name__ == '__main__':
