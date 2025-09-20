@@ -229,8 +229,11 @@ read_document(asHTML: bool = False)
         return response['messages'][-1]
 
     def handle_client_tool_response(self,data:dict):
-        self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
-
+        if data.get('tool_name','') == 'read_document':
+            self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
+        elif data.get('tool_name','') == 'apply':
+            logger.info(data)
+            self.agent.invoke(Command(resume={"status":"success"}),{"configurable": {"thread_id": "2"}}) # will default to success for testing
 
 
     # Remove the old apply_tool method; use self.apply_tool.apply instead

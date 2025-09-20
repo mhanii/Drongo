@@ -24,8 +24,7 @@ class State(TypedDict, total=False):
 
     # outcome
     outcome: str
-    position_id: str
-    relative_position: str
+    data_position_id: str
     # Retry management
     current_retry_count: int
     max_retries_reached: bool
@@ -42,6 +41,7 @@ class ApplyAgent:
         # Add nodes
         graph_builder.add_node("moderator", self.moderator_action)
         graph_builder.add_node("location_decider", self.location_decider_action)
+        graph_builder.add_node("send_apply_request",self.request_apply)
         graph_builder.add_node("handle_error", self.handle_error_action)
 
         # Define edges
@@ -59,10 +59,19 @@ class ApplyAgent:
 
         graph_builder.add_conditional_edges(
             "location_decider",
-            self.check_location_decider_outcome,
+            self.check_outcome,
             {
-                "success": END,
+                "success": "send_apply_request",
                 "error": "moderator"
+            }
+        )
+
+        graph_builder.add_conditional_edges(
+            "send_apply_request",
+            self.self.check_outcome,
+            {
+                "success" : END,
+                "error":"handle_error"
             }
         )
 
@@ -95,7 +104,7 @@ class ApplyAgent:
 
         return updates
 
-    def get_prompt(self, type: ApplyType, document_structure: str,  last_prompt: str, chunk_html: str = ""):
+    def get_prompt(self, document_structure: str,  last_prompt: str, chunk_html: str = ""):
         """
         Generate the LLM prompt based on the apply type.
         """
@@ -104,7 +113,7 @@ class ApplyAgent:
 You are an expert document editing assistant. Your task is to determine the precise location to insert a new HTML chunk into an existing document.
 
 ### Current Document Structure
-Here is the document, which is a sequence of HTML elements. Each element has a unique `position_id`.
+Here is the document, which is a sequence of HTML elements. Each element has a unique `data-position-id`.
 
 {document_structure}
 
@@ -117,33 +126,34 @@ The user's original request was: "{last_prompt}"
 
 
 CRITICAL INSTRUCTIONS:
-If the user wants to add to the end: You MUST find the VERY LAST element in the document that has a position_id attribute. Use that element's ID for your position_id and set relative_position to 'AFTER'.
-If the user specifies another position: Use the position_id they are referring to.
+If the user wants to add to the end: You MUST find the VERY LAST element in the document that has a data-position-id attribute. Use that element's ID for your data-position-id.
+If the user specifies another position: Use the data-position-id they are referring to.
 You must return ONLY a single, valid JSON object and nothing else.
 
 Task: Decide the best position to insert this chunk.
 Return a JSON object with:
-- position_id: the position_id of the element to insert relative to
-- relative_position: 'AFTER' or 'BEFORE'
+- data-position-id: the data-position-id of the element to insert after
 """
         elif type == ApplyType.DELETE:
             return f"""
-You are a document editing assistant. Here is the current document structure (HTML with position_id attributes):
+You are a document editing assistant. Here is the current document structure (HTML with data-position-id attributes):
 
 {document_structure}
 
 The user's original request was: "{last_prompt}"
 
-Task: Decide which position_id should be deleted from the document.
+Task: Decide which data-position-id should be deleted from the document.
 Return a JSON object with:
-- position_id: the position_id of the element to delete
+- data-position-id-start: the data-position-id from where to begin the delete
+- data-position-id-end: the data-position-id from where to end the delete
+
 """
         elif type == ApplyType.EDIT:
             return f"""
 You are an expert document editing assistant. Your task is to determine the precise location in the document to REPLACE with a new HTML chunk.
 
 ### Current Document Structure
-Here is the document, which is a sequence of HTML elements. Each element has a unique `position_id`.
+Here is the document, which is a sequence of HTML elements. Each element has a unique `data-position-id`.
 
 {document_structure}
 
@@ -156,13 +166,13 @@ The user's original request was: "{last_prompt}"
 
 CRITICAL INSTRUCTIONS:
 - You must identify the SINGLE element whose content should be replaced with the new chunk.
-- If the user specifies a position, use the position_id they are referring to.
+- If the user specifies a position, use the data-position-id they are referring to.
 - If the user describes the content to edit, find the best matching element.
 - You must return ONLY a single, valid JSON object and nothing else.
 
 Task: Decide the best position to REPLACE with this chunk.
 Return a JSON object with:
-- position_id: the position_id of the element to replace
+- data-position-id: the data-position-id of the element to replace
 """
         else:
             return f"Unknown apply type: {type}"
@@ -195,7 +205,7 @@ Return a JSON object with:
                 logger.debug(result)
                 return {
                     "outcome": "success",
-                    "position_id": result.get("position_id", "-1"),
+                    "data_position_id": result.get("data-position-id", "-1"),
                     "relative_position": result.get("relative_position", "NONE")
                 }
             except json.JSONDecodeError as e: # Catch specific error
@@ -206,6 +216,25 @@ Return a JSON object with:
         except Exception as e:
             logger.error(f"Location decider error: {e}")
             return {"outcome": "error", "result": {"error": f"Failed to handle LLM call: {e}"}}
+
+
+    def request_apply(self, state:State) -> dict:
+        interrupt_payload = {
+            "type": "tool_call",
+            "tool_name":"apply",
+            "action": state.get("apply_type"),
+            "data": state.get("chunk_html", "")
+            "timestamp": datetime.datetime.now().isoformat(),
+            "message": "Applying change"
+        }
+        if self.queue:
+            self.queue.put_nowait(json.dumps(interrupt_payload))
+
+        response = interrupt(interrupt_payload)
+
+        return {
+            "outcome": response.get("status",'error')
+        }
 
     def handle_error_action(self, state: State) -> dict:
         """Handle errors."""
@@ -226,7 +255,7 @@ Return a JSON object with:
             return "handle_error"
         return "decide_location"
 
-    def check_location_decider_outcome(self, state: State) -> str:
+    def check_outcome(self, state: State) -> str:
         outcome = state.get("outcome")
         logger.info(f"Location decider outcome: {outcome}")
         return outcome
@@ -250,7 +279,7 @@ Return a JSON object with:
             "chunk_html": chunk_html,
 
             "outcome":"N/A",
-            "position_id": "-1", # FIX: Changed to string for consistency
+            "data_position_id": "-1", # FIX: Changed to string for consistency
             "relative_position":"NONE",
             "current_retry_count": 0,
             "max_retries_reached": False,
@@ -269,7 +298,7 @@ Return a JSON object with:
 
             custom_response = {
                 "status" : "error" if response.get("outcome") != "success" else "success" ,
-                "position_id" : response.get("position_id","-1"),
+                "data_position_id" : response.get("data_position_id","-1"),
                 "relative_position" : response.get("relative_position","NONE")
             }
 

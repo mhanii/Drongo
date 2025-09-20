@@ -6118,3 +6118,159 @@ For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/er
 2025-09-19 15:35:34.556 | INFO     | __main__:handle_handshake:74 - Created new session: 76dd80d1-1fde-4244-ad30-feb3ff135aff
 2025-09-19 15:36:22.839 | INFO     | __main__:handler:20 - New connection established
 2025-09-19 15:36:22.895 | INFO     | __main__:handle_handshake:74 - Created new session: 10a5011a-e0a2-4423-a203-0f1f5daa2ef1
+2025-09-20 00:32:45.372 | INFO     | __main__:main:211 - WebSocket server started on ws://localhost:8765
+2025-09-20 00:34:28.352 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:34:28.355 | INFO     | __main__:handle_handshake:74 - Created new session: 71ecfa8b-35eb-4db3-a54c-afd384a75641
+2025-09-20 00:38:36.775 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:38:36.782 | INFO     | __main__:handle_handshake:74 - Created new session: b3b670d0-197c-4e56-9bd0-e6383e2f6d98
+2025-09-20 00:40:10.408 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:40:10.417 | INFO     | __main__:handle_handshake:74 - Created new session: 61639062-9c87-4276-ae36-ecbdc7a6527e
+2025-09-20 00:41:10.058 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:41:10.067 | INFO     | __main__:handle_handshake:74 - Created new session: 71bb1ffe-049f-48e3-90d8-004f7b4720dc
+2025-09-20 00:48:10.005 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:48:10.011 | INFO     | __main__:handle_handshake:74 - Created new session: ff5a57da-e804-4285-8ca4-1bba4c6bcee1
+2025-09-20 00:48:43.251 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:48:43.272 | INFO     | __main__:handle_handshake:74 - Created new session: 1705f85b-dd23-4729-a3ea-2e9fb4d1192f
+2025-09-20 00:52:18.591 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:52:18.599 | INFO     | __main__:handle_handshake:74 - Created new session: 9a5b52d7-a70d-4c32-bc51-219291756d70
+2025-09-20 00:56:22.687 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 00:56:22.709 | INFO     | __main__:handle_handshake:74 - Created new session: 5d3f5754-b855-493b-8774-8447c75af3ec
+2025-09-20 01:04:51.179 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:04:51.216 | INFO     | __main__:handle_handshake:74 - Created new session: c2f8c14f-a591-4301-ac28-eddc246c0588
+2025-09-20 01:05:35.930 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:05:35.945 | INFO     | __main__:handle_handshake:74 - Created new session: 7704c23e-19f8-458b-a0bf-507fb2797c2e
+2025-09-20 01:06:45.316 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:06:45.407 | INFO     | __main__:handle_handshake:74 - Created new session: 387cbd8a-fd17-4e6f-95ce-941781f7c0d3
+2025-09-20 01:09:15.674 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:09:15.722 | INFO     | __main__:handle_handshake:74 - Created new session: 4ffdcea6-132d-430b-bf8c-210b91c47f51
+2025-09-20 01:14:33.544 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:14:33.586 | INFO     | __main__:handle_handshake:74 - Created new session: f5055f01-5e15-465c-a1d9-833bb064a681
+2025-09-20 01:22:34.429 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:22:34.431 | INFO     | __main__:handle_handshake:74 - Created new session: 13e8598d-4eff-47a7-b0b9-70a4068eec65
+2025-09-20 01:26:12.723 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:26:12.730 | INFO     | __main__:handle_handshake:74 - Created new session: c98128b9-48db-425e-9fd4-7a71d121d338
+2025-09-20 01:30:51.944 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:30:51.949 | INFO     | __main__:handle_handshake:74 - Created new session: bc23a870-77d2-4127-b414-828b119fdc16
+2025-09-20 01:31:33.513 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:31:33.554 | INFO     | __main__:handle_handshake:74 - Created new session: 5e982cdf-602f-41a5-82f3-5db3cf56252f
+2025-09-20 01:33:59.738 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:33:59.746 | INFO     | __main__:handle_handshake:74 - Created new session: 6ffd251c-27da-4347-9447-dbee9eee0212
+2025-09-20 01:37:04.864 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:37:04.870 | INFO     | __main__:handle_handshake:74 - Created new session: 45b68d36-8efa-42b2-8fe4-1a02341a4955
+2025-09-20 01:39:25.963 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:39:25.972 | INFO     | __main__:handle_handshake:74 - Created new session: 3eb837a6-922f-4c52-8b14-de77399edcf4
+2025-09-20 01:42:19.061 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:42:19.068 | INFO     | __main__:handle_handshake:74 - Created new session: 09df863b-ac82-474b-87c7-1bab56d749ad
+2025-09-20 01:42:56.247 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:42:56.268 | INFO     | __main__:handle_handshake:74 - Created new session: ee919922-9f04-485c-a477-bcf2667340fc
+2025-09-20 01:44:16.236 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:44:16.255 | INFO     | __main__:handle_handshake:74 - Created new session: 30331073-cb2b-4a29-bce2-ccf3a310626a
+2025-09-20 01:45:26.670 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:45:26.688 | INFO     | __main__:handle_handshake:74 - Created new session: 080c34e0-1cfa-4f3e-b60f-fbe3603e8f03
+2025-09-20 01:49:58.367 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:49:58.385 | INFO     | __main__:handle_handshake:74 - Created new session: 3f261f5b-15d0-41b1-9065-87cb2b18533a
+2025-09-20 01:53:53.547 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:53:53.560 | INFO     | __main__:handle_handshake:74 - Created new session: d7a89db7-fa6b-4ffb-8574-fdc2adb14119
+2025-09-20 01:58:47.871 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 01:58:47.882 | INFO     | __main__:handle_handshake:74 - Created new session: 3721bc87-3028-49cd-bb08-22da390689b9
+2025-09-20 02:03:30.256 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:03:30.257 | INFO     | __main__:handle_handshake:74 - Created new session: 75e40398-3344-4b2b-ada1-1305c08bc9fd
+2025-09-20 02:05:58.224 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:05:58.226 | INFO     | __main__:handle_handshake:74 - Created new session: 085cf56a-320a-46da-b942-1e80363f88f1
+2025-09-20 02:08:57.806 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:08:57.807 | INFO     | __main__:handle_handshake:74 - Created new session: e87c5d3e-978f-4ce0-88c5-d3c38928b018
+2025-09-20 02:12:37.749 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:12:37.750 | INFO     | __main__:handle_handshake:74 - Created new session: 70ce0e20-a628-48fa-ab56-6e8aba96d418
+2025-09-20 02:16:53.844 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:16:53.845 | INFO     | __main__:handle_handshake:74 - Created new session: b196dc96-a2be-4377-a6c4-4cba4751a5c0
+2025-09-20 02:20:28.803 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:20:28.804 | INFO     | __main__:handle_handshake:74 - Created new session: 3826b86e-2d7e-41ea-9a44-0903b12c4990
+2025-09-20 02:25:34.745 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:25:34.746 | INFO     | __main__:handle_handshake:74 - Created new session: 3746571c-e523-47cd-bba5-c4b2951e22de
+2025-09-20 02:27:22.366 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:27:22.367 | INFO     | __main__:handle_handshake:74 - Created new session: 47ee7c7d-2a11-4d79-bb5b-cef6ef5fab32
+2025-09-20 02:36:04.320 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 02:36:04.325 | INFO     | __main__:handle_handshake:74 - Created new session: 4d68e832-e020-47a5-b3a3-564fc57cbe4c
+2025-09-20 12:49:39.601 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 12:49:39.605 | INFO     | __main__:handle_handshake:74 - Created new session: eb9b76ab-c2f4-4186-aac0-5f9ea3906ced
+2025-09-20 12:51:16.639 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 12:51:16.645 | INFO     | __main__:handle_handshake:74 - Created new session: df10189b-8aae-45c0-960b-38b0b16948ff
+2025-09-20 12:52:38.480 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 12:52:38.487 | INFO     | __main__:handle_handshake:74 - Created new session: 41b5bb30-93f1-4554-86a7-f071b539a868
+2025-09-20 13:00:49.356 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 13:00:49.359 | INFO     | __main__:handle_handshake:74 - Created new session: 969eeee3-2de1-4322-a93b-01ff70ca2622
+2025-09-20 13:13:15.506 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 13:13:15.520 | INFO     | __main__:handle_handshake:74 - Created new session: edfae7b1-cd95-4f9a-8fc7-1ebc5109d730
+2025-09-20 14:15:18.371 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:15:18.380 | INFO     | __main__:handle_handshake:74 - Created new session: 4895d9fc-afb9-46da-8001-effed3089069
+2025-09-20 14:16:39.207 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:16:39.234 | INFO     | __main__:handle_handshake:74 - Created new session: 9cf862fe-4634-4947-afd7-1b32e4b20af7
+2025-09-20 14:17:20.162 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:17:20.329 | INFO     | __main__:handle_handshake:74 - Created new session: bf0119cf-088a-4469-8ea1-fe8414f87fe5
+2025-09-20 14:19:33.490 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:19:33.528 | INFO     | __main__:handle_handshake:74 - Created new session: 78093e36-0e8f-4614-9799-fe44538da340
+2025-09-20 14:21:13.902 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:21:13.917 | INFO     | __main__:handle_handshake:74 - Created new session: 24ded0e2-0e22-4e59-aa66-99b1b286ab91
+2025-09-20 14:22:38.124 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:22:38.141 | INFO     | __main__:handle_handshake:74 - Created new session: 7f548f8e-f154-4c70-b1c9-db3ddb4c29d7
+2025-09-20 14:38:35.625 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:38:35.657 | INFO     | __main__:handle_handshake:74 - Created new session: d4da5076-1dbf-417c-b67f-41c26eb5aff4
+2025-09-20 14:39:57.834 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:39:57.856 | INFO     | __main__:handle_handshake:74 - Created new session: b2f9a474-ebb6-4638-ab01-73b24a132740
+2025-09-20 14:41:42.216 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:41:42.235 | INFO     | __main__:handle_handshake:74 - Created new session: d255c3f2-ed47-41ea-8ac4-beb0e3671ae8
+2025-09-20 14:46:46.218 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:46:46.257 | INFO     | __main__:handle_handshake:74 - Created new session: 73fa34c4-0e7f-444c-8744-951582475023
+2025-09-20 14:48:25.161 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:48:25.178 | INFO     | __main__:handle_handshake:74 - Created new session: 8d4ba86d-a2a8-42a3-b5f9-50aaf2a506d1
+2025-09-20 14:49:14.109 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:49:14.123 | INFO     | __main__:handle_handshake:74 - Created new session: e92c545d-bf2a-4b95-8f4f-4a2af9d78a3d
+2025-09-20 14:50:39.405 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:50:39.413 | INFO     | __main__:handle_handshake:74 - Created new session: 11e4256e-62b8-4855-85f8-c34948921672
+2025-09-20 14:51:23.294 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:51:23.347 | INFO     | __main__:handle_handshake:74 - Created new session: a800752e-6211-4d31-915c-851e2087dc9a
+2025-09-20 14:52:16.851 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:52:16.911 | INFO     | __main__:handle_handshake:74 - Created new session: 05002ddc-8332-4d67-ab80-72a6778e861d
+2025-09-20 14:55:31.726 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 14:55:31.747 | INFO     | __main__:handle_handshake:74 - Created new session: 38ef4900-2dd9-4ef3-b45b-b9c36f3a383e
+2025-09-20 15:11:09.926 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:11:09.957 | INFO     | __main__:handle_handshake:74 - Created new session: dac77bea-3df7-4df7-8374-39b5e07cba61
+2025-09-20 15:15:31.496 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:15:31.502 | INFO     | __main__:handle_handshake:74 - Created new session: bf651075-7934-4082-b67b-a71542da994e
+2025-09-20 15:16:14.424 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:16:14.429 | INFO     | __main__:handle_handshake:74 - Created new session: 3e7abb8d-0215-48c2-ba27-0aa959d34ee2
+2025-09-20 15:17:01.294 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:17:01.315 | INFO     | __main__:handle_handshake:74 - Created new session: 55186457-82da-424f-b12c-f768b3b611fe
+2025-09-20 15:18:38.509 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:18:38.529 | INFO     | __main__:handle_handshake:74 - Created new session: 4df32f32-b6ec-4aaf-bcb7-37d029c3f70c
+2025-09-20 15:20:40.129 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:20:40.188 | INFO     | __main__:handle_handshake:74 - Created new session: fdf68a7f-ffd0-4d94-8498-be540ec6858b
+2025-09-20 15:22:54.484 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:22:54.497 | INFO     | __main__:handle_handshake:74 - Created new session: 116721d0-935b-4a15-bfeb-1db47f56d8a7
+2025-09-20 15:24:50.581 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:24:50.593 | INFO     | __main__:handle_handshake:74 - Created new session: 566485b5-9135-48b3-8569-c039117e56aa
+2025-09-20 15:26:25.297 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:26:25.319 | INFO     | __main__:handle_handshake:74 - Created new session: 3ad01fc7-1972-4eb7-9924-69e9a874db94
+2025-09-20 15:28:18.872 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:28:18.885 | INFO     | __main__:handle_handshake:74 - Created new session: ca17e5bf-aee8-405c-8303-78b1baa345b6
+2025-09-20 15:29:59.986 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:30:00.072 | INFO     | __main__:handle_handshake:74 - Created new session: e0edf936-adb6-457b-8fa7-ee1aff39195e
+2025-09-20 15:33:42.024 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:33:42.056 | INFO     | __main__:handle_handshake:74 - Created new session: 09600034-79a9-4554-a8f7-09e4784ac561
+2025-09-20 15:36:22.523 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:36:22.533 | INFO     | __main__:handle_handshake:74 - Created new session: ece4d669-ba32-4280-9da0-cf4f85f8b615
+2025-09-20 15:39:31.091 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:39:31.115 | INFO     | __main__:handle_handshake:74 - Created new session: c0416c4d-5f5e-4dc3-8de6-7cee3e5fc31b
+2025-09-20 15:42:09.423 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:42:09.463 | INFO     | __main__:handle_handshake:74 - Created new session: 21952a5c-224b-4f49-9b6f-6f4e6fece18b
+2025-09-20 15:44:40.928 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:44:40.965 | INFO     | __main__:handle_handshake:74 - Created new session: cd42d4a1-f9bd-41d4-a92a-90af1ef55b28
+2025-09-20 15:47:29.243 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:47:29.256 | INFO     | __main__:handle_handshake:74 - Created new session: 0d120e84-f5c9-4fb9-ae01-c73341237051
+2025-09-20 15:50:47.701 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:50:47.838 | INFO     | __main__:handle_handshake:74 - Created new session: a49a26dc-2dd8-4308-a3c2-fd7872287b41
+2025-09-20 15:52:21.249 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:52:21.462 | INFO     | __main__:handle_handshake:74 - Created new session: e604c57a-6938-4993-86fa-e6eabada5128
+2025-09-20 15:55:15.999 | INFO     | __main__:handler:20 - New connection established
+2025-09-20 15:55:16.049 | INFO     | __main__:handle_handshake:74 - Created new session: bc9e2e01-6117-4ee3-b3cd-e6c097f51d31
+2025-09-20 15:56:25.878 | INFO     | __main__:<module>:218 - Server shutting down
