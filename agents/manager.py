@@ -39,7 +39,7 @@ class ManagerAgent:
         self.agent = create_react_agent(
             model=self.model,
             tools=[self.generate_content, self.apply_tool_func,self.read_document],
-            debug=True,
+            debug=False,
             # checkpointer=SqliteSaver(self.connection),
             checkpointer=MemorySaver(),
             prompt=self.get_prompt()
@@ -113,13 +113,16 @@ read_document(asHTML: bool = False)
             "type": "tool_call",
             "tool_name":"read_document",
             "as_html": asHTML,
-            "timestamp": datetime.datetime.now().isoformat(),
-            "message": "Reading document"
+            "timestamp": datetime.datetime.now().isoformat()
         }
         if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"read_document","message": "Reading document","status":"begin"}))
             self.queue.put_nowait(json.dumps(interrupt_payload))
+
         response = interrupt(interrupt_payload)
         
+
+
         # Extract content from response
         if isinstance(response, dict):
             return response.get("content", f"No content received from client")
@@ -147,8 +150,13 @@ read_document(asHTML: bool = False)
         Returns:
             dict: {"status": "success", ...} with position_id and relative_position if valid, otherwise an error dict.
         """
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"apply","status":"begin"}))
+
         result = self.apply_tool.apply(type, chunk_id, self.document_structure, self.last_prompt)
-        # If error from apply_tool, propagate
+
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"apply","status":"end"}))
         if "error" in result:
             return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
         # Validate presence of position_id
@@ -226,10 +234,16 @@ read_document(asHTML: bool = False)
     def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
         response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"generation","status":"end"}))
         return response['messages'][-1]
 
     def handle_client_tool_response(self,data:dict):
-        self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
+        if data.get("tool_name",'') == 'read_document':
+            logger.info("Processing read_document tool response")
+            if self.queue:
+                self.queue.put_nowait(json.dumps({"type":"status_update","process":"read_document","status":"end"}))
+            self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
 
 
 

@@ -28,8 +28,9 @@ class ApplyTool:
         logger.info(f"Document Structure Length: {len(document_structure)}")
         logger.info(f"Last Prompt: {last_prompt}")
 
-        if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"START","process":"APPLY", "chunk_id": chunk_id,"apply_type":type}))
+        # This is outdated because we moved the status update a little bit earlier
+        # if self.queue:
+        #     self.queue.put_nowait(json.dumps({"type":"START","process":"APPLY", "chunk_id": chunk_id,"apply_type":type}))
 
         try:
             apply_type = ApplyType[type.upper()]
@@ -61,6 +62,5 @@ class ApplyTool:
             "status": result.get("status","error"),
             "message": "Request applied to the document" if result.get("status","error") == "success" else "Couldn't apply the request to the document."
         }
-        if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"END","process":"APPLY", "chunk_id": chunk_id, "status": custom_response["status"]}))
+      
         return custom_response
