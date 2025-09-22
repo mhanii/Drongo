@@ -115,22 +115,9 @@ async def handle_prompt(websocket, data):
     agent = agent_data["agent"]
     message_queue = agent_data["queue"]
     
-    # Create sender task for real-time messages
-    async def sender():
-        while True:
-            try:
-                message = await asyncio.wait_for(message_queue.get(), timeout=0.1)
-                if message is None:  # End signal
-                    break
-                await websocket.send(message)
-                message_queue.task_done()
-            except asyncio.TimeoutError:
-                continue
-            except Exception as e:
-                logger.error(f"Error in sender: {e}")
-                break
+
     
-    sender_task = asyncio.create_task(sender())
+    sender_task = asyncio.create_task(sender(websocket, message_queue))
     
     try:
         # Run agent
@@ -155,13 +142,7 @@ async def handle_prompt(websocket, data):
             "error": "Agent processing error",
             "session_id": session_id
         }))
-    finally:
-        # Stop sender
-        await message_queue.put(None)
-        try:
-            await asyncio.wait_for(sender_task, timeout=1.0)
-        except asyncio.TimeoutError:
-            sender_task.cancel()
+
 
 async def handle_tool_response(websocket, data):
     """Handle tool response messages."""
@@ -198,12 +179,34 @@ async def handle_tool_response(websocket, data):
             "error": "Tool response processing error",
             "session_id": session_id
         }))
-
+# Create sender task for real-time messages
+async def sender(websocket, message_queue):
+    while True:
+        try:
+            message = await asyncio.wait_for(message_queue.get(), timeout=0.1)
+            if message is None:  # End signal
+                break
+            await websocket.send(message)
+            message_queue.task_done()
+        except asyncio.TimeoutError:
+            continue
+        except Exception as e:
+            logger.error(f"Error in sender: {e}")
+            break
 def cleanup_session(session_id):
     """Clean up a specific session."""
     if session_id in agent_store:
         logger.info(f"Cleaning up session: {session_id}")
+        session_data = agent_store[session_id]
+        sender_task = session_data.get("sender_task")
+        
+        if sender_task:
+            message_queue = session_data.get("queue")
+            if message_queue:
+                asyncio.create_task(message_queue.put(None))  # Signal sender to stop
+            sender_task.cancel()
         del agent_store[session_id]
+
 
 async def main():
     """Start the WebSocket server."""
