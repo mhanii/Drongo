@@ -116,10 +116,10 @@ read_document(asHTML: bool = False)
             "timestamp": datetime.datetime.now().isoformat(),
             "message": "Reading document"
         }
-        if self.queue:
-            self.queue.put_nowait(json.dumps(interrupt_payload))
+        logger.info("Let's see if this well run twice as our theory")
         response = interrupt(interrupt_payload)
-        
+
+ 
         # Extract content from response
         if isinstance(response, dict):
             return response.get("content", f"No content received from client")
@@ -225,7 +225,7 @@ read_document(asHTML: bool = False)
     def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
         response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
-        return response['messages'][-1]
+        return response
 
     def handle_client_tool_response(self,data:dict):
         if data.get('tool_name','') == 'read_document':

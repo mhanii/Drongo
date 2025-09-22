@@ -6274,3 +6274,137 @@ For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/er
 2025-09-20 15:55:15.999 | INFO     | __main__:handler:20 - New connection established
 2025-09-20 15:55:16.049 | INFO     | __main__:handle_handshake:74 - Created new session: bc9e2e01-6117-4ee3-b3cd-e6c097f51d31
 2025-09-20 15:56:25.878 | INFO     | __main__:<module>:218 - Server shutting down
+2025-09-22 00:54:33.079 | INFO     | __main__:main:211 - WebSocket server started on ws://localhost:8765
+2025-09-22 00:55:05.430 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 00:55:08.999 | INFO     | __main__:handle_handshake:74 - Created new session: 581dc021-c9a5-4164-bf9f-d8fcf6172047
+2025-09-22 00:55:33.295 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 00:55:34.006 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 581dc021-c9a5-4164-bf9f-d8fcf6172047
+2025-09-22 00:57:05.138 | INFO     | __main__:handle_tool_response:185 - Processed tool response for session 581dc021-c9a5-4164-bf9f-d8fcf6172047
+2025-09-22 00:57:05.139 | INFO     | __main__:handle_tool_response:186 - {'type': 'tool_response', 'tool_name': 'read_document', 'session_id': '581dc021-c9a5-4164-bf9f-d8fcf6172047', 'content': '<p>this is the document</p>'}
+2025-09-22 01:15:22.390 | INFO     | __main__:<module>:218 - Server shutting down
+2025-09-22 01:15:22.391 | INFO     | __main__:cleanup_session:205 - Cleaning up session: 581dc021-c9a5-4164-bf9f-d8fcf6172047
+2025-09-22 01:16:15.552 | INFO     | __main__:main:213 - WebSocket server started on ws://localhost:8765
+2025-09-22 01:18:40.421 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:18:56.503 | INFO     | __main__:handle_handshake:74 - Created new session: 5f9c4931-4bd8-40df-b983-85728a16f9e8
+2025-09-22 01:19:18.221 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 01:19:18.701 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 5f9c4931-4bd8-40df-b983-85728a16f9e8
+2025-09-22 01:19:18.702 | ERROR    | __main__:sender:165 - Error in sender: name 'message_queue' is not defined
+2025-09-22 01:22:26.165 | INFO     | __main__:<module>:220 - Server shutting down
+2025-09-22 01:22:26.166 | INFO     | __main__:cleanup_session:207 - Cleaning up session: 5f9c4931-4bd8-40df-b983-85728a16f9e8
+2025-09-22 01:24:01.853 | INFO     | __main__:main:213 - WebSocket server started on ws://localhost:8765
+2025-09-22 01:25:48.900 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:25:50.618 | INFO     | __main__:handle_handshake:74 - Created new session: f9337dfd-be51-4f42-8309-a538783e96ee
+2025-09-22 01:26:24.130 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 01:26:24.502 | INFO     | __main__:handle_prompt:112 - Created new agent for session: f9337dfd-be51-4f42-8309-a538783e96ee
+2025-09-22 01:26:56.724 | INFO     | __main__:handle_tool_response:187 - Processed tool response for session f9337dfd-be51-4f42-8309-a538783e96ee
+2025-09-22 01:26:56.724 | INFO     | __main__:handle_tool_response:188 - {'type': 'tool_response', 'tool_name': 'read_document', 'session_id': 'f9337dfd-be51-4f42-8309-a538783e96ee', 'content': '<p>this is the document</p>'}
+2025-09-22 01:41:42.272 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:41:42.280 | INFO     | __main__:handle_handshake:74 - Created new session: 02dabb93-6d37-4fe9-95ec-a4b5c90c3518
+2025-09-22 01:45:07.807 | INFO     | __main__:main:214 - WebSocket server started on ws://localhost:8765
+2025-09-22 01:45:17.500 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:45:24.087 | INFO     | __main__:handle_handshake:74 - Created new session: 506e6b23-357a-48e1-9fe0-3a8f203b3030
+2025-09-22 01:45:41.908 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 01:45:42.482 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 506e6b23-357a-48e1-9fe0-3a8f203b3030
+2025-09-22 01:45:44.010 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 01:45:44.012 | INFO     | __main__:handle_prompt:130 - Handling interrupt for session 506e6b23-357a-48e1-9fe0-3a8f203b3030: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T01:45:44.010435', 'message': 'Reading document'}, resumable=True, ns=['tools:e6c1925b-cb4a-22bc-459b-9b01ca0b07aa'])]
+2025-09-22 01:45:44.013 | ERROR    | __main__:handle_prompt:142 - Error running agent: 'ManagerAgent' object has no attribute 'handle_interrupt'
+2025-09-22 01:50:30.039 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:50:30.045 | INFO     | __main__:handle_handshake:74 - Created new session: 82280d09-6b2d-4a7a-a5d8-2183a0ec2e1c
+2025-09-22 01:54:46.710 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:54:46.737 | INFO     | __main__:handle_handshake:74 - Created new session: c53c6585-64be-4be1-a11f-2c00c8d9ecbd
+2025-09-22 01:57:27.515 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 01:57:27.517 | INFO     | __main__:handle_handshake:74 - Created new session: 2f88a539-727f-4c85-ba24-d0b4c6d84d3b
+2025-09-22 02:00:33.460 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:00:33.463 | INFO     | __main__:handle_handshake:74 - Created new session: 348e1b9a-8a36-4502-a28d-b76f82b53e96
+2025-09-22 02:03:12.194 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:03:12.196 | INFO     | __main__:handle_handshake:74 - Created new session: 4f86d660-6724-4bf8-91c8-08e89bb58810
+2025-09-22 02:05:44.127 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:05:44.131 | INFO     | __main__:handle_handshake:74 - Created new session: e4733a41-6b10-422f-8aea-6345297d770b
+2025-09-22 02:06:57.825 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:06:57.828 | INFO     | __main__:handle_handshake:74 - Created new session: 99d56482-0e6d-41e5-934e-2448ddd8c6a3
+2025-09-22 02:07:25.614 | INFO     | __main__:<module>:221 - Server shutting down
+2025-09-22 02:07:25.615 | INFO     | __main__:cleanup_session:208 - Cleaning up session: 506e6b23-357a-48e1-9fe0-3a8f203b3030
+2025-09-22 02:08:17.604 | INFO     | __main__:main:291 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:08:20.486 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:08:20.507 | INFO     | __main__:handle_handshake:74 - Created new session: b212ce52-0693-4f42-bfa7-8547092a1dab
+2025-09-22 02:08:32.169 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:08:34.007 | INFO     | __main__:handle_handshake:74 - Created new session: 3e1650e8-9911-4cfa-9ca4-4b638aeee892
+2025-09-22 02:08:52.725 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:08:53.235 | INFO     | __main__:handle_prompt:114 - Created new agent for session: 3e1650e8-9911-4cfa-9ca4-4b638aeee892
+2025-09-22 02:08:54.859 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:08:54.862 | INFO     | __main__:handle_prompt:148 - Handling interrupt #1 for session 3e1650e8-9911-4cfa-9ca4-4b638aeee892: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:08:54.859370', 'message': 'Reading document'}, resumable=True, ns=['tools:dc976720-d523-a211-10e3-a196ea7e1b30'])]
+2025-09-22 02:08:54.863 | ERROR    | __main__:handle_prompt:204 - Error running agent: Object of type Interrupt is not JSON serializable
+2025-09-22 02:09:45.818 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:09:45.830 | INFO     | __main__:handle_handshake:74 - Created new session: 30659573-06bb-4236-b8ec-5fcac782e8d4
+2025-09-22 02:12:09.919 | INFO     | __main__:<module>:298 - Server shutting down
+2025-09-22 02:12:09.920 | INFO     | __main__:cleanup_session:285 - Cleaning up session: 3e1650e8-9911-4cfa-9ca4-4b638aeee892
+2025-09-22 02:12:42.146 | INFO     | __main__:main:223 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:13:44.670 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:13:46.940 | INFO     | __main__:handle_handshake:74 - Created new session: 691b79d9-7377-464e-85e6-cb4b511e72c3
+2025-09-22 02:14:08.294 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:14:08.795 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 691b79d9-7377-464e-85e6-cb4b511e72c3
+2025-09-22 02:14:10.074 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:14:10.077 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 691b79d9-7377-464e-85e6-cb4b511e72c3: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:14:10.074499', 'message': 'Reading document'}, resumable=True, ns=['tools:592e74f5-708f-c95a-5bb8-767886f6af41'])]
+2025-09-22 02:14:10.077 | ERROR    | __main__:handle_prompt:150 - Error running agent: Object of type Interrupt is not JSON serializable
+2025-09-22 02:14:31.766 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:14:31.780 | INFO     | __main__:handle_handshake:74 - Created new session: 384a1db0-8356-4e68-a328-260a585e99b3
+2025-09-22 02:15:55.968 | INFO     | __main__:<module>:230 - Server shutting down
+2025-09-22 02:15:55.969 | INFO     | __main__:cleanup_session:217 - Cleaning up session: 691b79d9-7377-464e-85e6-cb4b511e72c3
+2025-09-22 02:16:27.694 | INFO     | __main__:main:230 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:16:33.383 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:16:39.856 | INFO     | __main__:handle_handshake:74 - Created new session: 2ad403c4-c3db-480a-9915-93581e118603
+2025-09-22 02:16:56.475 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:16:56.885 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 2ad403c4-c3db-480a-9915-93581e118603
+2025-09-22 02:16:58.544 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:16:58.549 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 2ad403c4-c3db-480a-9915-93581e118603: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:16:58.544256', 'message': 'Reading document'}, resumable=True, ns=['tools:a0a2f34f-2f60-2afc-7fad-70dd512af4c1'])]
+2025-09-22 02:16:58.552 | ERROR    | __main__:handle_prompt:157 - Error running agent: Object of type Interrupt is not JSON serializable
+2025-09-22 02:17:29.177 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:17:29.182 | INFO     | __main__:handle_handshake:74 - Created new session: 9b324ffa-0716-40fc-8791-1332412ebcf8
+2025-09-22 02:19:37.370 | INFO     | __main__:<module>:237 - Server shutting down
+2025-09-22 02:19:37.371 | INFO     | __main__:cleanup_session:224 - Cleaning up session: 2ad403c4-c3db-480a-9915-93581e118603
+2025-09-22 02:20:15.650 | INFO     | __main__:main:227 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:21:12.550 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:21:13.258 | INFO     | __main__:handle_handshake:74 - Created new session: d2a058f2-bcaa-4b61-ad75-01abc26f8d37
+2025-09-22 02:21:33.366 | ERROR    | __main__:handler:40 - Failed to decode JSON message
+2025-09-22 02:21:51.090 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:21:51.703 | INFO     | __main__:handle_prompt:112 - Created new agent for session: d2a058f2-bcaa-4b61-ad75-01abc26f8d37
+2025-09-22 02:21:52.812 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:21:52.817 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session d2a058f2-bcaa-4b61-ad75-01abc26f8d37: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:21:52.811247', 'message': 'Reading document'}, resumable=True, ns=['tools:41e69016-64ca-5ecc-6fc6-47138e20eda7'])]
+2025-09-22 02:21:52.818 | ERROR    | __main__:handle_prompt:154 - Error running agent: list indices must be integers or slices, not str
+2025-09-22 02:22:30.784 | INFO     | __main__:<module>:234 - Server shutting down
+2025-09-22 02:22:30.784 | INFO     | __main__:cleanup_session:221 - Cleaning up session: d2a058f2-bcaa-4b61-ad75-01abc26f8d37
+2025-09-22 02:23:06.496 | INFO     | __main__:main:227 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:25:54.893 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:25:56.534 | INFO     | __main__:handle_handshake:74 - Created new session: fb672709-6f2a-4006-a39c-861c45f780d4
+2025-09-22 02:26:15.844 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:26:16.290 | INFO     | __main__:handle_prompt:112 - Created new agent for session: fb672709-6f2a-4006-a39c-861c45f780d4
+2025-09-22 02:26:17.089 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:26:17.092 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session fb672709-6f2a-4006-a39c-861c45f780d4: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:26:17.089637', 'message': 'Reading document'}, resumable=True, ns=['tools:6c085f65-6dcf-5c76-0b1a-c27c9576bcfd'])]
+2025-09-22 02:26:17.093 | ERROR    | __main__:handle_prompt:154 - Error running agent: 'Interrupt' object is not subscriptable
+2025-09-22 02:26:54.962 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:26:54.969 | INFO     | __main__:handle_handshake:74 - Created new session: 7784e4c2-a0d6-4c1a-baa7-426e01d6c6bd
+2025-09-22 02:28:33.173 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:28:33.178 | INFO     | __main__:handle_handshake:74 - Created new session: 9869ce7e-7ae1-4fdc-86e4-72e28b6dcafe
+2025-09-22 02:28:56.442 | INFO     | __main__:<module>:234 - Server shutting down
+2025-09-22 02:28:56.443 | INFO     | __main__:cleanup_session:221 - Cleaning up session: fb672709-6f2a-4006-a39c-861c45f780d4
+2025-09-22 02:29:32.090 | INFO     | __main__:main:227 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:29:40.955 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:29:48.810 | INFO     | __main__:handle_handshake:74 - Created new session: 97907735-e427-4889-a806-0b13cb10cd6f
+2025-09-22 02:30:03.597 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:30:04.349 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 97907735-e427-4889-a806-0b13cb10cd6f
+2025-09-22 02:30:05.527 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:30:05.531 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 97907735-e427-4889-a806-0b13cb10cd6f: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:30:05.527686', 'message': 'Reading document'}, resumable=True, ns=['tools:e144e78d-38b9-1ed6-d0eb-383522c008ae'])]
+2025-09-22 02:30:05.532 | ERROR    | __main__:handle_prompt:154 - Error running agent: 'Interrupt' object has no attribute 'get'
+2025-09-22 02:30:54.643 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:30:54.652 | INFO     | __main__:handle_handshake:74 - Created new session: daa2dbc9-175e-4462-b972-c5e43bcdb5ab
+2025-09-22 02:31:12.700 | INFO     | __main__:<module>:234 - Server shutting down
+2025-09-22 02:31:12.701 | INFO     | __main__:cleanup_session:221 - Cleaning up session: 97907735-e427-4889-a806-0b13cb10cd6f
+2025-09-22 02:31:46.091 | INFO     | __main__:main:227 - WebSocket server started on ws://localhost:8765
+2025-09-22 02:31:55.881 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 02:32:00.856 | INFO     | __main__:handle_handshake:74 - Created new session: 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0
+2025-09-22 02:32:17.107 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 02:32:17.649 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0
+2025-09-22 02:32:18.690 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 02:32:18.694 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:32:18.690824', 'message': 'Reading document'}, resumable=True, ns=['tools:9bd6bad1-c6f5-31f4-442b-1ce3cd7cce6f'])]
+2025-09-22 02:32:38.271 | INFO     | __main__:<module>:234 - Server shutting down
+2025-09-22 02:32:38.271 | INFO     | __main__:cleanup_session:221 - Cleaning up session: 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0
