@@ -39,7 +39,7 @@ class ManagerAgent:
         self.agent = create_react_agent(
             model=self.model,
             tools=[self.generate_content, self.apply_tool_func,self.read_document],
-            debug=True,
+            debug=False,
             # checkpointer=SqliteSaver(self.connection),
             checkpointer=MemorySaver(),
             prompt=self.get_prompt()
@@ -225,6 +225,7 @@ read_document(asHTML: bool = False)
     def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
         response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
+        logger.info(f"Agent response: {response}")
         return response
 
     def handle_client_tool_response(self,data:dict):

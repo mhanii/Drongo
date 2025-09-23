@@ -6408,3 +6408,241 @@ For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/er
 2025-09-22 02:32:18.694 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T02:32:18.690824', 'message': 'Reading document'}, resumable=True, ns=['tools:9bd6bad1-c6f5-31f4-442b-1ce3cd7cce6f'])]
 2025-09-22 02:32:38.271 | INFO     | __main__:<module>:234 - Server shutting down
 2025-09-22 02:32:38.271 | INFO     | __main__:cleanup_session:221 - Cleaning up session: 2fdcc1e8-ace4-4eaf-a424-99c2075aefd0
+2025-09-22 10:53:21.371 | INFO     | __main__:main:249 - WebSocket server started on ws://localhost:8765
+2025-09-22 10:53:56.409 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 10:53:57.547 | INFO     | __main__:handle_handshake:74 - Created new session: 723b6452-3ab2-44a1-81c4-a04a0dd9ebf7
+2025-09-22 10:54:17.754 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 10:54:18.280 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 723b6452-3ab2-44a1-81c4-a04a0dd9ebf7
+2025-09-22 10:54:18.922 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 10:54:18.928 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 723b6452-3ab2-44a1-81c4-a04a0dd9ebf7: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T10:54:18.922583', 'message': 'Reading document'}, resumable=True, ns=['tools:1bf6ffdc-b443-59a9-42a9-769657164d26'])]
+2025-09-22 10:56:03.007 | INFO     | __main__:<module>:256 - Server shutting down
+2025-09-22 10:56:03.008 | INFO     | __main__:cleanup_session:234 - Cleaning up session: 723b6452-3ab2-44a1-81c4-a04a0dd9ebf7
+2025-09-22 10:58:21.219 | INFO     | __main__:main:251 - WebSocket server started on ws://localhost:8765
+2025-09-22 10:58:35.308 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 10:58:44.653 | INFO     | __main__:handle_handshake:74 - Created new session: 46987107-e272-4857-8d19-db80b8d046d5
+2025-09-22 10:59:01.578 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 10:59:02.318 | INFO     | __main__:handle_prompt:112 - Created new agent for session: 46987107-e272-4857-8d19-db80b8d046d5
+2025-09-22 10:59:03.064 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 10:59:03.069 | INFO     | __main__:handle_prompt:129 - Handling interrupt for session 46987107-e272-4857-8d19-db80b8d046d5: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T10:59:03.064109', 'message': 'Reading document'}, resumable=True, ns=['tools:ba947bbc-7d60-f86b-c7c9-e831348c7c13'])]
+2025-09-22 11:02:30.595 | INFO     | __main__:<module>:258 - Server shutting down
+2025-09-22 11:02:30.595 | INFO     | __main__:cleanup_session:236 - Cleaning up session: 46987107-e272-4857-8d19-db80b8d046d5
+2025-09-22 11:03:07.690 | INFO     | __main__:main:252 - WebSocket server started on ws://localhost:8765
+2025-09-22 11:04:05.452 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 11:04:10.890 | INFO     | __main__:handler:25 - Handling new message
+2025-09-22 11:04:10.891 | INFO     | __main__:handle_handshake:75 - Created new session: 969746d2-a6f4-4e10-8b39-63d2cff81fa7
+2025-09-22 11:04:31.913 | INFO     | __main__:handler:25 - Handling new message
+2025-09-22 11:04:31.914 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 11:04:32.363 | INFO     | __main__:handle_prompt:113 - Created new agent for session: 969746d2-a6f4-4e10-8b39-63d2cff81fa7
+2025-09-22 11:04:32.979 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 11:04:32.983 | INFO     | __main__:handle_prompt:130 - Handling interrupt for session 969746d2-a6f4-4e10-8b39-63d2cff81fa7: [Interrupt(value={'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T11:04:32.979545', 'message': 'Reading document'}, resumable=True, ns=['tools:057826a3-f902-b7ba-4138-92e09c963f77'])]
+2025-09-22 11:06:47.309 | INFO     | __main__:<module>:259 - Server shutting down
+2025-09-22 11:06:47.310 | INFO     | __main__:cleanup_session:237 - Cleaning up session: 969746d2-a6f4-4e10-8b39-63d2cff81fa7
+2025-09-22 11:07:19.449 | INFO     | __main__:main:291 - WebSocket server started on ws://localhost:8765
+2025-09-22 11:07:23.760 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 11:07:40.316 | INFO     | __main__:handle_handshake:74 - Created new session: 88a871c8-7740-4946-846c-947c049ea7b2
+2025-09-22 11:08:05.088 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-22 11:08:05.519 | INFO     | __main__:handle_prompt:114 - Created new agent for session: 88a871c8-7740-4946-846c-947c049ea7b2
+2025-09-22 11:08:07.027 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 11:08:07.031 | INFO     | __main__:handle_prompt:148 - Handling interrupt #1 for session 88a871c8-7740-4946-846c-947c049ea7b2: {'type': 'tool_call', 'tool_name': 'read_document', 'as_html': False, 'timestamp': '2025-09-22T11:08:07.027573', 'message': 'Reading document'}
+2025-09-22 11:13:07.013 | ERROR    | __main__:handle_prompt:167 - Timeout waiting for tool response for interrupt #1
+2025-09-22 11:13:07.015 | INFO     | __main__:handle_tool_response:259 - Processing standalone tool response for session 88a871c8-7740-4946-846c-947c049ea7b2
+2025-09-22 11:13:07.026 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-22 11:36:40.721 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 11:36:40.823 | INFO     | __main__:handle_handshake:74 - Created new session: bbbb0efd-b2e4-4efd-9a99-e62f87ba1e00
+2025-09-22 11:49:38.763 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 11:49:38.770 | INFO     | __main__:handle_handshake:74 - Created new session: 5cede15c-004f-409d-80ef-8544490e5b7d
+2025-09-22 11:51:51.416 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 11:51:51.423 | INFO     | __main__:handle_handshake:74 - Created new session: 8366bd90-99f1-4892-87e3-a1d06e22a2e9
+2025-09-22 12:23:28.261 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 12:23:28.266 | INFO     | __main__:handle_handshake:74 - Created new session: 43a58b3a-8eb1-4351-96d8-433406f12d54
+2025-09-22 12:24:06.670 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 12:24:06.680 | INFO     | __main__:handle_handshake:74 - Created new session: 67a2e2a4-aeed-488b-8abe-d437cb4878c0
+2025-09-22 12:26:34.509 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 12:26:34.521 | INFO     | __main__:handle_handshake:74 - Created new session: de4e20c6-fd73-45b1-8a59-908f4109acf8
+2025-09-22 12:51:19.448 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 12:51:19.635 | INFO     | __main__:handle_handshake:74 - Created new session: 9b799c48-f747-4e8f-8eaf-21e5f7d63f74
+2025-09-22 18:33:20.824 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 18:33:20.883 | INFO     | __main__:handle_handshake:74 - Created new session: b1443701-848c-4039-939b-c3621de7e226
+2025-09-22 18:39:19.902 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 18:39:19.913 | INFO     | __main__:handle_handshake:74 - Created new session: cd2d11d3-a436-4bc5-9ea8-63b2d6541afc
+2025-09-22 18:51:14.827 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 18:51:14.831 | INFO     | __main__:handle_handshake:74 - Created new session: ce654943-6631-456a-b8a3-d4990e608e02
+2025-09-22 19:02:11.050 | INFO     | __main__:handler:20 - New connection established
+2025-09-22 19:02:11.059 | INFO     | __main__:handle_handshake:74 - Created new session: 4527d0d9-ff31-490d-8911-29b02ddcd8f6
+2025-09-23 13:40:38.651 | INFO     | __main__:handler:20 - New connection established
+2025-09-23 13:40:38.664 | INFO     | __main__:handle_handshake:74 - Created new session: 526b4fb2-8c7c-46ef-87db-ab88a8755391
+2025-09-23 13:42:24.880 | INFO     | __main__:handler:20 - New connection established
+2025-09-23 13:42:24.890 | INFO     | __main__:handle_handshake:74 - Created new session: beb6239e-c6ca-493f-a351-3ecbdbbcbdd4
+2025-09-23 18:08:53.186 | INFO     | __main__:main:234 - WebSocket server started on ws://localhost:8765
+2025-09-23 18:09:07.930 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 18:13:07.582 | INFO     | __main__:<module>:241 - Server shutting down
+2025-09-23 18:15:07.057 | INFO     | __main__:<module>:226 - Server is starting.
+2025-09-23 18:15:07.059 | INFO     | __main__:main:219 - Starting WebSocket server...
+2025-09-23 18:15:07.096 | INFO     | __main__:main:221 - WebSocket server started on ws://localhost:8765
+2025-09-23 18:15:12.931 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 18:15:16.519 | DEBUG    | __main__:handler:27 - Received handshake message: {
+    "type": "handshake"
+}
+2025-09-23 18:15:16.520 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 18:15:17.013 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:15:17.013 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:15:17.013 | INFO     | __main__:handler:46 - Created new session: 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:15:46.858 | DEBUG    | __main__:handler:53 - Received message: {
+    "type": "prompt",
+    "text":"Could you use read_document tool to make sure everything works just fine?",
+    "images":[],
+    "documents":[],
+    "document_structure":"<p></p>",
+    "session_id": "5ad24005-be16-41ad-9691-75944390a69e"
+}
+2025-09-23 18:15:46.859 | INFO     | __main__:handler:58 - Message enqueued for session 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:15:46.860 | INFO     | session.clientSession:_message_processor:77 - Processing message of type 'prompt' for session 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:15:49.047 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-23 18:15:49.049 | INFO     | session.clientSession:_handle_prompt:112 - Handling interrupt for session 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:16:16.536 | DEBUG    | __main__:handler:53 - Received message: {
+    "type": "tool_response",
+    "tool_name": "read_document",
+    "session_id": "5ad24005-be16-41ad-9691-75944390a69e",
+    "content": "<p>this is the document</p>"
+}
+2025-09-23 18:16:16.537 | INFO     | __main__:handler:58 - Message enqueued for session 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 18:17:20.303 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 18:17:20.315 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 18:17:20.318 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 18:17:20.913 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 4df13da5-142b-410d-a895-5367025b1a66
+2025-09-23 18:17:20.914 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 4df13da5-142b-410d-a895-5367025b1a66
+2025-09-23 18:17:20.915 | INFO     | __main__:handler:46 - Created new session: 4df13da5-142b-410d-a895-5367025b1a66
+2025-09-23 18:17:50.930 | INFO     | __main__:handler:72 - Client for session 4df13da5-142b-410d-a895-5367025b1a66 disconnected.
+2025-09-23 21:57:25.477 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 21:57:25.570 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 21:57:25.573 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 21:57:27.882 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: d2e217dd-2e19-4b0e-9543-7393721eb674
+2025-09-23 21:57:27.884 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: d2e217dd-2e19-4b0e-9543-7393721eb674
+2025-09-23 21:57:27.886 | INFO     | __main__:handler:46 - Created new session: d2e217dd-2e19-4b0e-9543-7393721eb674
+2025-09-23 21:57:57.940 | INFO     | __main__:handler:72 - Client for session d2e217dd-2e19-4b0e-9543-7393721eb674 disconnected.
+2025-09-23 22:00:09.540 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:00:09.570 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:00:09.572 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:00:10.269 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 45cc05e2-b748-4959-b2e8-257d51948322
+2025-09-23 22:00:10.270 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 45cc05e2-b748-4959-b2e8-257d51948322
+2025-09-23 22:00:10.271 | INFO     | __main__:handler:46 - Created new session: 45cc05e2-b748-4959-b2e8-257d51948322
+2025-09-23 22:00:47.628 | INFO     | __main__:handler:72 - Client for session 45cc05e2-b748-4959-b2e8-257d51948322 disconnected.
+2025-09-23 22:02:21.232 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:02:21.243 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:02:21.243 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:02:21.626 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: fc3a3724-429c-46bb-949c-9eade934b9ce
+2025-09-23 22:02:21.627 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: fc3a3724-429c-46bb-949c-9eade934b9ce
+2025-09-23 22:02:21.628 | INFO     | __main__:handler:46 - Created new session: fc3a3724-429c-46bb-949c-9eade934b9ce
+2025-09-23 22:02:51.638 | INFO     | __main__:handler:72 - Client for session fc3a3724-429c-46bb-949c-9eade934b9ce disconnected.
+2025-09-23 22:04:02.456 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:04:02.467 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:04:02.469 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:04:02.983 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 61e10b99-8449-4282-8a23-1ebd821554dc
+2025-09-23 22:04:02.983 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 61e10b99-8449-4282-8a23-1ebd821554dc
+2025-09-23 22:04:02.984 | INFO     | __main__:handler:46 - Created new session: 61e10b99-8449-4282-8a23-1ebd821554dc
+2025-09-23 22:04:32.991 | INFO     | __main__:handler:72 - Client for session 61e10b99-8449-4282-8a23-1ebd821554dc disconnected.
+2025-09-23 22:12:44.678 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:12:44.767 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:12:44.777 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:12:47.206 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 3730d866-f18d-4291-936a-69eee71d63af
+2025-09-23 22:12:47.208 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 3730d866-f18d-4291-936a-69eee71d63af
+2025-09-23 22:12:47.209 | INFO     | __main__:handler:46 - Created new session: 3730d866-f18d-4291-936a-69eee71d63af
+2025-09-23 22:13:17.219 | INFO     | __main__:handler:72 - Client for session 3730d866-f18d-4291-936a-69eee71d63af disconnected.
+2025-09-23 22:17:17.830 | INFO     | session.clientSession:_message_processor:91 - Message processor for 5ad24005-be16-41ad-9691-75944390a69e cancelled.
+2025-09-23 22:17:17.831 | INFO     | session.clientSession:_message_processor:91 - Message processor for 4df13da5-142b-410d-a895-5367025b1a66 cancelled.
+2025-09-23 22:17:17.831 | INFO     | session.clientSession:_message_processor:91 - Message processor for 45cc05e2-b748-4959-b2e8-257d51948322 cancelled.
+2025-09-23 22:17:17.831 | INFO     | __main__:handler:72 - Client for session 5ad24005-be16-41ad-9691-75944390a69e disconnected.
+2025-09-23 22:17:17.833 | INFO     | session.clientSession:_message_processor:91 - Message processor for 3730d866-f18d-4291-936a-69eee71d63af cancelled.
+2025-09-23 22:17:17.833 | INFO     | session.clientSession:_message_processor:91 - Message processor for d2e217dd-2e19-4b0e-9543-7393721eb674 cancelled.
+2025-09-23 22:17:17.834 | INFO     | session.clientSession:_message_processor:91 - Message processor for 61e10b99-8449-4282-8a23-1ebd821554dc cancelled.
+2025-09-23 22:17:17.834 | INFO     | session.clientSession:_message_processor:91 - Message processor for fc3a3724-429c-46bb-949c-9eade934b9ce cancelled.
+2025-09-23 22:17:17.840 | INFO     | __main__:<module>:229 - Server shutting down
+2025-09-23 22:17:17.840 | INFO     | __main__:cleanup_session:208 - Cleaning up session: 5ad24005-be16-41ad-9691-75944390a69e
+2025-09-23 22:19:09.125 | INFO     | __main__:<module>:226 - Server is starting.
+2025-09-23 22:19:09.127 | INFO     | __main__:main:219 - Starting WebSocket server...
+2025-09-23 22:19:09.170 | INFO     | __main__:main:221 - WebSocket server started on ws://localhost:8765
+2025-09-23 22:20:08.043 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:20:11.385 | DEBUG    | __main__:handler:27 - Received handshake message: {
+    "type": "handshake"
+}
+2025-09-23 22:20:11.385 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:20:11.884 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:11.885 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:11.886 | INFO     | __main__:handler:46 - Created new session: fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:37.739 | DEBUG    | __main__:handler:53 - Received message: {
+    "type": "prompt",
+    "text":"Could you use read_document tool to make sure everything works just fine?",
+    "images":[],
+    "documents":[],
+    "document_structure":"<p></p>",
+    "session_id": "fd53120b-f87d-469a-878c-3e0b7194db21"
+}
+2025-09-23 22:20:37.739 | INFO     | __main__:handler:58 - Message enqueued for session fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:37.742 | INFO     | session.clientSession:_message_processor:97 - Processing message of type 'prompt' for session fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:39.417 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-23 22:20:39.418 | INFO     | session.clientSession:_handle_prompt:132 - Handling interrupt for session fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:54.652 | DEBUG    | __main__:handler:53 - Received message: {
+    "type": "tool_response",
+    "tool_name": "read_document",
+    "session_id": "fd53120b-f87d-469a-878c-3e0b7194db21",
+    "content": "<p>this is the document</p>"
+}
+2025-09-23 22:20:54.653 | INFO     | session.clientSession:resolve_interrupt:66 - Directly resolved interrupt for session fd53120b-f87d-469a-878c-3e0b7194db21.
+2025-09-23 22:20:54.653 | INFO     | __main__:handler:58 - Message enqueued for session fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:20:54.667 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-23 22:21:56.002 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:21:56.030 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:21:56.033 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:21:58.036 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: f302b1b3-6616-4187-86b4-cf3f09fcc1f6
+2025-09-23 22:21:58.038 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: f302b1b3-6616-4187-86b4-cf3f09fcc1f6
+2025-09-23 22:21:58.040 | INFO     | __main__:handler:46 - Created new session: f302b1b3-6616-4187-86b4-cf3f09fcc1f6
+2025-09-23 22:22:59.332 | INFO     | __main__:handler:72 - Client for session f302b1b3-6616-4187-86b4-cf3f09fcc1f6 disconnected.
+2025-09-23 22:23:19.076 | INFO     | __main__:handler:72 - Client for session fd53120b-f87d-469a-878c-3e0b7194db21 disconnected.
+2025-09-23 22:23:19.076 | INFO     | session.clientSession:_message_processor:111 - Message processor for f302b1b3-6616-4187-86b4-cf3f09fcc1f6 cancelled.
+2025-09-23 22:23:19.079 | INFO     | __main__:<module>:229 - Server shutting down
+2025-09-23 22:23:19.079 | INFO     | __main__:cleanup_session:208 - Cleaning up session: fd53120b-f87d-469a-878c-3e0b7194db21
+2025-09-23 22:25:58.864 | INFO     | __main__:<module>:226 - Server is starting.
+2025-09-23 22:25:58.866 | INFO     | __main__:main:219 - Starting WebSocket server...
+2025-09-23 22:25:58.908 | INFO     | __main__:main:221 - WebSocket server started on ws://localhost:8765
+2025-09-23 22:25:59.238 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:25:59.244 | DEBUG    | __main__:handler:27 - Received handshake message: {"type":"handshake","session_id":null}
+2025-09-23 22:25:59.245 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:25:59.623 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: 6b988f45-488f-4d1a-ac77-aadb7c388d5b
+2025-09-23 22:25:59.624 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: 6b988f45-488f-4d1a-ac77-aadb7c388d5b
+2025-09-23 22:25:59.625 | INFO     | __main__:handler:46 - Created new session: 6b988f45-488f-4d1a-ac77-aadb7c388d5b
+2025-09-23 22:26:22.814 | INFO     | __main__:handler:23 - New connection established.
+2025-09-23 22:26:29.639 | INFO     | __main__:handler:72 - Client for session 6b988f45-488f-4d1a-ac77-aadb7c388d5b disconnected.
+2025-09-23 22:26:31.667 | DEBUG    | __main__:handler:27 - Received handshake message: {
+    "type": "handshake"
+}
+2025-09-23 22:26:31.668 | INFO     | agents.manager:__init__:31 - Manager agent initialized.
+2025-09-23 22:26:31.987 | INFO     | session.clientSession:__init__:33 - ClientSession created for session: baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:31.987 | INFO     | session.clientSession:start:39 - Started processing and sender tasks for session: baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:31.988 | INFO     | __main__:handler:46 - Created new session: baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:43.536 | DEBUG    | __main__:handler:53 - Received message: {
+    "type": "prompt",
+    "text":"Could you use read_document tool to make sure everything works just fine?",
+    "images":[],
+    "documents":[],
+    "document_structure":"<p></p>",
+    "session_id": "baed2080-155b-4bf0-bd23-af1e2b6945aa"
+}
+2025-09-23 22:26:43.537 | INFO     | __main__:handler:58 - Message enqueued for session baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:43.538 | INFO     | session.clientSession:_message_processor:97 - Processing message of type 'prompt' for session baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:44.519 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-23 22:26:44.521 | INFO     | session.clientSession:_handle_prompt:132 - Handling interrupt for session baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:57.929 | DEBUG    | __main__:handler:53 - Received message: 
+{
+    "type": "tool_response",
+    "tool_name": "read_document",
+    "session_id": "baed2080-155b-4bf0-bd23-af1e2b6945aa",
+    "content": "<p>this is the document</p>"
+}
+2025-09-23 22:26:57.930 | INFO     | session.clientSession:resolve_interrupt:66 - Directly resolved interrupt for session baed2080-155b-4bf0-bd23-af1e2b6945aa.
+2025-09-23 22:26:57.930 | INFO     | __main__:handler:58 - Message enqueued for session baed2080-155b-4bf0-bd23-af1e2b6945aa
+2025-09-23 22:26:57.934 | INFO     | agents.manager:read_document:119 - Let's see if this well run twice as our theory
+2025-09-23 22:29:55.517 | INFO     | session.clientSession:_message_processor:111 - Message processor for 6b988f45-488f-4d1a-ac77-aadb7c388d5b cancelled.
+2025-09-23 22:29:55.517 | INFO     | __main__:handler:72 - Client for session baed2080-155b-4bf0-bd23-af1e2b6945aa disconnected.
+2025-09-23 22:29:55.520 | INFO     | __main__:<module>:229 - Server shutting down
+2025-09-23 22:29:55.521 | INFO     | __main__:cleanup_session:208 - Cleaning up session: 6b988f45-488f-4d1a-ac77-aadb7c388d5b
+2025-09-23 22:29:55.521 | INFO     | session.clientSession:cleanup_session:180 - Cleaning up session: 6b988f45-488f-4d1a-ac77-aadb7c388d5b
