@@ -116,7 +116,6 @@ read_document(asHTML: bool = False)
             "timestamp": datetime.datetime.now().isoformat(),
             "message": "Reading document"
         }
-        logger.info("Let's see if this well run twice as our theory")
         response = interrupt(interrupt_payload)
 
  
@@ -222,20 +221,53 @@ read_document(asHTML: bool = False)
         payload["document_structure"] = self.document_structure
         return payload
     
-    def run_prompt(self, request_data: dict):
+    async def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
-        response = self.agent.invoke(payload, {"configurable": {"thread_id": "2"}})
-        logger.info(f"Agent response: {response}")
-        return response
-
-    def handle_client_tool_response(self,data:dict):
-        if data.get('tool_name','') == 'read_document':
-            self.agent.invoke(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}})
-        elif data.get('tool_name','') == 'apply':
-            logger.info(data)
-            self.agent.invoke(Command(resume=data.get('content',{})),{"configurable": {"thread_id": "2"}})
+        logger.info(f"Manager running with payload: {payload}")
+        async for chunk in self.agent.astream(payload, {"configurable": {"thread_id": "2"}}, stream_mode=["updates", "messages"]):
+            data = self._handle_chunk(chunk)
+            logger.info(f"Manager chunk: {data}")
+            if data:
+                yield data
 
 
+    async def resume_agent(self,data:dict):
+        logger.info(f"Manager resuming with data: {data}")
+        async for chunk in self.agent.astream(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}},stream_mode=["updates", "messages"]):
+            data = self._handle_chunk(chunk)
+            if data:
+                yield data
+
+    def _handle_chunk(self, chunk):
+
+        data = None
+        if (
+            isinstance(chunk, tuple)
+            and chunk[0] == "updates"
+            and isinstance(chunk[1], dict)
+            and "__interrupt__" in chunk[1]
+        ):
+            data = {
+                "type": "interrupt",
+                "payload": chunk[1]["__interrupt__"][0].value
+            }
+            logger.info(f"Interrupt: {data}")
+
+        elif (
+            isinstance(chunk, tuple)
+            and chunk[0] == "messages"
+        ):
+            message = chunk[1][0]  # Extract the message content
+            if message.content != '':
+                data = {
+                    "type": "message",
+                    "payload": message
+                }
+                
+                logger.info(f"Message: {data}")
+            else:
+                logger.info("Empty message content received; skipping.")
+        return data
     # Remove the old apply_tool method; use self.apply_tool.apply instead
 
 # agent = ManagerAgent("checkpoint.sqlite","models/gemini-2.0-flash",ContextStore("1",[],[]))

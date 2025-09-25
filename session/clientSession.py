@@ -20,14 +20,14 @@ class ClientSession:
         
         
         # Initialize the agent for this session
-        self.agent = ManagerAgent(
+        self.manager = ManagerAgent(
             checkpoint_path=f"data/{session_id}_checkpoint.sqlite", # Session-specific checkpoint
             model="models/gemini-2.0-flash",
             store=None, # Should be initialized properly if needed
             queue=asyncio.Queue() # Agent's own queue for streaming messages
         )
         # The agent's message queue for streaming partial responses
-        self.agent_message_queue = self.agent.queue
+        self.agent_message_queue = self.manager.queue
         self.sender_task = None
 
         logger.info(f"ClientSession created for session: {self.session_id}")
@@ -118,53 +118,61 @@ class ClientSession:
                 }))
 
     async def _handle_prompt(self, data):
-        """Handles a new prompt from the client, streaming agent responses."""
-        try:
-            # Assume agent.run_prompt_stream returns an async generator yielding partial responses
-            stream = await asyncio.to_thread(self.agent.run_prompt_stream, data)
-            while True:
-                try:
-                    chunk = await asyncio.to_thread(next, stream)
-                except StopIteration:
-                    break
-                except Exception as e:
-                    logger.error(f"Error streaming agent response: {e}")
-                    break
-                if chunk is None:
-                    continue
-                # Check for interrupt
-                if isinstance(chunk, dict) and chunk.get("__interrupt__"):
-                    interrupt_payload = chunk["__interrupt__"][0].value
-                    logger.info(f"Handling interrupt for session {self.session_id}")
-                    await self.websocket.send(json.dumps({
-                        "type": "interrupt",
-                        "payload": interrupt_payload,
-                        "session_id": self.session_id
-                    }))
-                    self.resume_future = asyncio.get_event_loop().create_future()
-                    tool_response_data = await self.resume_future
-                    # Resume agent execution with the client's response
-                    stream = await asyncio.to_thread(self.agent.handle_client_tool_response_stream, tool_response_data)
-                    continue
-                # Stream partial content
+        """Handles a new prompt from the client with a restartable generator loop."""
+        logger.info(f"Handling prompt for session {self.session_id}")
+
+        # Start with the initial generator
+        generator = self.manager.run_prompt(data)
+
+        while True: # Loop to handle generator switches
+            try:
+                async for chunk in generator:
+                    logger.debug(f"Sending chunk to client for session {self.session_id}: {chunk}")
+
+                    if chunk['type'] == "interrupt":
+                        logger.info(f"Session {self.session_id} interrupted, waiting for tool response.")
+
+                        payload = dict(chunk["payload"])  # Make a copy to avoid mutating the original
+                        payload["session_id"] = self.session_id
+                        await self.websocket.send(json.dumps(payload))
+
+                        self.resume_future = asyncio.get_event_loop().create_future()
+                        tool_response_data = await self.resume_future
+                        logger.info(f"Resuming session {self.session_id} with tool response: {tool_response_data}")
+
+                        # Get the NEW generator for the resumed agent
+                        generator = self.manager.resume_agent(tool_response_data)
+                        break 
+
+                    elif chunk["type"] == "message":
+                        payload = dict(chunk["payload"])  # Make a copy to avoid mutating the original
+                        payload["type"] = "msc" # message stream chunk
+                        payload["session_id"] = self.session_id
+                        await self.websocket.send(json.dumps(payload))
+
+                else: 
+                    logger.info(f"Generator for session {self.session_id} finished normally.")
+                    break # Exit the outer 'while' loop
+
+            except Exception as e:
+                logger.error(f"Error running agent for session {self.session_id}: {e}", exc_info=True)
                 await self.websocket.send(json.dumps({
-                    "type": "agent_text",
-                    "status": "stream",
-                    "content": getattr(chunk, 'content', chunk),
+                    "error": "Agent processing error",
                     "session_id": self.session_id
                 }))
-            # Send end message
-            await self.websocket.send(json.dumps({
-                "type": "agent_text",
-                "status": "end",
-                "session_id": self.session_id
-            }))
-        except Exception as e:
-            logger.error(f"Error running agent for session {self.session_id}: {e}", exc_info=DEBUG)
-            await self.websocket.send(json.dumps({
-                "error": "Agent processing error",
-                "session_id": self.session_id
-            }))
+                break # Exit the loop on errorr after tool response.")
+
+
+
+
+
+
+            except Exception as e:
+                logger.error(f"Error running agent for session {self.session_id}: {e}", exc_info=DEBUG)
+                await self.websocket.send(json.dumps({
+                    "error": "Agent processing error",
+                    "session_id": self.session_id
+                }))
 
     async def _handle_tool_response(self, data):
         """Handles a tool response from the client to resume a paused agent."""
