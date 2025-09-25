@@ -239,7 +239,6 @@ read_document(asHTML: bool = False)
                 yield data
 
     def _handle_chunk(self, chunk):
-
         data = None
         if (
             isinstance(chunk, tuple)
@@ -258,15 +257,15 @@ read_document(asHTML: bool = False)
             and chunk[0] == "messages"
         ):
             message = chunk[1][0]  # Extract the message content
-            if message.content != '':
+            # Only handle AIMessageChunk, ignore ToolMessage
+            if message.__class__.__name__ == "AIMessageChunk" and message.content != '':
                 data = {
                     "type": "message",
                     "payload": message
                 }
-                
                 logger.info(f"Message: {data}")
             else:
-                logger.info("Empty message content received; skipping.")
+                logger.debug(f"Ignoring non-AIMessageChunk message: {message}")
         return data
     # Remove the old apply_tool method; use self.apply_tool.apply instead
 
