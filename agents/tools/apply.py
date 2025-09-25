@@ -29,7 +29,7 @@ class ApplyTool:
         logger.info(f"Last Prompt: {last_prompt}")
 
         if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"START","process":"APPLY", "chunk_id": chunk_id,"apply_type":type}))
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"APPLY","status":"begin", "chunk_id": chunk_id,"apply_type":type}))
 
         try:
             apply_type = ApplyType[type.upper()]
@@ -64,5 +64,6 @@ class ApplyTool:
             "data_position_id_end": result.get("data_position_id_end")
         }
         if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"END","process":"APPLY", "chunk_id": chunk_id, "status": custom_response["status"]}))
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"APPLY","status":"end", "chunk_id": chunk_id,"apply_type":type}))
+
         return custom_response

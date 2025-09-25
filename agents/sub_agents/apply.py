@@ -220,8 +220,7 @@ Return a JSON object with:
             "timestamp": datetime.datetime.now().isoformat(),
             "message": "Applying change"
         }
-        if self.queue:
-            self.queue.put_nowait(json.dumps(interrupt_payload))
+
 
         response = interrupt(interrupt_payload)
 
