@@ -15,7 +15,8 @@ import datetime
 import json
 from io import BytesIO
 from unstructured.partition.pdf import partition_pdf
-from agents.tools.apply import ApplyTool
+from agents.sub_agents.find_location import FindLocationTool
+from agents.tools.enums import ApplyType
 from agents.content import ContentAgent
 from new_logger import get_logger
 
@@ -32,15 +33,14 @@ class ManagerAgent:
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.model = ChatGoogleGenerativeAI(model=model)
         self.CS = store if store is not None else ContextStore()
-        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, queue=queue)  # Should be passed in or set after init. The checkpoint location should change if we will use database checkpoints instead of memory based.
+        self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, queue=queue)
         self.last_prompt = last_prompt
-        self.apply_tool = ApplyTool(self.content_agent.chunk_db, queue=queue)
+        self.find_location_tool = FindLocationTool(model=self.model)
         self.document_structure = ""  # Will be set in handle_and_save_input
         self.agent = create_react_agent(
             model=self.model,
-            tools=[self.generate_content, self.apply_tool_func,self.read_document],
+            tools=[self.generate_content, self.apply_tool_func, self.read_document],
             debug=False,
-            # checkpointer=SqliteSaver(self.connection),
             checkpointer=MemorySaver(),
             prompt=self.get_prompt()
         )
@@ -69,16 +69,16 @@ You MUST follow this sequence. Do not deviate.
 3.  **STEP 2: APPLY (Always the final action):**
     *   To perform any modification on the document, you **MUST** call the `apply_tool_func` tool. This is your only way to change the document.
     *   You must provide the correct parameters based on your analysis.
-    *   You Don't need to infer the location, it will be decided by the apply tool.
+    *   You Don't need to infer the location, it will be decided by the tool.
         ** DELETE type doesn't need a chunk_id.
 
 **Your Tools:**
 
 ---
-read_document(asHTML: bool = False)
+`read_document(asHTML: bool = False)`
     retrieves the document for you
 
-
+---
 `generate_content(description: str, style_guidelines: str)` SHOULD ONLY BE USED IF NECESSARY.
 *   **Purpose:** Delegates all content creation to a specialized writing agent.
 *   **Use When:** The user asks to write, create, generate, summarize, or add any new text.
@@ -88,16 +88,13 @@ read_document(asHTML: bool = False)
 ---
 
 `apply_tool_func(action_type: str,  chunk_id: Optional[str] = None)`
-*   **Description:** This tool applies a structural change to the document. It can insert, delete, or edit content. Use it to make all document modifications. You must specify the action type, and for inserts/edits, the chunk_id of the content to use.
+*   **Description:** This tool finds the correct location in the document and requests the change. It can insert, delete, or edit content. Use it to make all document modifications. You must specify the action type, and for inserts/edits, the chunk_id of the content to use.
 *   **Purpose:** Executes a specific change on the document structure.
 *   **Parameters:**
     *   `action_type` (str): **REQUIRED.** Must be one of the following exact strings:
         *   `"INSERT"`: To add a new content chunk.
         *   `"DELETE"`: To remove an existing element. No need to provide a chunk_id.
         *   `"EDIT"`: To replace an existing element with a new content chunk.
-
-
-
 """
 
     def read_document(self,asHTML: bool = False):
@@ -134,30 +131,77 @@ read_document(asHTML: bool = False)
         # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
         return self.content_agent.run(prompt)
 
-    def apply_tool_func(self, type: str, chunk_id: str = ""):
+    def apply_tool_func(self, action_type: str, chunk_id: str = ""):
         """
-        Calls the ApplyTool to decide where/how to apply a chunk. Validates the result and returns status and location info.
+        Calls the FindLocationTool to decide where/how to apply a chunk and then interrupts
+        to allow the client to perform the action.
 
         Args:
-            type (str): The action type, one of 'INSERT', 'DELETE', or 'EDIT'.
+            action_type (str): The action type, one of 'INSERT', 'DELETE', or 'EDIT'.
             chunk_id (str): The chunk_id of the content to insert or edit (required for INSERT and EDIT).
 
-
         Returns:
-            dict: {"status": "success", ...} with position_id_start and position_id_end if valid, otherwise an error dict.
+            dict: A status message for the ReAct agent. The actual action is sent via an interrupt.
         """
-        result = self.apply_tool.apply(type, chunk_id, self.document_structure, self.last_prompt)
-        # If error from apply_tool, propagate
-        if "error" in result:
-            return {"status": "error", "message": result["error"], "raw_response": result.get("raw_response")}
+        logger.info(f"--- Finding Location for Apply ---")
+        logger.info(f"Type: {action_type}")
+        logger.info(f"Chunk ID: {chunk_id}")
 
-        return {"status": "success", "message": result["message"]}
-    
-    
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"begin", "chunk_id": chunk_id,"apply_type":action_type}))
 
+        try:
+            apply_type_enum = ApplyType[action_type.upper()]
+        except KeyError:
+            logger.error(f"Invalid apply type: {action_type}")
+            return {"status": "error", "message": f"Invalid apply type: {action_type}"}
+
+        chunk_html = ""
+        if apply_type_enum in [ApplyType.INSERT, ApplyType.EDIT]:
+            if not chunk_id:
+                return {"status": "error", "message": "chunk_id is required for INSERT or EDIT actions."}
+            chunk = self.content_agent.chunk_db.load_content_chunk(chunk_id)
+            if not chunk:
+                logger.error(f"Chunk with id {chunk_id} not found.")
+                return {"status": "error", "message": f"Chunk with id {chunk_id} not found."}
+            chunk_html = chunk.html
+            logger.info(f"Loaded chunk HTML with length: {len(chunk_html)}")
+
+        result = self.find_location_tool.run(
+            apply_type=apply_type_enum,
+            document_structure=self.document_structure,
+            last_prompt=self.last_prompt,
+            chunk_id=chunk_id,
+            chunk_html=chunk_html
+        )
+
+        logger.info(f"--- Find Location Finished ---")
+        logger.info(f"Result: {result}")
+
+        if result.get("status") != "success":
+            return {"status": "error", "message": "Failed to find location for the requested action."}
+
+        if self.queue:
+            self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"end", "chunk_id": chunk_id,"apply_type":action_type}))
+
+        interrupt_payload = {
+            "type": "tool_call",
+            "tool_name": "apply",  # Client expects this tool name
+            "action": action_type,
+            "data": {
+                "chunk_html": chunk_html,
+                "chunk_id": chunk_id,
+                "data_position_id_start": result.get("data_position_id_start"),
+                "data_position_id_end": result.get("data_position_id_end"),
+            },
+            "timestamp": datetime.datetime.now().isoformat(),
+            "message": "Applying change"
+        }
+        interrupt(interrupt_payload)
+
+        return {"status": "success", "message": "Apply request sent to client."}
     
     def handle_and_save_input(self, request_data: dict):
-        # if it has prompt, if it has images if it has docs etc
         prompt = request_data.get("text","Prompt not found")
         images = request_data.get("images",[])
         docs = request_data.get("documents",[])
@@ -257,7 +301,6 @@ read_document(asHTML: bool = False)
             and chunk[0] == "messages"
         ):
             message = chunk[1][0]  # Extract the message content
-            # Only handle AIMessageChunk, ignore ToolMessage
             if message.__class__.__name__ == "AIMessageChunk" and message.content != '':
                 data = {
                     "type": "message",
@@ -267,6 +310,3 @@ read_document(asHTML: bool = False)
             else:
                 logger.debug(f"Ignoring non-AIMessageChunk message: {message}")
         return data
-    # Remove the old apply_tool method; use self.apply_tool.apply instead
-
-# agent = ManagerAgent("checkpoint.sqlite","models/gemini-2.0-flash",ContextStore("1",[],[]))
