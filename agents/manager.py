@@ -45,6 +45,7 @@ class ManagerAgent:
             prompt=self.get_prompt()
         )
         self.queue = queue
+        self.previous_result = {} # Not the best practice, but just for testing purposes.
     
     def get_prompt(self):
         return """**You are the Manager Agent, a specialized AI orchestrator within a document editing application. Your single purpose is to translate user requests into a sequence of precise tool calls. You do not write or edit content directly.**
@@ -147,8 +148,6 @@ You MUST follow this sequence. Do not deviate.
         logger.info(f"Type: {action_type}")
         logger.info(f"Chunk ID: {chunk_id}")
 
-        if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"begin", "chunk_id": chunk_id,"apply_type":action_type}))
 
         try:
             apply_type_enum = ApplyType[action_type.upper()]
@@ -167,22 +166,26 @@ You MUST follow this sequence. Do not deviate.
             chunk_html = chunk.html
             logger.info(f"Loaded chunk HTML with length: {len(chunk_html)}")
 
-        result = self.find_location_tool.run(
-            apply_type=apply_type_enum,
-            document_structure=self.document_structure,
-            last_prompt=self.last_prompt,
-            chunk_id=chunk_id,
-            chunk_html=chunk_html
-        )
+        if not self.previous_result:
+            if self.queue:
+                self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"begin", "chunk_id": chunk_id,"apply_type":action_type}))
 
-        logger.info(f"--- Find Location Finished ---")
-        logger.info(f"Result: {result}")
+            self.previous_result = self.find_location_tool.run(
+                apply_type=apply_type_enum,
+                document_structure=self.document_structure,
+                last_prompt=self.last_prompt,
+                chunk_id=chunk_id,
+                chunk_html=chunk_html
+            )
 
-        if result.get("status") != "success":
-            return {"status": "error", "message": "Failed to find location for the requested action."}
+            logger.info(f"--- Find Location Finished ---")
+            logger.info(f"Result: {result}")
 
-        if self.queue:
-            self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"end", "chunk_id": chunk_id,"apply_type":action_type}))
+            if result.get("status") != "success":
+                return {"status": "error", "message": "Failed to find location for the requested action."}
+
+            if self.queue:
+                self.queue.put_nowait(json.dumps({"type":"status_update","process":"FIND_LOCATION","status":"end", "chunk_id": chunk_id,"apply_type":action_type}))
 
         interrupt_payload = {
             "type": "tool_call",
@@ -191,14 +194,15 @@ You MUST follow this sequence. Do not deviate.
             "data": {
                 "chunk_html": chunk_html,
                 "chunk_id": chunk_id,
-                "data_position_id_start": result.get("data_position_id_start"),
-                "data_position_id_end": result.get("data_position_id_end"),
+                "data_position_id_start": self.previous_result.get("data_position_id_start",-1),
+                "data_position_id_end": self.previous_result.get("data_position_id_end",-1),
             },
             "timestamp": datetime.datetime.now().isoformat(),
             "message": "Applying change"
         }
-        interrupt(interrupt_payload)
-
+        result = interrupt(interrupt_payload)
+        logger.info(f"Interrupt response: {result}")
+        self.previous_result = {}
         return {"status": "success", "message": "Apply request sent to client."}
     
     def handle_and_save_input(self, request_data: dict):

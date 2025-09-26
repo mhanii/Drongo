@@ -132,14 +132,30 @@ class ClientSession:
                     if chunk['type'] == "interrupt":
                         logger.info(f"Session {self.session_id} interrupted, waiting for tool response.")
 
+                        
                         payload = dict(chunk["payload"])  # Make a copy to avoid mutating the original
                         payload["session_id"] = self.session_id
+                        await self.websocket.send(json.dumps({
+                            "type": "status_update",
+                            "process" : payload.get("tool_name", "unknown"),
+                            "status": "begin",
+                            "message": payload.get("message", "Tool execution started"),
+                            "session_id": self.session_id
+                        }))
                         await self.websocket.send(json.dumps(payload))
 
                         self.resume_future = asyncio.get_event_loop().create_future()
                         tool_response_data = await self.resume_future
                         logger.info(f"Resuming session {self.session_id} with tool response: {tool_response_data}")
+                        self.resume_future = None  # Clear the future after use
 
+                        await self.websocket.send(json.dumps({
+                            "type": "status_update",
+                            "process" : payload.get("tool_name", "unknown"),
+                            "status": "end",
+                            "message": payload.get("message", "Tool execution ended"),
+                            "session_id": self.session_id
+                        }))
                         # Get the NEW generator for the resumed agent
                         generator = self.manager.resume_agent(tool_response_data)
                         break 
@@ -152,6 +168,14 @@ class ClientSession:
 
                 else: 
                     logger.info(f"Generator for session {self.session_id} finished normally.")
+                    await self.websocket.send(json.dumps({
+                        "type": "status_update",
+                        "process" : "agent",
+                        "status": "end",
+                        "message": "Agent processing completed",
+                        "session_id": self.session_id
+                    }))
+
                     break # Exit the outer 'while' loop
 
             except Exception as e:
