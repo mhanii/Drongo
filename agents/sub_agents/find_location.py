@@ -101,7 +101,7 @@ class FindLocationTool:
 
         return updates
 
-    def get_prompt(self, apply_type: ApplyType, document_structure: str,  last_prompt: str, chunk_html: str = ""):
+    def get_prompt(self, apply_type: ApplyType, document_structure: str,  last_prompt: str, chunk_html: str = "", hint: str = "") -> str:
         """
         Generate the LLM prompt based on the apply type.
         """
@@ -114,6 +114,9 @@ Here is the document, which is a sequence of HTML elements. Each element has a u
 
 **User's Goal**
 The user's original request was: "{last_prompt}"
+
+### Additional Hints
+{hint}
 
 CRITICAL INSTRUCTIONS:
 - You must return ONLY a single, valid JSON object and nothing else.
@@ -169,7 +172,8 @@ Return a JSON object with:
                 state["apply_type"],
                 state["document_structure"],
                 state["last_prompt"],
-                state.get("chunk_html", "")
+                state.get("chunk_html", ""),
+                state.get("hint","")
             )
             response = self.model.invoke(prompt)
             content = response.content.strip()

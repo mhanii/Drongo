@@ -194,6 +194,9 @@ class ClientSession:
             except Exception as e:
                 logger.error(f"Error running agent for session {self.session_id}: {e}", exc_info=DEBUG)
                 await self.websocket.send(json.dumps({
+                    "type":"status_update",
+                    "process" : "agent",
+                    "status": "error",
                     "error": "Agent processing error",
                     "session_id": self.session_id
                 }))
