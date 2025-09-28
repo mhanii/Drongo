@@ -132,7 +132,7 @@ class ManagerAgent:
         """
         Constructs a prompt and calls the content agent's main run function. Returns a list of generated chunks with their ids.
         """
-        prompt = f"Generate HTML content with the following description: {description}\nStyle guidelines: {style_guidelines}\nDocument structure: {self.document_structure}"
+        prompt = f"Generate HTML content with the following description: {description}\nStyle guidelines: {style_guidelines}\n" # I removed the document structure for now . I should probably add it back later.
         
         # Assume self.content_agent.generated_chunks is a list of dicts (from chunk.to_dict())
         if self.queue:
@@ -174,7 +174,7 @@ class ManagerAgent:
                 logger.error(f"Chunk with id {chunk_id} not found.")
                 return {"status": "error", "message": f"Chunk with id {chunk_id} not found."}
             chunk_html = chunk.html
-            logger.info(f"Loaded chunk HTML with length: {len(chunk_html)}")
+            logger.debug(f"Loaded chunk HTML with length: {len(chunk_html)}")
 
         if not self.previous_result:
             # if self.queue:
@@ -189,7 +189,7 @@ class ManagerAgent:
             )
 
             logger.info(f"--- Find Location Finished ---")
-            logger.info(f"Result: {self.previous_result}")
+            logger.debug(f"Result: {self.previous_result}")
 
             if self.previous_result.get("status") != "success":
                 return {"status": "error", "message": "Failed to find location for the requested action."}
@@ -280,7 +280,7 @@ class ManagerAgent:
     
     async def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
-        logger.info(f"Manager running with payload: {payload}")
+        logger.debug(f"Manager running with payload: {payload}")
         async for chunk in self.agent.astream(payload, {"configurable": {"thread_id": "2"}}, stream_mode=["updates", "messages"]):
             data = self._handle_chunk(chunk)
             # logger.info(f"Manager chunk: {data}")
@@ -289,7 +289,7 @@ class ManagerAgent:
 
 
     async def resume_agent(self,data:dict):
-        logger.info(f"Manager resuming with data: {data}")
+        logger.debug(f"Manager resuming with data: {data}")
         async for chunk in self.agent.astream(Command(resume={"content": data.get('content','')}),{"configurable": {"thread_id": "2"}},stream_mode=["updates", "messages"]):
             data = self._handle_chunk(chunk)
             if data:

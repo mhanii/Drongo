@@ -120,6 +120,10 @@ Here is the document, which is a sequence of HTML elements. Each element has a u
 
 {document_structure}
 
+**What does data-position-id mean?**
+Each HTML element in the document has a `data-position-id` attribute that uniquely identifies its STARTING position in the document. This ID is crucial for specifying where to insert, delete, or edit content.
+
+
 **User's Goal**
 The user's original request was: "{last_prompt}"
 
@@ -137,6 +141,8 @@ Your task is to determine the precise location to insert a new HTML chunk into a
 New Content to Insert:
 {chunk_html}
 
+
+
 If the user wants to add to the end: You MUST find the VERY LAST element in the document that has a data-position-id attribute. Use that element's ID for your `data-position-id-start` and `data-position-id-end`.
 If the user specifies another position: Use the data-position-id they are referring to for both `data-position-id-start` and `data-position-id-end`.
 
@@ -144,6 +150,19 @@ Task: Decide the best position to insert this chunk.
 Return a JSON object with:
 - data-position-id-start: the data-position-id of the element to insert after.
 - data-position-id-end: the same as data-position-id-start for insertion.
+
+### EXAMPLES ###
+prompt: "Insert a flag where you see suits best"
+document_structure: "<b style=\"font-weight: normal;\"><p data-position-id=\"0\"><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-family: Arial, sans-serif; font-size: 11pt; font-weight: 400;\">Your flag should be under this line&nbsp;&nbsp;</span></p><p data-position-id=\"38\"><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-family: Arial, sans-serif; font-size: 11pt; font-weight: 400;\">But before this line</span></p></b>"
+
+## What does the data-position-id in the document_structure mean?##
+*The first paragraph starts at position 0, the second paragraph starts at position 38.**
+### Task: Decide the best position to insert a flag.
+So let's think about what the user means by "where you see suits best". The user is asking for a location that makes sense contextually. The first paragraph states very clearly that it should be UNDER IT, which consequently mean after it.The second paragraph seems to be a continuation. A suitable place to insert a flag would be after the first paragraph, which ends at position 38.
+
+
+
+Return: {{"data-position-id-start": 38, "data-position-id-end": 38}}
 """
         elif apply_type == ApplyType.DELETE:
             return base_prompt + f"""
@@ -288,7 +307,7 @@ Return a JSON object with:
             if self.debug:
                 logger.debug(f"Find Location Graph Response: {response}")
 
-            logger.info(f"Unparsed response:{response}")
+            logger.debug(f"Unparsed response:{response}")
 
             custom_response = {
                 "status" : "error" if response.get("outcome") != "success" else "success" ,
@@ -304,6 +323,6 @@ Return a JSON object with:
             }
 
         logger.info(f"--- Find Location Tool Finished ---")
-        logger.info(f"Final Response: {custom_response}")
+        logger.debug(f"Final Response: {custom_response}")
 
         return custom_response

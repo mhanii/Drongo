@@ -426,7 +426,7 @@ WHEN TO ASK FOR CLARIFICATION:
         try:
             logger.debug("Invoking agent for content generation")
             # Invoke the agent
-            full_prompt = f"{prompt}\n\nDocument Structure: {self.document_structure}"
+            full_prompt = f"{prompt}" # I removed the document structure for now . I should probably add it back later.
             response = self.agent.invoke(
                 {"messages": [{"role": "user", "content": full_prompt}]},
                 config=self.config

@@ -292,12 +292,12 @@ Generate the HTML content now:"""
         }
         
         if evaluator_feedback and evaluator_score is not None and evaluator_score < self.acceptance_threshold:
-            logger.info(f"Moderator: Retry {current_retries}/{self.max_retries} due to low score ({evaluator_score})")
-            logger.info(f"Feedback: {evaluator_feedback}")
+            logger.debug(f"Moderator: Retry {current_retries}/{self.max_retries} due to low score ({evaluator_score})")
+            logger.debug(f"Feedback: {evaluator_feedback}")
         elif validation_outcome == "error":
-            logger.info(f"Moderator: Retry {current_retries}/{self.max_retries} due to validation error")
+            logger.debug(f"Moderator: Retry {current_retries}/{self.max_retries} due to validation error")
         else:
-            logger.info(f"Moderator: Initial attempt ({current_retries}/{self.max_retries})")
+            logger.debug(f"Moderator: Initial attempt ({current_retries}/{self.max_retries})")
         
         return updates
 
@@ -404,10 +404,10 @@ Generate the HTML content now:"""
             if response.score > best_score_so_far:
                 new_best_score = response.score
                 new_best_html = current_html
-                logger.info(f"New best score: {new_best_score} (previous: {best_score_so_far})")
+                logger.debug(f"New best score: {new_best_score} (previous: {best_score_so_far})")
             
-            logger.info(f"Evaluation score: {response.score}/{100}")
-            logger.info(f"Feedback: {response.feedback}")
+            logger.debug(f"Evaluation score: {response.score}/{100}")
+            logger.debug(f"Feedback: {response.feedback}")
             
             return {
                 "evaluator_score": response.score,
@@ -500,18 +500,18 @@ Respond with a JSON object:
 
     def check_content_generation_outcome(self, state: State) -> str:
         outcome = state.get("content_generation_outcome", "error")
-        logger.info(f"Content generation outcome: {outcome}")
+        logger.debug(f"Content generation outcome: {outcome}")
         return outcome
 
     def check_validation_outcome(self, state: State) -> str:
         outcome = state.get("validation_outcome", "error")
-        logger.info(f"Validation outcome: {outcome}")
+        logger.debug(f"Validation outcome: {outcome}")
         return outcome
 
     def check_evaluation_score(self, state: State) -> str:
         score = state.get("evaluator_score", 0)
         threshold = self.acceptance_threshold
-        logger.info(f"Evaluation score: {score}, threshold: {threshold}")
+        logger.debug(f"Evaluation score: {score}, threshold: {threshold}")
         
         if score >= threshold:
             return "accept"

@@ -153,7 +153,7 @@ class ClientSession:
                             "type": "status_update",
                             "process" : payload.get("tool_name", "unknown"),
                             "status": "end",
-                            "message": payload.get("message", "Tool execution ended"),
+                            "message": payload.get("message_end", "Tool execution ended"),
                             "session_id": self.session_id
                         }))
                         # Get the NEW generator for the resumed agent
