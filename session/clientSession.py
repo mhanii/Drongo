@@ -22,7 +22,7 @@ class ClientSession:
         # Initialize the agent for this session
         self.manager = ManagerAgent(
             checkpoint_path=f"data/{session_id}_checkpoint.sqlite", # Session-specific checkpoint
-            model="models/gemini-2.0-flash",
+            model="models/gemini-2.5-flash",
             store=None, # Should be initialized properly if needed
             queue=asyncio.Queue() # Agent's own queue for streaming messages
         )
@@ -127,7 +127,7 @@ class ClientSession:
         while True: # Loop to handle generator switches
             try:
                 async for chunk in generator:
-                    logger.debug(f"Sending chunk to client for session {self.session_id}: {chunk}")
+                    # logger.debug(f"Sending chunk to client for session {self.session_id}: {chunk}")
 
                     if chunk['type'] == "interrupt":
                         logger.info(f"Session {self.session_id} interrupted, waiting for tool response.")

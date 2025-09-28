@@ -23,7 +23,8 @@ class State(TypedDict):
 import json
 import asyncio
 class ContentAgent:
-    def __init__(self, model: str, checkpoint_path: str, debug: bool = False, queue: asyncio.Queue = None) -> None:
+    def __init__(self, model: str, checkpoint_path: str, debug: bool = True, queue: asyncio.Queue = None) -> None:
+        logger.debug(f"Initializing ContentAgent with model={model}, checkpoint_path={checkpoint_path}, debug={debug}")
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
         self.chunk_db = ContentChunkDB(self.connection)
         # self.CS = store
@@ -35,7 +36,7 @@ class ContentAgent:
         self.config = {"configurable": {"thread_id": "1"}}
         self.queue = queue
 
-        
+        logger.debug("Defining tools for ContentAgent")
         self.defined_tools = [
             self.run_html_agent,
             self.run_image_agent,
@@ -44,6 +45,7 @@ class ContentAgent:
             # self.analyze_content_requirements
         ]
 
+        logger.debug("Creating react agent for ContentAgent")
         self.agent = create_react_agent(
             model=self.model_instance,
             tools=self.defined_tools,
@@ -97,7 +99,21 @@ When users request content generation:
 - Use `coordinate_content_generation` for complex multi-step content tasks
 - Use `analyze_content_requirements` to break down complex requests
 
-Remember: You are the intelligent coordinator that ensures high-quality, integrated content output by leveraging your specialized sub-agents effectively."""
+Remember: You are the intelligent coordinator that ensures high-quality, integrated content output by leveraging your specialized sub-agents effectively.
+
+RESPONSE RULES:
+- Respond with ONLY the JSON object - no additional text, explanations, or formatting
+- Use exactly "success" or "clarification" as result values
+- Keep messages concise but informative
+- Never include markdown code blocks, explanations, or other text outside the JSON
+
+WHEN TO ASK FOR CLARIFICATION:
+- Request is too vague ("create content" without specifics)
+- Missing essential details (content type, purpose, style requirements)
+- Conflicting or contradictory instructions
+- Unclear target audience or context
+
+"""
         )
 
     # Remove DB and cache logic from here, use self.chunk_db instead
@@ -115,20 +131,26 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         Returns:
             str: Generated HTML content with validation and quality assurance
         """
+
+        logger.debug(f"run_html_agent called with description={description}, style_guidelines={style_guidelines}, context={context}")
+
         try:
-            if self.queue:
-                self.queue.put_nowait(json.dumps({"type":"START","process":"GENERATE"}))
-            result = self.html_agent.run(description, style_guidelines, context,self.document_structure)
+            logger.debug("Invoking HTML agent run method")
+            # if self.queue:
+            #     self.queue.put_nowait(json.dumps({"type":"START","process":"GENERATE"}))
+            result = self.html_agent.run(description, style_guidelines, context, self.document_structure)
+            logger.debug(f"HTML agent result: {result}")
             response_html = result["html"]
             # Create and save ContentChunk
             if result["status"] == "success":
-
+                logger.debug("HTML generation successful, saving content chunk")
                 chunk = ContentChunk(html=response_html, position_guideline="", status="PENDING")
                 if self.queue:
                     self.queue.put_nowait(json.dumps({"type":"content_chunk","content":chunk.html,"status":"continuing"}))
                     # self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"success"}))
                 self.chunk_db.save_content_chunk(chunk)
                 self.generated_chunks.append(chunk.to_dict())
+                logger.debug(f"Content chunk saved with id={chunk.id} and status={chunk.status}")
                 return f"HTML Generation Result: {result}\nchunk_id: {chunk.id}\nStatus: {chunk.status}"
             else:
                 logger.error("### Error generating content chunk. ###")
@@ -138,15 +160,18 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
                 error_chunk = ContentChunk(html="<p><span>Error generating content.</span></p>", position_guideline="", status="ERROR")
                 self.chunk_db.save_content_chunk(error_chunk)
                 self.generated_chunks.append(error_chunk.to_dict())
+                logger.debug(f"Error chunk saved with id={error_chunk.id}")
                 return f"HTML Generation failed. Created a placeholder chunk with ID: {error_chunk.id}"
 
         except Exception as e:
+            logger.debug(f"Exception in run_html_agent: {e}")
             # if self.queue:
                     # self.queue.put_nowait(json.dumps({"type":"END","process":"GENERATE","status":"exception","error": e}))
             # OPTION 2: Handle exceptions gracefully and create an error chunk
             error_chunk = ContentChunk(html=f"<p><span>An exception occurred: {e}</span></p>", position_guideline="", status="ERROR")
             self.chunk_db.save_content_chunk(error_chunk)
             self.generated_chunks.append(error_chunk.to_dict())
+            logger.debug(f"Exception error chunk saved with id={error_chunk.id}")
             return f"Error in HTML generation: {str(e)}"
 
     def run_image_agent(self, detailed_instruction: str) -> str:
@@ -178,10 +203,15 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         Returns:
             str: Result from the image agent operation (usually JSON formatted)
         """
+        logger.debug(f"run_image_agent called with detailed_instruction={detailed_instruction}")
+
         try:
+            logger.debug("Invoking image agent run method")
             result = self.image_agent.run(detailed_instruction)
+            logger.debug(f"Image agent result: {result}")
             return f"Image Agent Result: {result}"
         except Exception as e:
+            logger.debug(f"Exception in run_image_agent: {e}")
             return f"Error in image processing: {str(e)}"
 
 #     def get_context_summary(self) -> str:
@@ -233,37 +263,38 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         Returns:
             str: Coordinated content generation result
         """
+        logger.debug(f"coordinate_content_generation called with content_type={content_type}, requirements={requirements}, include_images={include_images}")
+
         try:
+            logger.debug("Analyzing content requirements for coordination")
             # Analyze requirements first
             analysis = self.analyze_content_requirements(requirements)
-            
+            logger.debug(f"Analysis result: {analysis}")
             results = ["=== CONTENT GENERATION COORDINATION ==="]
             results.append(f"Content Type: {content_type}")
             results.append(f"Analysis: {analysis}")
-            
             # Handle image operations if requested
             if include_images:
+                logger.debug("Including image operations in coordination")
                 results.append("\n--- IMAGE OPERATIONS ---")
                 # Get available images
                 image_summary = self.run_image_agent("Get all images from store and provide summary")
                 results.append(f"Available Images: {image_summary}")
-                
                 # Could add logic to suggest relevant images based on content requirements
                 image_suggestions = self.run_image_agent(f"Search for images relevant to: {requirements}")
                 results.append(f"Image Suggestions: {image_suggestions}")
-            
             # Generate HTML content
             results.append("\n--- HTML CONTENT GENERATION ---")
             style_guidelines = self._extract_style_guidelines(requirements)
             html_content = self.run_html_agent(requirements, style_guidelines, self.get_context_summary())
             results.append(f"Generated HTML: {html_content}")
-            
+            logger.debug("Content generation coordination complete")
             return "\n".join(results)
-            
         except Exception as e:
+            logger.debug(f"Exception in coordinate_content_generation: {e}")
             return f"Error in content coordination: {str(e)}"
 
-    @tool
+    
     def analyze_content_requirements(self, requirements: str) -> str:
         """
         Analyze content requirements to determine the best approach for generation.
@@ -274,7 +305,10 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         Returns:
             str: Analysis and recommendations for content generation approach
         """
+        logger.debug(f"analyze_content_requirements called with requirements={requirements}")
+        
         try:
+            logger.debug("Building analysis prompt for requirements analysis")
             # Use the model to analyze requirements
             analysis_prompt = f"""
             Analyze the following content requirements and provide:
@@ -288,11 +322,11 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
             
             Provide a structured analysis.
             """
-            
             response = self.model_instance.invoke([{"role": "user", "content": analysis_prompt}])
+            logger.debug(f"Model analysis response: {response.content}")
             return response.content
-            
         except Exception as e:
+            logger.debug(f"Exception in analyze_content_requirements: {e}")
             return f"Error analyzing requirements: {str(e)}"
 
     def _extract_style_guidelines(self, requirements: str) -> str:
@@ -305,39 +339,133 @@ Remember: You are the intelligent coordinator that ensures high-quality, integra
         Returns:
             str: Extracted or default style guidelines
         """
+        logger.debug(f"_extract_style_guidelines called with requirements={requirements}")
+
         # Simple extraction - could be enhanced with NLP
         style_keywords = ['style', 'format', 'font', 'color', 'layout', 'design']
         
         if any(keyword in requirements.lower() for keyword in style_keywords):
+            logger.debug("Style keywords detected in requirements, returning full requirements as style guidelines")
             return requirements  # Return full requirements if style elements detected
         else:
+            logger.debug("No style keywords detected, returning default style guidelines")
             return "Clean, professional styling with proper typography and spacing"
 
-    def run(self, prompt: str,document_structure: str = ""):
+
+
+    def _parse_agent_response(self, response_content: str) -> dict:
         """
-        Main entry point for the Content Agent. Processes user requests and coordinates
-        appropriate responses using HTML and Image agents as needed.
+        Parse the agent's response and ensure it matches the expected format.
         
-        Args:
-            prompt (str): User's content generation request
-            
         Returns:
-            Agent response with generated content
+            dict: Parsed response with result and message fields
         """
+        logger.debug(f"_parse_agent_response called with response_content={response_content}")
+
+        try:
+            logger.debug("Cleaning agent response content for parsing")
+            # Clean the response content
+            cleaned_content = response_content.strip()
+            # Remove any markdown code blocks if present
+            if cleaned_content.startswith('```json'):
+                cleaned_content = cleaned_content[7:]  # Remove ```json
+            if cleaned_content.startswith('```'):
+                cleaned_content = cleaned_content[3:]   # Remove ```
+            if cleaned_content.endswith('```'):
+                cleaned_content = cleaned_content[:-3]  # Remove trailing ```
+            cleaned_content = cleaned_content.strip()
+            logger.debug(f"Cleaned content: {cleaned_content}")
+            # Parse JSON
+            parsed_response = json.loads(cleaned_content)
+            # Validate structure
+            if not isinstance(parsed_response, dict):
+                raise ValueError("Response is not a JSON object")
+            if "result" not in parsed_response or "message" not in parsed_response:
+                raise ValueError("Response missing required 'result' or 'message' fields")
+            result_value = parsed_response["result"]
+            if result_value not in ["success", "clarification"]:
+                raise ValueError(f"Invalid result value: {result_value}. Must be 'success' or 'clarification'")
+            logger.debug(f"Parsed agent response: result={result_value}, message={parsed_response['message']}")
+            return {
+                "result": result_value,
+                "message": str(parsed_response["message"])
+            }
+        except json.JSONDecodeError as e:
+            logger.debug(f"JSON parsing error: {e}")
+            logger.debug(f"Raw response: {response_content}")
+            return {
+                "result": "error",
+                "message": f"Failed to parse agent response as JSON: {str(e)}"
+            }
+        except ValueError as e:
+            logger.debug(f"Response validation error: {e}")
+            logger.debug(f"Parsed content: {cleaned_content}")
+            return {
+                "result": "error", 
+                "message": f"Invalid response format: {str(e)}"
+            }
+        except Exception as e:
+            logger.debug(f"Unexpected error parsing response: {e}")
+            return {
+                "result": "error",
+                "message": f"Unexpected error processing response: {str(e)}"
+            }
+
+
+    def run(self, prompt: str, document_structure: str = "") -> dict:
+        """
+        Main entry point for the Content Agent. 
+        
+        Returns:
+            dict: Structured response with result, message, and generated_chunks fields
+        """
+        logger.debug(f"run called with prompt={prompt}, document_structure={document_structure}")
+
         self.document_structure = document_structure
-        self.generated_chunks = []  # Reset the list for each new run
-
-        prompt += f"Document Structure: {self.document_structure}"
-        response = self.agent.invoke(
-            {"messages": [{"role": "user", "content": prompt}]},
-            config=self.config
+        self.generated_chunks = []  # Reset chunks for each run
+        try:
+            logger.debug("Invoking agent for content generation")
+            # Invoke the agent
+            full_prompt = f"{prompt}\n\nDocument Structure: {self.document_structure}"
+            response = self.agent.invoke(
+                {"messages": [{"role": "user", "content": full_prompt}]},
+                config=self.config
             )
-        print(self.generated_chunks)
+            
+            # logger.info(f"Agent raw response: {response}")
+            response = response['messages'][-1]
+            logger.debug(f"Agent invoke last response: {response}")
 
-        if len(self.generated_chunks) == 0:
-            return "No content chunks were generated. Please check the logs for errors."
-        else:
-            # Optional: you could check if all chunks have an "ERROR" status
-            if all(chunk['status'] == 'ERROR' for chunk in self.generated_chunks):
-                return "All content generation attempts resulted in errors. Please review your request and the agent's capabilities."
-        return self.generated_chunks
+            logger.debug(f"Agent invoke response: {response.content}")
+            result_content = response.content
+            if not response:
+                logger.error("No valid response from agent")
+                return {
+                    "result": "error",
+                    "message": "Agent failed to provide a response",
+                    "generated_chunks": []
+                }
+            
+            # Parse the agent's response
+            parsed_result = self._parse_agent_response(response.content)
+            
+            # Override result based on generated chunks if parsing was successful
+            if parsed_result["result"] != "error":
+                if self.generated_chunks:
+                    parsed_result["result"] = "success"
+                # Keep the original message from the agent
+                # parsed_result["message"] is already set by _parse_agent_response
+            
+            # Add generated chunks to the result
+            parsed_result["generated_chunks"] = self.generated_chunks
+            
+            logger.debug(f"Content Agent Result: {parsed_result['result']} - {parsed_result['message']}")
+            logger.debug(f"Generated {len(self.generated_chunks)} chunks")
+            return parsed_result
+        except Exception as e:
+            logger.debug(f"Error in ContentAgent.run: {e}")
+            return {
+                "result": "error",
+                "message": f"Content agent execution failed: {str(e)}",
+                "generated_chunks": []
+            }

@@ -145,7 +145,7 @@ class HtmlAgent:
         
         return "\n".join(context_parts)
 
-    def get_content_generation_prompt(self, state: State) -> str:
+    def get_content_generation_prompt(self, state: State) -> str: # remember that we removed the document structure from the prompt
         """
         Generate a comprehensive prompt for HTML content generation.
         """
@@ -163,7 +163,7 @@ class HtmlAgent:
 {context}
 
 === DOCUMENT STRUCTURE ===
-{document_structure}
+
 === GENERATION TASK ===
 Create HTML content that fulfills the following requirements:
 - Description: {description}
