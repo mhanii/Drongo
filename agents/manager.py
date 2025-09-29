@@ -31,7 +31,7 @@ class ManagerAgent:
     def __init__(self, checkpoint_path: str, model: str, store: ContextStore, content_agent : ContentAgent=None, last_prompt: str = "", state: Optional[Dict] = State, queue=None) -> None:
         logger.info("Manager agent initialized.")
         self.connection = sqlite3.connect(checkpoint_path, check_same_thread=False)
-        self.model = ChatGoogleGenerativeAI(model=model)
+        self.model = ChatGoogleGenerativeAI(model=model,tags=["manager"])
         self.CS = store if store is not None else ContextStore()
         self.content_agent = content_agent if content_agent is not None else ContentAgent(model=model,checkpoint_path=checkpoint_path, queue=queue)
         self.last_prompt = last_prompt
@@ -43,6 +43,7 @@ class ManagerAgent:
             debug=False,
             checkpointer=MemorySaver(),
             prompt=self.get_prompt()
+
         )
         self.queue = queue
         self.previous_result = {} # Not the best practice, but just for testing purposes.
@@ -56,6 +57,7 @@ class ManagerAgent:
             Document Modification: To execute any change—such as inserting, editing, or deleting content—you must use the apply_tool_func. This is how you interact with the document itself. To be able to use this tool, you must know the chunk_id of the content you want to insert or edit. You can get this from the generate_content tool or from previous interactions. However, you CANNOT make up chunk_ids.
             Reading Document State: To understand the current state of the document, you can call the read_document tool. This is especially useful if the user asks for changes that depend on existing content.
             Contextual Understanding: If you need more information about the document's current state to proceed, you can use the read_document tool to get the necessary context.
+            Positional Understanding: When applying changes, you might need to know where in the document to make those changes. You can use the read_document tool with asHTML set to true to help determine the correct positions.
         How You Should Interact:
             Be Conversational: You should communicate with the user in a clear and helpful manner. Acknowledge their requests, ask for clarification if needed, and inform them of the actions you are taking.
             Provide Updates: Let the user know your plan. For example, you might say, "Certainly, I can add a conclusion to this document. I'll start by generating the text," before you call the generate_content tool.
@@ -70,7 +72,8 @@ class ManagerAgent:
 
     def read_document(self,asHTML: bool = False):
         """
-        Retrieves the document as text if  asHTML == False, or the document as html if otherwise.
+        Retrieves the document as text if  asHTML == False, or HTML otherwise.
+        Html is useful to determine positions for applying changes.
         Args:
             asHTML (bool) : Wether it should be in HTML format. Text otherwise.
 
@@ -281,7 +284,11 @@ class ManagerAgent:
     async def run_prompt(self, request_data: dict):
         payload = self.handle_and_save_input(request_data)
         logger.debug(f"Manager running with payload: {payload}")
-        async for chunk in self.agent.astream(payload, {"configurable": {"thread_id": "2"}}, stream_mode=["updates", "messages"]):
+        async for chunk in self.agent.astream(
+            payload, 
+            {"configurable": {"thread_id": "2"}}, 
+            stream_mode=["updates", "messages"],
+            ):
             data = self._handle_chunk(chunk)
             # logger.info(f"Manager chunk: {data}")
             if data:
@@ -297,6 +304,9 @@ class ManagerAgent:
 
     def _handle_chunk(self, chunk):
         data = None
+
+        logger.info(f"Manager received chunk: {chunk}")
+
         if (
             isinstance(chunk, tuple)
             and chunk[0] == "updates"
@@ -314,7 +324,13 @@ class ManagerAgent:
             and chunk[0] == "messages"
         ):
             message = chunk[1][0]  # Extract the message content
-            if message.__class__.__name__ == "AIMessageChunk" and message.content != '':
+
+
+
+            if (message.__class__.__name__ == "AIMessageChunk" and 
+                message.content != '' and 
+                any(tag == 'manager' for tag in chunk[-1][-1].get('tags', []))): # Safely check tags if they exist
+
                 data = {
                     "type": "message",
                     "payload": message
