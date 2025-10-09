@@ -1,39 +1,51 @@
-# Manager Agent
+# ManagerAgent
 
-The `ManagerAgent` is the central orchestrator of the document editing application. It is responsible for translating user requests into a sequence of tool calls that modify the document. It does not directly edit the document content itself, but rather delegates content creation and modification to other agents and tools.
+The `ManagerAgent` is the AI-powered core of the application, acting as the central orchestrator for fulfilling user requests. It is responsible for understanding a user's intent and translating it into a series of tool calls to read, generate, and modify the document.
 
-## Inputs
+The `ManagerAgent` is instantiated within a `ClientSession` and does not interact directly with the WebSocket. Instead, it communicates through a system of yielded messages and interrupts, as described in the [Workflow](./workflow.md) documentation.
 
-The `ManagerAgent` takes a dictionary as input, which can contain the following keys:
+## Execution Model: Streaming and Interrupts
 
-- `text`: The user's prompt, describing the desired change.
-- `images`: A list of images to be used as context. Each image is a dictionary with `content` (base64 encoded) and `name` keys.
-- `documents`: A list of documents to be used as context. Each document is a dictionary with `content` (base64 encoded) and `name` keys.
-- `document_structure`: An HTML string representing the current state of the document.
+The `ManagerAgent` runs asynchronously and streams its output. The `run_prompt` method returns a generator that yields different types of data:
 
-## Workflow
-
-1.  **Analyze:** The agent first analyzes the user's request to determine the intent: adding, deleting, or editing content.
-2.  **Generate (optional):** If the request requires new content, the `ManagerAgent` calls the `generate_content` tool. This tool delegates the content creation to a specialized writing agent and returns a list of content "chunks" with unique IDs.
-3.  **Apply:** The `ManagerAgent` then calls the `apply_tool_func` tool to modify the document. This tool takes the action type (`INSERT`, `DELETE`, or `EDIT`), the target location (a CSS selector), and, for `INSERT` and `EDIT` actions, the `chunk_id` of the content to be used.
+-   **Message Chunks:** Partial text responses from the agent, which are streamed to the client for a real-time conversational experience.
+-   **Interrupts:** When the agent needs to use a tool, it halts its own execution and yields an `interrupt` payload. The `ClientSession` catches this and sends a corresponding `tool_call` to the client. The agent remains paused until the `ClientSession` receives a `tool_response` and resumes it.
 
 ## Tools
 
-### `generate_content(description: str, style_guidelines: str)`
+The `ManagerAgent` has access to a suite of tools to perform its tasks. It decides which tool to use based on the user's prompt and the current context.
 
--   **Purpose:** Delegates content creation to a specialized writing agent.
--   **Use When:** The user asks to write, create, generate, summarize, or add any new text.
--   **Output:** Returns a list of one or more generated content chunks, each with a unique `chunk_id`.
+### `read_document(asHTML: bool = False)`
 
-### `apply_tool_func(action_type: str, target_location: str, chunk_id: Optional[str] = None, relative_position: Optional[str] = None)`
-
--   **Purpose:** Applies a structural change to the document.
+-   **Purpose:** To retrieve the current state of the document. This is crucial for the agent to understand the context before making changes.
 -   **Parameters:**
-    -   `action_type` (str): **REQUIRED.** Must be one of `"INSERT"`, `"DELETE"`, or `"EDIT"`.
-    -   `target_location` (str): **REQUIRED.** A precise CSS selector or description identifying the target HTML element.
-    -   `chunk_id` (str): **REQUIRED for 'INSERT' and 'EDIT'**. The `chunk_id` of the content received from the `generate_content` tool.
-    -   `relative_position` (str): **REQUIRED *only* when `action_type` is "INSERT"**. Must be one of `"BEFORE"` or `"AFTER"`.
+    -   `asHTML` (bool): If `True`, returns the document as an HTML string. This is useful for determining the precise positions of elements for modification. If `False` (default), returns the document as plain text.
+-   **Interrupt Payload:** When this tool is called, it triggers an interrupt with the `tool_name: "read_document"`.
 
-## Outputs
+### `generate_content(description: str, style_guidelines: str = "")`
 
-The `ManagerAgent`'s `run_prompt` method returns the final message from the agent's execution, which is typically the result of the `apply_tool_func` call. This result is a dictionary indicating the status of the operation (e.g., `{"status": "success", ...}`).
+-   **Purpose:** Delegates the task of creating new content to the specialized `ContentAgent`. The `ManagerAgent` should use this tool whenever the user asks to write, create, add, or generate new text. It should not generate content by itself.
+-   **Parameters:**
+    -   `description` (str): A detailed description of the content that needs to be generated.
+    -   `style_guidelines` (str, optional): Any specific style instructions to follow.
+-   **Output:** This tool does not directly return a value to the agent. It runs the `ContentAgent`, which generates content and stores it in a database. The most important output is the `chunk_id`, which is returned to the agent and used to refer to the newly created content in subsequent tool calls.
+
+### `apply_tool_func(action_type: str, chunk_id: str = "", hint: str = "")`
+
+-   **Purpose:** Applies a change to the document, such as inserting, deleting, or editing content. This tool first uses the `FindLocationTool` to determine *where* the change should be applied.
+-   **Parameters:**
+    -   `action_type` (str): **REQUIRED.** The type of action to perform. Must be one of `INSERT`, `DELETE`, or `EDIT`.
+    -   `chunk_id` (str): **REQUIRED for `INSERT` and `EDIT` actions.** The ID of the content chunk (obtained from `generate_content`) to be inserted or used for editing.
+    -   `hint` (str, optional): Additional information to help the `FindLocationTool` determine the correct position for the change.
+-   **Interrupt Payload:** Triggers an interrupt with `tool_name: "apply"`. The payload includes the `action_type`, the resolved start and end positions, and the HTML of the chunk to be applied.
+
+### `fast_apply(action_type: str, start_position: int, end_position: int, text: str = "")`
+
+-   **Purpose:** A more direct version of `apply_tool_func` for making small, explicit text changes (e.g., fixing a typo, adding a single word). It bypasses the `FindLocationTool` and applies the change directly at the specified positions.
+-   **Use Case:** This tool should only be used when the agent knows the *exact* start and end positions for the change, typically after calling `read_document` with `asHTML=True`.
+-   **Parameters:**
+    -   `action_type` (str): The action type: `INSERT`, `DELETE`, or `EDIT`.
+    -   `start_position` (int): The starting character index for the change.
+    -   `end_position` (int): The ending character index for the change.
+    -   `text` (str): The text to insert or use for editing.
+-   **Interrupt Payload:** Triggers an interrupt with `tool_name: "apply"`, similar to `apply_tool_func`.

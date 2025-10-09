@@ -1,51 +1,39 @@
-# Websocket-based Architecture
+# WebSocket Architecture Overview
 
-The application now uses a websocket-based architecture for real-time, bidirectional communication between the client (frontend) and the server. This has replaced the previous HTTP-based approach, allowing for a more interactive and responsive user experience.
+This document provides an overview of the WebSocket-based architecture that powers the application, enabling real-time, bidirectional communication between the client and the server.
 
-## Endpoints
+## Core Components
 
-The websocket server exposes the following endpoints:
+The architecture is built around three main components:
 
-*   `ws://<server-address>:<port>/prompt`: This is the primary endpoint for initiating interactions with the AI. The client sends a JSON message to this endpoint containing the user's prompt and any associated data (images, documents, etc.). The server then creates a `ManagerAgent` instance to handle the request.
+1.  **WebSocket Server (`main.py`):** The entry point for all client connections. It handles the initial handshake and creates a `ClientSession` for each new connection.
 
-*   `ws://<server-address>:<port>/tool-message`: This endpoint is used for sending responses from tools back to the `ManagerAgent`. When a tool in the frontend completes a task, it sends a JSON message to this endpoint with the results.
+2.  **ClientSession (`session/clientSession.py`):** The central orchestrator for a user's session. Each client is assigned a unique `ClientSession` that manages their state, message queues, and the associated `ManagerAgent`. It acts as a bridge between the WebSocket connection and the agent, ensuring that messages are processed correctly and that the agent's lifecycle is managed.
 
-## Frontend Notifications and Tool Calls
+3.  **ManagerAgent (`agents/manager.py`):** The AI-powered agent responsible for understanding and executing user requests. It uses a suite of tools to generate content, read the document state, and apply changes. The `ManagerAgent` operates independently of the WebSocket connection, communicating with the `ClientSession` through a system of message queues and interrupts.
 
-A key advantage of using websockets is the ability for the server to proactively notify the frontend of its current state. This is crucial for keeping the user informed about the progress of their request. Here's how it can be achieved:
+## Connection and Session Establishment
 
-### Server-to-Frontend Notifications
+The communication process begins when a client connects to the WebSocket server. The server and client perform a handshake to establish or resume a session:
 
-The server can send messages to the client at any point during the processing of a prompt. This can be used to:
+1.  **Handshake:** The client sends a `handshake` message, optionally including a `session_id` to resume a previous session.
+2.  **Session Creation/Resumption:**
+    -   If a valid `session_id` is provided, the server reconnects the WebSocket to the existing `ClientSession`.
+    -   Otherwise, a new `session_id` is generated, and a new `ClientSession` is created and stored.
+3.  **Handshake Response:** The server sends a `handshake_response` to the client, confirming the session has been created or resumed.
 
-*   **Acknowledge receipt of a prompt:** Immediately after receiving a prompt, the server can send a message to the client to confirm that it has started processing the request.
-*   **Provide status updates:** As the `ManagerAgent` progresses through its workflow (e.g., calling different tools, generating content), it can send updates to the frontend. This could include messages like "Generating content...", "Applying changes to the document...", etc.
-*   **Signal completion:** Once the entire process is complete, the server can send a final message to the client with the results.
+Once the session is established, the client can begin sending `prompt` messages to the server.
 
-To implement this, the `ManagerAgent` can be modified to accept a websocket connection object. It can then use this object to send messages to the client at various points in its execution.
+## Message Flow and Tool Calls
 
-### Calling Frontend Tools
+The `ClientSession` manages the flow of messages between the client and the `ManagerAgent`. This is a simplified, high-level overview of the process:
 
-In some scenarios, it may be necessary for the server to trigger actions in the frontend. For example, the `ManagerAgent` might need to request a piece of information from the user that can only be obtained through a frontend interface (e.g., asking the user to select an area of an image).
+1.  **Prompt:** The client sends a `prompt` message containing the user's request.
+2.  **Processing:** The `ClientSession` receives the prompt and passes it to the `ManagerAgent` for processing.
+3.  **Tool Call Interrupt:** When the `ManagerAgent` needs to use a tool that requires client-side action (e.g., reading the document), it triggers an **interrupt**.
+4.  **Interrupt Handling:** The `ClientSession` catches the interrupt, sends a `tool_call` message to the client, and waits for a response.
+5.  **Tool Response:** The client executes the tool and sends a `tool_response` message back to the server.
+6.  **Resuming the Agent:** The `ClientSession` receives the response and uses it to resume the `ManagerAgent`, which then continues its work.
+7.  **Streaming Updates:** Throughout this process, the `ClientSession` streams status updates and partial message responses from the agent to the client, providing real-time feedback.
 
-This can be achieved by having the server send a specific message to the client that indicates which tool to call and what parameters to use. The frontend would then listen for these messages and execute the appropriate action.
-
-Here's a possible workflow:
-
-1.  The `ManagerAgent` determines that it needs to call a frontend tool.
-2.  It sends a JSON message to the client over the websocket connection. This message could look something like this:
-
-    ```json
-    {
-      "type": "tool_call",
-      "tool_name": "image_selection",
-      "parameters": {
-        "image_id": "some-image-id"
-      }
-    }
-    ```
-3.  The frontend receives this message and identifies it as a tool call.
-4.  It then calls the `image_selection` tool, passing the specified parameters.
-5.  Once the tool has completed its execution (e.g., the user has selected an area of the image), the frontend sends a message back to the server via the `/tool-message` endpoint with the results.
-
-This approach allows for a powerful and flexible integration between the backend AI logic and the frontend user interface.
+This architecture decouples the agent's logic from the WebSocket communication, allowing for a more robust and scalable system. For a more detailed breakdown of the entire workflow, please see the [Workflow](./workflow.md) documentation.
