@@ -1,40 +1,41 @@
-# Content Agent
+# ContentAgent
 
-The `ContentAgent` is a specialized agent responsible for generating and managing content, including HTML and images. It acts as a central hub for all content-related operations, coordinating between specialized sub-agents for HTML and image generation.
+The `ContentAgent` is a specialized sub-agent responsible for all content generation tasks within the application. It is called by the `ManagerAgent` whenever a user's request requires the creation of new text or image-related operations. The `ContentAgent` orchestrates its own sub-agents (`HtmlAgent` and `ImageAgent`) to produce high-quality content.
 
-## Inputs
+## Role in the Workflow
 
-The `ContentAgent`'s `run` method takes the following arguments:
+The `ContentAgent` is not directly exposed to the client. It operates as a service layer called by the `ManagerAgent`.
 
-- `prompt`: A string describing the content to be generated.
-- `document_structure`: An HTML string representing the current state of the document.
-
-## Workflow
-
-1.  **Analyze Request:** The agent analyzes the user's prompt to determine the type of content required (HTML, images, or both).
-2.  **Delegate to Sub-Agents:** Based on the analysis, the `ContentAgent` delegates the task to the appropriate sub-agent:
-    -   `HtmlAgent`: For generating structured HTML content.
-    -   `ImageAgent`: For all image-related operations.
-3.  **Content Integration:** The agent ensures that the generated text and visual content are seamlessly integrated.
-4.  **Quality Assurance:** The agent ensures that all generated content meets the specified requirements and quality standards.
+1.  **Invocation:** The `ManagerAgent` calls the `content_agent.run()` method with a prompt describing the desired content.
+2.  **Execution:** The `ContentAgent` uses its internal React agent and a suite of tools to interpret the prompt and generate the content. This may involve calling the `HtmlAgent` to create text and the `ImageAgent` for image operations.
+3.  **Content Storage:** As content is generated, it is saved to a database as "content chunks." Each chunk is given a unique `chunk_id`.
+4.  **Output:** The `run` method returns a dictionary containing the final status of the operation and a list of the `chunk_id`s that were created. The `ManagerAgent` then uses these IDs to apply the new content to the document.
 
 ## Tools
 
-### `run_html_agent(description: str, style_guidelines: str, context: str = "No additional context") -> str`
+The `ContentAgent` uses the following tools to fulfill content generation requests.
 
--   **Purpose:** Runs the `HtmlAgent` to generate high-quality HTML content.
--   **Output:** Returns a string containing the generated HTML, a `chunk_id`, and the status of the operation.
+### `run_html_agent(description: str, style_guidelines: str, context: str = "...")`
 
-### `run_image_agent(detailed_instruction: str) -> str`
+-   **Purpose:** Generates structured and validated HTML content. This is the primary tool for creating any text-based content, from paragraphs to titles.
+-   **Process:**
+    -   It takes a detailed `description` of the required content and optional `style_guidelines`.
+    -   It invokes the `HtmlAgent`, which handles the core generation logic.
+    -   The generated HTML is saved as a `ContentChunk` in the database.
+-   **Output:** Returns a string confirming the generation and providing the `chunk_id` of the newly created content.
 
--   **Purpose:** Runs the `ImageAgent` for comprehensive image operations and management.
--   **Output:** Returns a string containing the result of the image agent operation, usually in JSON format.
+### `run_image_agent(detailed_instruction: str)`
 
-### `analyze_content_requirements(requirements: str) -> str`
+-   **Purpose:** Manages all image-related tasks. This is a comprehensive tool for everything from adding images to performing complex analysis.
+-   **Capabilities:**
+    -   **Store Management:** Add, remove, search, and organize images.
+    -   **Processing:** Resize, filter, enhance, and convert image formats.
+    -   **AI-Powered Analysis:** Generate captions, extract text from images, and analyze visual content.
+-   **Usage:** It takes a `detailed_instruction` describing the specific image operation to perform (e.g., "Add an image from URL...", "Generate a caption for image 'abc-123'").
+-   **Output:** Returns a string (usually JSON formatted) containing the result of the image operation.
 
--   **Purpose:** Analyzes content requirements to determine the best approach for generation.
--   **Output:** Returns a structured analysis of the content requirements.
+### `analyze_content_requirements(requirements: str)`
 
-## Outputs
-
-The `ContentAgent`'s `run` method returns a list of "content chunks." Each chunk is a dictionary containing the generated content, its ID, and its status. If no content is generated, or if all generation attempts result in errors, an appropriate message is returned.
+-   **Purpose:** Analyzes a user's prompt to determine the best strategy for content generation.
+-   **Process:** It uses the underlying AI model to break down a complex request into a structured plan, identifying key elements, image needs, and overall complexity.
+-   **Output:** Returns a structured text analysis that guides the agent's next steps.
